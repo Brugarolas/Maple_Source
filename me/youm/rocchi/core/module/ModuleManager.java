@@ -1,5 +1,7 @@
 package me.youm.rocchi.core.module;
 
+import com.darkmagician6.eventapi.EventTarget;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,4 +19,5 @@ public class ModuleManager {
         }
         return null;
     }
+
 }

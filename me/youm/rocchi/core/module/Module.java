@@ -1,18 +1,29 @@
 package me.youm.rocchi.core.module;
 
+import com.darkmagician6.eventapi.EventManager;
+import com.darkmagician6.eventapi.events.Event;
+import me.youm.rocchi.Rocchi;
+import me.youm.rocchi.common.settings.Setting;
+import net.minecraft.client.Minecraft;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
 public class Module {
+    protected Minecraft mc = Minecraft.getMinecraft();
     private boolean toggle;
     private String name;
     private String suffixes;
     private ModuleCategory category;
     private int key;
-
+    private List<Setting<?>> settings;
     public Module(String name, ModuleCategory category, int key) {
         this.name = name;
         this.category = category;
         this.key = key;
     }
-
 
     public Module(String name, String suffixes, ModuleCategory category, int key) {
         this.name = name;
@@ -26,7 +37,21 @@ public class Module {
 
     public void setToggle(boolean toggle) {
         this.toggle = toggle;
+        this.toggled();
     }
+
+    public void toggled(){
+        if(toggle) {
+            EventManager.register(this);
+            this.onEnable();
+        } else {
+            EventManager.unregister(this);
+            this.onDisable();
+        }
+    }
+
+    public void onEnable(){}
+    public void onDisable(){}
 
     public String getName() {
         return name;
@@ -59,4 +84,16 @@ public class Module {
     public void setKey(int key) {
         this.key = key;
     }
+
+    public List<Setting<?>> getSettings() {
+        return settings;
+    }
+    public void setSettings(List<Setting<?>> settings) {
+        this.settings = settings;
+    }
+    public void addSetting(Setting<?> ...setting){
+        this.settings.addAll(Arrays.stream(setting).collect(Collectors.toCollection(ArrayList::new)));
+        Rocchi.getInstance().getSettingManager().settings.put(this,this.settings);
+    }
+
 }

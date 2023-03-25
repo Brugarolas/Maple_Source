@@ -1,6 +1,7 @@
 package me.youm.rocchi;
 
 import com.darkmagician6.eventapi.EventManager;
+import me.youm.rocchi.common.settings.SettingManager;
 import me.youm.rocchi.core.module.ModuleManager;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -15,14 +16,18 @@ public class Rocchi {
     public static Rocchi getInstance() {
         return instance;
     }
-    public Logger log = LogManager.getLogger();
+    public static Logger log = LogManager.getLogger();
 
     public String NAME = "Rocchi";
     public String VERSION = "alpha-0.1";
     public String[] dev = {"YouM"};
     private ModuleManager moduleManager;
+    private SettingManager settingManager;
     public void startGame(){
         moduleManager = new ModuleManager();
+
+        settingManager = new SettingManager();
+
         moduleManager.initialize();
 
         log.info("developer: " + dev.toString());
@@ -35,4 +40,7 @@ public class Rocchi {
         return moduleManager;
     }
 
+    public SettingManager getSettingManager() {
+        return settingManager;
+    }
 }
