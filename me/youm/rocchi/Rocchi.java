@@ -1,5 +1,7 @@
 package me.youm.rocchi;
 
+import me.youm.rocchi.core.module.ModuleManager;
+import me.youm.rocchi.core.module.modules.Sprint;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.lwjgl.opengl.Display;
@@ -19,7 +21,12 @@ public class Rocchi {
     public String NAME = "Rocchi";
     public String VERSION = "alpha-0.1";
     public String[] dev = {"YouM"};
+
+    private ModuleManager moduleManager;
+
     public void startGame(){
+        moduleManager = new ModuleManager();
+        moduleManager.initialize();
         log.info("developer: " + dev.toString());
         Display.setTitle(NAME + " | " + VERSION);
     }
@@ -28,4 +35,7 @@ public class Rocchi {
         log.info("Thank you to play Rocchi client. Goodbye");
     }
 
+    public ModuleManager getModuleManager() {
+        return moduleManager;
+    }
 }

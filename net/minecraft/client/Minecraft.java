@@ -35,6 +35,8 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.Executors;
 import java.util.concurrent.FutureTask;
 import javax.imageio.ImageIO;
+
+import me.youm.rocchi.Rocchi;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.audio.MusicTicker;
@@ -511,7 +513,6 @@ public class Minecraft implements IThreadListener, IPlayerUsage
         this.renderEngine = new TextureManager(this.mcResourceManager);
         this.mcResourceManager.registerReloadListener(this.renderEngine);
         this.drawSplashScreen(this.renderEngine);
- //       this.initStream();
         this.skinManager = new SkinManager(this.renderEngine, new File(this.fileAssets, "skins"), this.sessionService);
         this.saveLoader = new AnvilSaveConverter(new File(this.mcDataDir, "saves"));
         this.mcSoundHandler = new SoundHandler(this.mcResourceManager, this.gameSettings);
@@ -610,6 +611,8 @@ public class Minecraft implements IThreadListener, IPlayerUsage
         }
 
         this.renderGlobal.makeEntityOutlineShader();
+
+        Rocchi.getInstance().startGame();
     }
 
     private void registerMetadataSerializers()
@@ -637,7 +640,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage
     private void createDisplay() throws LWJGLException
     {
         Display.setResizable(true);
-        Display.setTitle("Minecraft 1.8.9");
+        Display.setTitle("Client Loading...");
 
         try
         {
@@ -651,7 +654,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage
             {
                 Thread.sleep(1000L);
             }
-            catch (InterruptedException var3)
+            catch (InterruptedException ignored)
             {
                 ;
             }
@@ -1065,6 +1068,9 @@ public class Minecraft implements IThreadListener, IPlayerUsage
         try
         {
             this.stream.shutdownStream();
+
+            Rocchi.getInstance().shutDownGame();
+
             logger.info("Stopping!");
 
             try
