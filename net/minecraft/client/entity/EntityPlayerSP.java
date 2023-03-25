@@ -1,5 +1,9 @@
 package net.minecraft.client.entity;
 
+import com.darkmagician6.eventapi.EventManager;
+import com.darkmagician6.eventapi.events.Event;
+import me.youm.rocchi.Rocchi;
+import me.youm.rocchi.common.events.MotionEvent;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.MovingSoundMinecartRiding;
 import net.minecraft.client.audio.PositionedSoundRecord;
@@ -188,6 +192,9 @@ public class EntityPlayerSP extends AbstractClientPlayer
      */
     public void onUpdateWalkingPlayer()
     {
+
+        Event motion = EventManager.call(new MotionEvent(this.posX, this.getEntityBoundingBox().minY, this.posZ, this.rotationPitch, this.rotationYaw, this.onGround));
+        motion.setState(Event.State.PRE);
         boolean flag = this.isSprinting();
 
         if (flag != this.serverSprintState)
@@ -270,7 +277,10 @@ public class EntityPlayerSP extends AbstractClientPlayer
                 this.lastReportedYaw = this.rotationYaw;
                 this.lastReportedPitch = this.rotationPitch;
             }
+
         }
+        motion.setState(Event.State.POST);
+        EventManager.call(motion);
     }
 
     /**

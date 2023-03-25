@@ -7,6 +7,28 @@ package com.darkmagician6.eventapi.events;
  * @author DarkMagician6
  * @since July 30, 2013
  */
-public interface Event {
+public class Event {
 
+    private State state = State.PRE;
+    private boolean cancellable;
+
+    public boolean isCancellable() {
+        return cancellable;
+    }
+
+    public void setCancellable(boolean cancellable) {
+        this.cancellable = cancellable;
+    }
+
+    public State getState() {
+        return state;
+    }
+
+    public void setState(State state) {
+        this.state = state;
+    }
+
+    public enum State{
+        PRE,POST
+    }
 }

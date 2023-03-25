@@ -7,13 +7,6 @@ public class Module {
     private ModuleCategory category;
     private int key;
 
-    public Module(String name, String suffixes, ModuleCategory category, int key) {
-        this.name = name;
-        this.suffixes = suffixes;
-        this.category = category;
-        this.key = key;
-    }
-
     public Module(String name, ModuleCategory category, int key) {
         this.name = name;
         this.category = category;
@@ -21,7 +14,12 @@ public class Module {
     }
 
 
-
+    public Module(String name, String suffixes, ModuleCategory category, int key) {
+        this.name = name;
+        this.suffixes = suffixes;
+        this.category = category;
+        this.key = key;
+    }
     public boolean isToggle() {
         return toggle;
     }
