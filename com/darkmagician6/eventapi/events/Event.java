@@ -10,14 +10,14 @@ package com.darkmagician6.eventapi.events;
 public class Event {
 
     private State state = State.PRE;
-    private boolean cancellable;
+    private boolean cancelled;
 
-    public boolean isCancellable() {
-        return cancellable;
+    public boolean isCancelled() {
+        return cancelled;
     }
 
-    public void setCancellable(boolean cancellable) {
-        this.cancellable = cancellable;
+    public void setCancelled(boolean cancelled) {
+        this.cancelled = cancelled;
     }
 
     public State getState() {

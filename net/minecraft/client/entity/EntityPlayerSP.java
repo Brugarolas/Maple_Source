@@ -4,6 +4,7 @@ import com.darkmagician6.eventapi.EventManager;
 import com.darkmagician6.eventapi.events.Event;
 import me.youm.rocchi.Rocchi;
 import me.youm.rocchi.common.events.MotionEvent;
+import me.youm.rocchi.common.events.MoveEvent;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.MovingSoundMinecartRiding;
 import net.minecraft.client.audio.PositionedSoundRecord;
@@ -695,6 +696,17 @@ public class EntityPlayerSP extends AbstractClientPlayer
     {
         boolean flag = this.movementInput != null ? this.movementInput.sneak : false;
         return flag && !this.sleeping;
+    }
+
+    @Override
+    public void moveEntity(double x, double y, double z) {
+        MoveEvent move = EventManager.call(new MoveEvent(x, y, z));
+        if (!move.isCancelled()) {
+            x = move.getX();
+            y = move.getY();
+            z = move.getZ();
+            super.moveEntity(x, y, z);
+        }
     }
 
     public void updateEntityActionState()

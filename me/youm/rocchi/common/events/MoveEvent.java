@@ -1,8 +1,8 @@
 package me.youm.rocchi.common.events;
 
-import net.minecraft.client.Minecraft;
+import com.darkmagician6.eventapi.events.Event;
 
-public class MoveEvent {
+public class MoveEvent extends Event {
     private double x, y, z;
     public MoveEvent(double x, double y, double z) {
         this.x = x;

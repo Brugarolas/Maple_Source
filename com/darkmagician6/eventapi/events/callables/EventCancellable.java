@@ -9,7 +9,7 @@ import com.darkmagician6.eventapi.events.Event;
  * @author DarkMagician6
  * @since August 27, 2013
  */
-public abstract class EventCancellable implements Event, Cancellable {
+public abstract class EventCancellable extends Event implements Cancellable {
 
     private boolean cancelled;
 

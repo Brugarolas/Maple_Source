@@ -9,7 +9,7 @@ import com.darkmagician6.eventapi.events.Typed;
  * @author DarkMagician6
  * @since August 27, 2013
  */
-public abstract class EventTyped implements Event, Typed {
+public abstract class EventTyped extends Event implements Typed {
 
     private final byte type;
 

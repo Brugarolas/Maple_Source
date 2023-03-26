@@ -8,7 +8,7 @@ package com.darkmagician6.eventapi.events;
  * @author DarkMagician6
  * @since 26-9-13
  */
-public abstract class EventStoppable implements Event {
+public abstract class EventStoppable extends Event {
 
     private boolean stopped;
 

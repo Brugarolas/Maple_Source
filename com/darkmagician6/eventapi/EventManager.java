@@ -237,7 +237,7 @@ public final class EventManager {
      *
      * @return Event in the state after dispatching it.
      */
-    public static final Event call(final Event event) {
+    public static <T extends Event> T call(final T event) {
         List<MethodData> dataList = REGISTRY_MAP.get(event.getClass());
 
         if (dataList != null) {

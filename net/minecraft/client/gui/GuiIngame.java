@@ -1,11 +1,14 @@
 package net.minecraft.client.gui;
 
+import com.darkmagician6.eventapi.EventManager;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import java.util.Collection;
 import java.util.List;
 import java.util.Random;
+
+import me.youm.rocchi.common.events.Render2DEvent;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
@@ -359,7 +362,8 @@ public class GuiIngame extends Gui
         {
             this.overlayPlayerList.updatePlayerList(false);
         }
-
+        /* Rocchi: 2D render event */
+        EventManager.call(new Render2DEvent(partialTicks));
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
         GlStateManager.disableLighting();
         GlStateManager.enableAlpha();
