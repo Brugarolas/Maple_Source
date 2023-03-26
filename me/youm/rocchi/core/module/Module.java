@@ -18,7 +18,7 @@ public class Module {
     private String suffixes;
     private ModuleCategory category;
     private int key;
-    private List<Setting<?>> settings;
+    private List<Setting<?>> settings = new ArrayList<>();
     public Module(String name, ModuleCategory category, int key) {
         this.name = name;
         this.category = category;
