@@ -35,17 +35,24 @@ public class RealmsBridge extends RealmsScreen
         try
         {
             this.previousScreen = p_getNotificationScreen_1_;
-            Class<?> oclass = Class.forName("com.mojang.realmsclient.gui.screens.RealmsNotificationsScreen");
-            Constructor<?> constructor = oclass.getDeclaredConstructor(RealmsScreen.class);
-            constructor.setAccessible(true);
-            Object object = constructor.newInstance(this);
-            return ((RealmsScreen)object).getProxy();
+//            Class<?> oclass = null;
+//            try{
+//                oclass = Class.forName("com.mojang.realmsclient.gui.screens.RealmsNotificationsScreen");
+//            }catch (Exception ignored){
+//                ;
+//            }
+//            Constructor<?> constructor = oclass.getDeclaredConstructor(RealmsScreen.class);
+//            constructor.setAccessible(true);
+//            Object object = constructor.newInstance(this);
+//            return ((RealmsScreen)object).getProxy();
+            return null;
         }
         catch (Exception exception)
         {
             LOGGER.error("Realms module missing", (Throwable)exception);
             return null;
         }
+
     }
 
     public void init()

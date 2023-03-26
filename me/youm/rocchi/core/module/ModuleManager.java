@@ -1,6 +1,8 @@
 package me.youm.rocchi.core.module;
 
 import com.darkmagician6.eventapi.EventTarget;
+import me.youm.rocchi.core.module.modules.client.HUD;
+import me.youm.rocchi.core.module.modules.movement.Sprint;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,7 +11,10 @@ public class ModuleManager {
     public List<Module> modules = new ArrayList<>();
 
     public void initialize(){
-
+        /* movement */
+        this.modules.add(new Sprint());
+        /* client */
+        this.modules.add(new HUD());
     }
     public <T extends Module> T getModuleByClass(Class<T> moduleClass){
         for (Module module : modules) {
