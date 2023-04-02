@@ -6,19 +6,17 @@ import me.youm.rocchi.common.events.Render2DEvent;
 import me.youm.rocchi.common.settings.BoolSetting;
 import me.youm.rocchi.core.module.Module;
 import me.youm.rocchi.core.module.ModuleCategory;
-import me.youm.rocchi.core.module.ModuleManager;
 import me.youm.rocchi.core.ui.TabUI;
 import me.youm.rocchi.core.ui.Theme;
+import me.youm.rocchi.core.ui.font.FontLoaders;
 import me.youm.rocchi.utils.render.RenderUtil;
-import net.minecraft.client.gui.Gui;
-import net.minecraft.client.renderer.GlStateManager;
 import org.lwjgl.input.Keyboard;
 
 import java.awt.*;
 
 public class HUD extends Module {
     public BoolSetting ttf_font = new BoolSetting("ttf-font",false);
-    TabUI tabUI = new TabUI();
+    public TabUI tabUI = new TabUI();
     public HUD() {
         super("HUD", ModuleCategory.CLIENT, Keyboard.KEY_U);
         this.setToggle(true);
@@ -26,17 +24,10 @@ public class HUD extends Module {
     }
     @EventTarget
     public void onRender(Render2DEvent event){
-        this.renderTitle();
-        this.renderTabUI();
+        if(this.ttf_font.getValue()){
+            FontLoaders.comfortaaB18.drawStringWithShadow(Rocchi.getInstance().NAME,5,5, Theme.titleColor.getRGB());
+        }else {
+            this.mc.fontRendererObj.drawStringWithShadow(Rocchi.getInstance().NAME,5,5, Theme.titleColor.getRGB());
+        }
     }
-    public void renderTitle(){
-        GlStateManager.pushMatrix();
-        GlStateManager.scale(1.2,1.2,1.2);
-        this.mc.fontRendererObj.drawStringWithShadow(Rocchi.getInstance().NAME,5,5, Theme.titleColor.getRGB());
-        GlStateManager.popMatrix();
-    }
-    public void renderTabUI(){
-        tabUI.render();
-    }
-
 }

@@ -23,6 +23,4 @@ public class Sprint extends Module {
             this.mc.thePlayer.setSprinting(true);
         }
     }
-
-
 }
