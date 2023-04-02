@@ -8,10 +8,20 @@ import me.youm.rocchi.common.settings.ModeSetting;
 import me.youm.rocchi.common.settings.NumberSetting;
 import me.youm.rocchi.core.module.Module;
 import me.youm.rocchi.core.module.ModuleCategory;
+import me.youm.rocchi.utils.TimerUtil;
+import me.youm.rocchi.utils.math.RandomUtil;
+import me.youm.rocchi.utils.network.PacketUtil;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemSword;
+import net.minecraft.network.play.client.C02PacketUseEntity;
+import net.minecraft.network.play.client.C07PacketPlayerDigging;
+import net.minecraft.network.play.client.C08PacketPlayerBlockPlacement;
+import net.minecraft.network.play.client.C0APacketAnimation;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.MathHelper;
 import org.lwjgl.input.Keyboard;
 
@@ -23,16 +33,22 @@ public class KillAura extends Module {
 
     public final ModeSetting<Mode> mode = new ModeSetting<>("mode", Mode.values(), Mode.NCP);
     private final NumberSetting reach = new NumberSetting("reach", 3.2, 10.0, 1.0, 0.1);
-    private final NumberSetting cps = new NumberSetting("cps", 8.0, 10.0, 1.0, 0.5);
-    public final BoolSetting animal = new BoolSetting("animal", false);
-    public final BoolSetting player = new BoolSetting("player", false);
-    public final BoolSetting autoBlock = new BoolSetting("auto block", false);
-    public final BoolSetting mobs = new BoolSetting("mobs", false);
+    private final NumberSetting maxCps = new NumberSetting("cps", 8.0, 10.0, 1.0, 0.5);
+    private final NumberSetting minCps = new NumberSetting("cps", 8.0, 10.0, 1.0, 0.5);
+    public final BoolSetting animal = new BoolSetting("animal", true);
+    public final BoolSetting player = new BoolSetting("player", true);
+    public final BoolSetting autoBlock = new BoolSetting("auto block", true);
+    public final BoolSetting mobs = new BoolSetting("mobs", true);
     public Entity target;
     public List<Entity> targets;
+    private TimerUtil timer = new TimerUtil();
+    private boolean isBlocking;
+    private boolean attacking;
+    private boolean blocking;
 
     public KillAura() {
         super("KillAura", ModuleCategory.COMBAT, Keyboard.KEY_R);
+//        this.setToggle(true);
     }
 
     @EventTarget
@@ -43,21 +59,50 @@ public class KillAura extends Module {
                 .stream().sorted(
                         Comparator.comparingDouble(mc.thePlayer::getDistanceToEntity)
                 ).collect(Collectors.toList());
-        if (event.getState() == Event.State.PRE) {
-            target = targets.get(0);
-            float[] rotations = getRotationsToEnt(target);
-            switch (mode.getValue()){
-                case WatchDog:
-                    break;
-                case AAC:
-                    break;
-                case Matrix:
-                    break;
-                default:
-                    break;
+        if (!targets.isEmpty()) {
+            if (event.getState() == Event.State.PRE) {
+                target = targets.get(0);
+                float[] rotations = getRotationsToEnt(target);
+                switch (mode.getValue()){
+                    case WatchDog:
+                        break;
+                    case AAC:
+                        break;
+                    case Matrix:
+                        break;
+                    default:
+                        break;
+                }
+                event.setYaw(rotations[0]);
+                event.setPitch(rotations[1]);
             }
-            event.setYaw(rotations[0]);
-            event.setPitch(rotations[1]);
+
+            if(autoBlock.getValue() && mc.thePlayer.getCurrentEquippedItem() != null && mc.thePlayer.getCurrentEquippedItem().getItem() instanceof ItemSword){
+                mc.playerController.syncCurrentPlayItem();
+                blocking = true;
+                if(event.getState() == Event.State.POST) {
+                    if (blocking) {
+                        mc.playerController.sendUseItem(mc.thePlayer, mc.theWorld, mc.thePlayer.getHeldItem());
+                    } else {
+                        PacketUtil.sendPacket(new C08PacketPlayerBlockPlacement(
+                                new BlockPos(-1, -1, -1), 255, mc.thePlayer.getHeldItem(), 0, 0, 0));
+                        blocking = false;
+                    }
+                    PacketUtil.sendPacket(new C0APacketAnimation());
+                }
+
+            }
+            if (event.getState() == Event.State.PRE) {
+                attacking = true;
+                if (timer.hasTimeElapsed((1000 / RandomUtil.getRandomInRange(minCps.getValue().intValue(), maxCps.getValue().intValue())), true)) {
+                    mc.thePlayer.swingItem();
+                    mc.thePlayer.sendQueue.addToSendQueue(new C02PacketUseEntity(target, C02PacketUseEntity.Action.ATTACK));
+                }
+            }
+        }
+        if (targets.isEmpty()) {
+            attacking = false;
+            blocking = false;
         }
     }
 
