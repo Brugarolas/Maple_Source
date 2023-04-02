@@ -1,8 +1,10 @@
 package me.youm.rocchi.core.module;
 
 import com.darkmagician6.eventapi.EventManager;
+import com.darkmagician6.eventapi.EventTarget;
 import com.darkmagician6.eventapi.events.Event;
 import me.youm.rocchi.Rocchi;
+import me.youm.rocchi.common.events.KeyEvent;
 import me.youm.rocchi.common.settings.Setting;
 import net.minecraft.client.Minecraft;
 
@@ -15,7 +17,7 @@ public class Module {
     protected Minecraft mc = Minecraft.getMinecraft();
     private boolean toggle;
     private String name;
-    private String suffixes;
+    private String suffixes = "";
     private ModuleCategory category;
     private int key;
     private List<Setting<?>> settings = new ArrayList<>();
@@ -37,10 +39,14 @@ public class Module {
 
     public void setToggle(boolean toggle) {
         this.toggle = toggle;
-        this.toggled();
+        this.isEnabled();
     }
-
     public void toggled(){
+        this.toggle = !this.toggle;
+        this.isEnabled();
+    }
+    public void isEnabled(){
+
         if(toggle) {
             EventManager.register(this);
             this.onEnable();

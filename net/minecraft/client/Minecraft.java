@@ -1,5 +1,6 @@
 package net.minecraft.client;
 
+import com.darkmagician6.eventapi.EventManager;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -13,6 +14,8 @@ import com.mojang.authlib.minecraft.MinecraftSessionService;
 import com.mojang.authlib.properties.Property;
 import com.mojang.authlib.properties.PropertyMap;
 import com.mojang.authlib.yggdrasil.YggdrasilAuthenticationService;
+
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -37,6 +40,7 @@ import java.util.concurrent.FutureTask;
 import javax.imageio.ImageIO;
 
 import me.youm.rocchi.Rocchi;
+import me.youm.rocchi.common.events.KeyEvent;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.audio.MusicTicker;
@@ -1961,6 +1965,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage
                     }
                     else
                     {
+                        EventManager.call(new KeyEvent(k));
                         if (k == 1)
                         {
                             this.displayInGameMenu();
