@@ -1,5 +1,7 @@
 package net.minecraft.client.renderer;
 
+import me.youm.rocchi.Rocchi;
+import me.youm.rocchi.core.module.modules.visual.Animations;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
@@ -401,8 +403,54 @@ public class ItemRenderer
                             break;
 
                         case BLOCK:
-                            this.transformFirstPersonItem(f, 0.0F);
-                            this.doBlockTransformations();
+                            float rotateAngle = MathHelper.sin(MathHelper.sqrt_float(f1) * (float)Math.PI);
+                            Animations animations = Rocchi.getInstance().getModuleManager().getModuleByClass(Animations.class);
+                            if(animations.isToggle()){
+                                switch (animations.mode.getValue()){
+                                    case OLD:
+                                        this.transformFirstPersonItem(f, f1);
+                                        GlStateManager.translate(0, 0.3, 0);
+                                        this.doBlockTransformations();
+                                        break;
+                                    case SIGMA:
+                                        this.transformFirstPersonItem(f*0.5f, 0);
+                                        GlStateManager.rotate(-rotateAngle * 55 / 2.0F, -8.0F, -0.0F, 9.0F);
+                                        GlStateManager.rotate(-rotateAngle * 45, 1.0F, rotateAngle / 2, -0.0F);
+                                        this.doBlockTransformations();
+                                        GL11.glTranslated(1.2, 0.3, 0.5);
+                                        GL11.glTranslatef(-1, this.mc.thePlayer.isSneaking() ? -0.1F : -0.2F, 0.2F);
+                                        break;
+                                    case Smooth:
+                                        this.transformFirstPersonItem(f1 / 5, f1);
+                                        GlStateManager.translate(0, 0.2, 0);
+                                        GlStateManager.rotate(-rotateAngle, 4, -0.8F, -1F);
+                                        this.doBlockTransformations();
+                                        break;
+                                    case ETB:
+                                        this.performDrinking(abstractclientplayer, partialTicks);
+                                        this.transformFirstPersonItem(f, 0.0F);
+                                        break;
+                                    case Exhibition: {
+                                        this.transformFirstPersonItem(f / 2.0f, 0.0f);
+                                        GlStateManager.rotate(-rotateAngle * 40.0f / 2.0f, rotateAngle / 2.0f, -0.0f, 9.0f);
+                                        GlStateManager.rotate(-rotateAngle * 30.0f, 1.0f, rotateAngle / 2.0f, -0.0f);
+                                        this.doBlockTransformations();
+                                        break;
+                                    }
+                                    case Slide: {
+                                        this.transformFirstPersonItem(f, 0.0f);
+                                        this.doBlockTransformations();
+                                        GlStateManager.translate(-0.3, 0.3, 0.0);
+                                        GlStateManager.rotate(-rotateAngle * 70.0f / 2.0f, -8.0f, 0.0f, 9.0f);
+                                        GlStateManager.rotate(-rotateAngle * 70.0f, 1.0f, -0.4f, -0.0f);
+                                        break;
+                                    }
+                                }
+                            }else {
+                                this.transformFirstPersonItem(f, 0.0F);
+                                this.doBlockTransformations();
+                            }
+
                             break;
 
                         case BOW:
