@@ -21,6 +21,8 @@ public class Module {
     private ModuleCategory category;
     private int key;
     private List<Setting<?>> settings = new ArrayList<>();
+
+    public float animX,animY;
     public Module(String name, ModuleCategory category, int key) {
         this.name = name;
         this.category = category;

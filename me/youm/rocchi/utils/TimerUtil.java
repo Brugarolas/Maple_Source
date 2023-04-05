@@ -24,7 +24,6 @@ public class TimerUtil {
         return System.currentTimeMillis() - lastMS > time;
     }
 
-
     public long getTime() {
         return System.currentTimeMillis() - lastMS;
     }

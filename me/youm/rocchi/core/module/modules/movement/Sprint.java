@@ -12,7 +12,6 @@ import org.lwjgl.input.Keyboard;
 public class Sprint extends Module {
     public Sprint() {
         super("Sprint", ModuleCategory.MOVEMENT, Keyboard.KEY_NONE);
-        this.setToggle(true);
     }
     public BoolSetting safe = new BoolSetting("safe",true);
     @EventTarget
