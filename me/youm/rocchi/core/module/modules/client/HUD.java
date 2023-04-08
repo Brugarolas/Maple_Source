@@ -18,7 +18,7 @@ public class HUD extends Module {
     public BoolSetting ttf_font = new BoolSetting("ttf-font",false);
     public TabUI tabUI = new TabUI();
     public HUD() {
-        super("HUD", ModuleCategory.CLIENT, Keyboard.KEY_U);
+        super("HUD", ModuleCategory.CLIENT, Keyboard.KEY_V);
         this.setToggle(true);
         this.addSetting(ttf_font);
     }

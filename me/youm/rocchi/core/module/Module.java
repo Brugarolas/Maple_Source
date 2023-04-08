@@ -21,7 +21,7 @@ public class Module {
     private ModuleCategory category;
     private int key;
     private List<Setting<?>> settings = new ArrayList<>();
-
+    public boolean wasRemoved;
     public float animX,animY;
     public Module(String name, ModuleCategory category, int key) {
         this.name = name;
@@ -48,7 +48,6 @@ public class Module {
         this.isEnabled();
     }
     public void isEnabled(){
-
         if(toggle) {
             EventManager.register(this);
             this.onEnable();
