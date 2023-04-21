@@ -4,6 +4,12 @@ import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 import java.util.concurrent.Callable;
+
+import me.youm.rocchi.Rocchi;
+import me.youm.rocchi.core.module.ModuleManager;
+import me.youm.rocchi.core.module.modules.player.SafeWalk;
+import me.youm.rocchi.utils.math.Vec2f;
+import me.youm.rocchi.utils.math.Vec3f;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockFence;
 import net.minecraft.block.BlockFenceGate;
@@ -12,6 +18,7 @@ import net.minecraft.block.BlockWall;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.block.state.pattern.BlockPattern;
+import net.minecraft.client.Minecraft;
 import net.minecraft.command.CommandResultStats;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.crash.CrashReport;
@@ -242,6 +249,15 @@ public abstract class Entity implements ICommandSender
 
     /** The command result statistics for this Entity. */
     private final CommandResultStats cmdResultStats;
+
+
+    private Vec3f pos;
+    private Vec3f prevPos;
+    private Vec3f lastTickPos;
+    private Vec3f headPos;
+    private Vec3f motion;
+    private Vec2f rotation;
+    private Vec2f prevRotation;
 
     public int getEntityId()
     {
@@ -630,10 +646,15 @@ public abstract class Entity implements ICommandSender
             double d3 = x;
             double d4 = y;
             double d5 = z;
-            boolean flag = this.onGround && this.isSneaking() && this instanceof EntityPlayer;
+
+            SafeWalk safeWalk = Rocchi.getInstance().getModuleManager().getModuleByClass(SafeWalk.class);
+            boolean isSafe = safeWalk.isToggle() && safeWalk.start();
+
+            boolean flag = this.onGround && (this.isSneaking() || isSafe) && this instanceof EntityPlayer;
 
             if (flag)
             {
+                if (isSafe) Minecraft.getMinecraft().thePlayer.setSneaking(true);
                 double d6;
 
                 for (d6 = 0.05D; x != 0.0D && this.worldObj.getCollidingBoundingBoxes(this, this.getEntityBoundingBox().offset(x, -1.0D, 0.0D)).isEmpty(); d3 = x)
@@ -2822,5 +2843,20 @@ public abstract class Entity implements ICommandSender
         }
 
         EnchantmentHelper.applyArthropodEnchantments(entityLivingBaseIn, entityIn);
+    }
+    public final Vec3f getLastTickPos() {
+        if (this.lastTickPos == null) {
+            this.lastTickPos = new Vec3f();
+        }
+        return this.lastTickPos.setX(this.lastTickPosX).setY(this.lastTickPosY).setZ(this.lastTickPosZ);
+    }
+    public final Vec3f getPos() {
+        if (this.pos == null) {
+            this.pos = new Vec3f();
+        }
+        return this.pos.setX(this.posX).setY(this.posY).setZ(this.posZ);
+    }
+    public final Vec3f interpolate(final float ticks) {
+        return this.getLastTickPos().add(this.getPos().sub(this.getLastTickPos()).scale(ticks));
     }
 }

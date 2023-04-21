@@ -25,6 +25,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.MathHelper;
 import org.lwjgl.input.Keyboard;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -34,21 +35,19 @@ public class KillAura extends Module {
     public final ModeSetting<Mode> mode = new ModeSetting<>("mode", Mode.values(), Mode.NCP);
     private final NumberSetting reach = new NumberSetting("reach", 3.2, 10.0, 1.0, 0.1);
     private final NumberSetting maxCps = new NumberSetting("cps", 8.0, 10.0, 1.0, 0.5);
-    private final NumberSetting minCps = new NumberSetting("cps", 8.0, 10.0, 1.0, 0.5);
+    private final NumberSetting minCps = new NumberSetting("cps", 4.0, 10.0, 1.0, 0.5);
     public final BoolSetting animal = new BoolSetting("animal", true);
     public final BoolSetting player = new BoolSetting("player", true);
     public final BoolSetting autoBlock = new BoolSetting("auto block", true);
     public final BoolSetting mobs = new BoolSetting("mobs", true);
     public Entity target;
-    public List<Entity> targets;
+    public List<Entity> targets = new ArrayList<>();
     private TimerUtil timer = new TimerUtil();
-    private boolean isBlocking;
     private boolean attacking;
     private boolean blocking;
 
     public KillAura() {
         super("KillAura", ModuleCategory.COMBAT, Keyboard.KEY_R);
-//        this.setToggle(true);
     }
 
     @EventTarget

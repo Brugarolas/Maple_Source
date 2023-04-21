@@ -3,6 +3,8 @@ package net.minecraft.client.renderer.entity;
 import com.google.common.collect.Maps;
 import java.util.Collections;
 import java.util.Map;
+
+import me.youm.rocchi.utils.math.MathUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockBed;
 import net.minecraft.block.state.IBlockState;
@@ -113,9 +115,9 @@ public class RenderManager
 
     /** Renders fonts */
     private FontRenderer textRenderer;
-    private double renderPosX;
-    private double renderPosY;
-    private double renderPosZ;
+    public double renderPosX;
+    public double renderPosY;
+    public double renderPosZ;
     public TextureManager renderEngine;
 
     /** Reference to the World object. */
@@ -324,7 +326,68 @@ public class RenderManager
         Render<Entity> render = this.getEntityRenderObject(entityIn);
         return render != null && render.shouldRender(entityIn, camera, camX, camY, camZ);
     }
+    public void renderEntityStaticNoShadow(Entity entity, float partialTicks, boolean p_147936_3_) {
+        if (entity.ticksExisted == 0) {
+            entity.lastTickPosX = entity.posX;
+            entity.lastTickPosY = entity.posY;
+            entity.lastTickPosZ = entity.posZ;
+        }
+        double d0 = MathUtil.interpolate(entity.lastTickPosX, entity.posX, partialTicks);
+        double d1 = MathUtil.interpolate(entity.lastTickPosY, entity.posY, partialTicks);
+        double d2 = MathUtil.interpolate(entity.lastTickPosZ, entity.posZ, partialTicks);
+        float f = MathUtil.interpolateFloat(entity.prevRotationYaw, entity.rotationYaw, partialTicks);
+        int i = entity.getBrightnessForRender(partialTicks);
 
+        int j = i % 65536;
+        int k = i / 65536;
+        OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, (float) j / 1.0F, (float) k / 1.0F);
+        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+        this.doRenderEntityNoShadow(entity, d0 - this.renderPosX, d1 - this.renderPosY, d2 - this.renderPosZ, f, partialTicks, p_147936_3_);
+    }
+    public void doRenderEntityNoShadow(Entity entity, double x, double y, double z, float entityYaw, float partialTicks, boolean hideDebugBox) {
+        Render<Entity> render = null;
+
+        try {
+            render = this.getEntityRenderObject(entity);
+
+            if (render != null && this.renderEngine != null) {
+                try {
+                    if (render instanceof RendererLivingEntity) {
+                        ((RendererLivingEntity<?>) render).setRenderOutlines(this.renderOutlines);
+                    }
+
+                    if (CustomEntityModels.isActive()) {
+                        this.renderRender = render;
+                    }
+
+                    render.doRender(entity, x, y, z, entityYaw, partialTicks);
+
+                } catch (Throwable throwable2) {
+                    throw new ReportedException(CrashReport.makeCrashReport(throwable2, "Rendering entity in world"));
+                }
+
+                if (this.debugBoundingBox && !entity.isInvisible() && !hideDebugBox) {
+                    try {
+                        this.renderDebugBoundingBox(entity, x, y, z, entityYaw, partialTicks);
+                    } catch (Throwable throwable) {
+                        throw new ReportedException(CrashReport.makeCrashReport(throwable, "Rendering entity hitbox in world"));
+                    }
+                }
+            } else if (this.renderEngine != null) {
+            }
+
+        } catch (Throwable throwable3) {
+            CrashReport crashreport = CrashReport.makeCrashReport(throwable3, "Rendering entity in world");
+            CrashReportCategory crashreportcategory = crashreport.makeCategory("Entity being rendered");
+            entity.addEntityCrashInfo(crashreportcategory);
+            CrashReportCategory crashreportcategory1 = crashreport.makeCategory("Renderer details");
+            crashreportcategory1.addCrashSection("Assigned renderer", render);
+            crashreportcategory1.addCrashSection("Location", CrashReportCategory.getCoordinateInfo(x, y, z));
+            crashreportcategory1.addCrashSection("Rotation", Float.valueOf(entityYaw));
+            crashreportcategory1.addCrashSection("Delta", Float.valueOf(partialTicks));
+            throw new ReportedException(crashreport);
+        }
+    }
     public boolean renderEntityStatic(Entity entity, float partialTicks, boolean hideDebugBox)
     {
         if (entity.ticksExisted == 0)

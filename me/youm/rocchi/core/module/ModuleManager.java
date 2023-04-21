@@ -6,10 +6,12 @@ import com.darkmagician6.eventapi.EventTarget;
 import me.youm.rocchi.common.events.KeyEvent;
 import me.youm.rocchi.core.module.modules.client.HUD;
 import me.youm.rocchi.core.module.modules.combat.KillAura;
+import me.youm.rocchi.core.module.modules.movement.Speed;
 import me.youm.rocchi.core.module.modules.movement.Sprint;
-import me.youm.rocchi.core.module.modules.visual.Animations;
-import me.youm.rocchi.core.module.modules.visual.KeyStrokes;
-import me.youm.rocchi.core.module.modules.visual.ModuleList;
+import me.youm.rocchi.core.module.modules.movement.Step;
+import me.youm.rocchi.core.module.modules.player.FullBright;
+import me.youm.rocchi.core.module.modules.player.SafeWalk;
+import me.youm.rocchi.core.module.modules.visual.*;
 import me.youm.rocchi.core.module.modules.player.NoSlow;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,14 +24,20 @@ public class ModuleManager {
         this.modules.add(new KillAura());
         /* movement */
         this.modules.add(new Sprint());
+        this.modules.add(new Speed());
+        this.modules.add(new Step());
         /* client */
         this.modules.add(new HUD());
         /* player */
         this.modules.add(new NoSlow());
+        this.modules.add(new FullBright());
+        this.modules.add(new SafeWalk());
         /* visual */
         this.modules.add(new Animations());
         this.modules.add(new KeyStrokes());
         this.modules.add(new ModuleList());
+        this.modules.add(new GlowESP());
+        this.modules.add(new ClickGui());
         EventManager.register(this);
     }
     public <T extends Module> T getModuleByClass(Class<T> moduleClass){

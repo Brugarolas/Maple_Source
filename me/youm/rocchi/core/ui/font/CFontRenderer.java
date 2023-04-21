@@ -43,13 +43,10 @@ extends CFont {
         return this.drawString(text, x - (float)(this.getStringWidth(text) / 2), y, color);
     }
 
-    public float drawCenteredStringWithShadow(String text, float x, float y, int color) {
-        return this.drawStringWithShadow(text, x - (float)(this.getStringWidth(text) / 2), y, color);
+    public void drawCenteredStringWithShadow(String text, float x, float y, int color) {
+        this.drawStringWithShadow(text, x - (float) (this.getStringWidth(text) / 2), y, color);
     }
 
-    public float drawCenteredStringWithShadow(String text, double x, double y, int color) {
-        return this.drawStringWithShadow(text, x - (double)(this.getStringWidth(text) / 2), y, color);
-    }
 
     public float drawString(String text, double x, double y, int color, boolean shadow) {
         x -= 1.0;

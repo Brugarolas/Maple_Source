@@ -2,6 +2,7 @@ package me.youm.rocchi.core.module.modules.player;
 
 import com.darkmagician6.eventapi.EventTarget;
 import me.youm.rocchi.common.events.MotionEvent;
+import me.youm.rocchi.common.settings.BoolSetting;
 import me.youm.rocchi.core.module.Module;
 import me.youm.rocchi.core.module.ModuleCategory;
 import net.minecraft.network.play.client.C07PacketPlayerDigging;
@@ -14,6 +15,7 @@ public class NoSlow extends Module {
     public NoSlow() {
         super("NoSlow", ModuleCategory.MOVEMENT, Keyboard.KEY_O);
     }
+
     @EventTarget
     public void onMotion(MotionEvent motion){
         if(mc.thePlayer.isUsingItem()) {
