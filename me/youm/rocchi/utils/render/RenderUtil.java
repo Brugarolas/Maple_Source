@@ -7,9 +7,11 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.shader.Framebuffer;
+import org.lwjgl.opengl.GL11;
 
 import java.awt.Color;
 import java.util.Objects;
+import java.util.function.Function;
 
 
 import static net.minecraft.client.renderer.GlStateManager.disableBlend;
@@ -17,6 +19,10 @@ import static net.minecraft.client.renderer.GlStateManager.enableTexture2D;
 import static org.lwjgl.opengl.GL11.*;
 
 public class RenderUtil {
+    public static void resetColor() {
+        GlStateManager.color(1, 1, 1, 1);
+    }
+
     public static Minecraft mc = Minecraft.getMinecraft();
     public static void drawRect(int x,int y,int width,int height,int color){
         Gui.drawRect(x,y,x+width,y+height,color);
@@ -117,6 +123,14 @@ public class RenderUtil {
     }
     public static void drawRoundedRect(float x, float y, float width, float height, float radius, int color) {
         originalRoundedRect(x, y, width + x, height + y, radius, color);
+    }
+    public static void scale(float x, float y, float scale, Runnable data) {
+        GL11.glPushMatrix();
+        GL11.glTranslatef(x, y, 0);
+        GL11.glScalef(scale, scale, 1);
+        GL11.glTranslatef(-x, -y, 0);
+        data.run();
+        GL11.glPopMatrix();
     }
 
 }

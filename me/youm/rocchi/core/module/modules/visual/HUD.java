@@ -1,4 +1,4 @@
-package me.youm.rocchi.core.module.modules.client;
+package me.youm.rocchi.core.module.modules.visual;
 
 import com.darkmagician6.eventapi.EventTarget;
 import me.youm.rocchi.Rocchi;
@@ -18,7 +18,7 @@ public class HUD extends Module {
     public BoolSetting ttf_font = new BoolSetting("ttf-font",false);
     public TabUI tabUI = new TabUI();
     public HUD() {
-        super("HUD", ModuleCategory.PLAYER, Keyboard.KEY_V);
+        super("HUD", ModuleCategory.VISUAL, Keyboard.KEY_V);
         this.setToggle(true);
         this.addSetting(ttf_font);
     }

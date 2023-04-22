@@ -16,7 +16,7 @@ import java.util.List;
 public class ConfigManager {
     public List<Config> configs = new ArrayList<>();
     public File mainDir = new File(Minecraft.getMinecraft().mcDataDir,"/"+Rocchi.getInstance().NAME+"/configs/");
-    public static Gson gson = new GsonBuilder().setPrettyPrinting().create();
+    public static Gson gson = Rocchi.gson;
     public void initialize(){
         configs.add(new ModuleConfig());
         boolean mkdirs = mainDir.mkdirs();

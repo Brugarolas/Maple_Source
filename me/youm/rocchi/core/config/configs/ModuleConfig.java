@@ -7,11 +7,9 @@ import me.youm.rocchi.core.config.Config;
 import me.youm.rocchi.core.config.ConfigManager;
 import me.youm.rocchi.core.module.Module;
 import org.apache.commons.io.FileUtils;
+import org.lwjgl.input.Keyboard;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -32,6 +30,7 @@ public class ModuleConfig extends Config {
                 for (ModuleConfiguration configuration : configurations) {
                     if (configuration.getName().equals(module.getName())){
                         module.setToggle(configuration.isEnable());
+                        module.setKey(Keyboard.getKeyIndex(configuration.getKey()));
                     }
                 }
             }
@@ -44,7 +43,7 @@ public class ModuleConfig extends Config {
     public void saveConfig() {
         List<ModuleConfiguration> configurations = Rocchi.getInstance().getModuleManager().
                 modules.stream().
-                map(module -> new ModuleConfiguration(module.getName(), module.isToggle())).
+                map(module -> new ModuleConfiguration(module.getName(), module.isToggle(), Keyboard.getKeyName(module.getKey()))).
                 collect(Collectors.toList());
 
         this.context = ConfigManager.gson.toJson(configurations);

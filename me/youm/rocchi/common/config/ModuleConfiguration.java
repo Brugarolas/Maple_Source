@@ -5,12 +5,22 @@ import java.io.Serializable;
 public class ModuleConfiguration implements Serializable {
     private String name;
     private boolean enable;
+    private String key;
     public ModuleConfiguration(){
 
     }
-    public ModuleConfiguration(String name,boolean enable){
+    public ModuleConfiguration(String name,boolean enable,String key){
         this.name = name;
         this.enable = enable;
+        this.key = key;
+    }
+
+    public String getKey() {
+        return key;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
     }
 
     public String getName(){

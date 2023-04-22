@@ -12,11 +12,11 @@ import org.lwjgl.input.Keyboard;
 
 
 public class ModuleList extends Module {
-    public ModeSetting<Mode> mode = new ModeSetting<>("mode",Mode.values(),Mode.RAINBOW);
+    public ModeSetting<Mode> mode = new ModeSetting<>("mode",Mode.values(),Mode.FADE);
     public BoolSetting font = new BoolSetting("ttf-font",true);
-    public BoolSetting rect = new BoolSetting("rect",false);
+    public BoolSetting rect = new BoolSetting("rect",true);
     public BoolSetting shadow = new BoolSetting("shadow",false);
-    public BoolSetting border = new BoolSetting("border",false);
+    public BoolSetting border = new BoolSetting("border",true);
     public NumberSetting rectAlpha = new NumberSetting("alpha",100,255,0,1);
     public NumberSetting speed = new NumberSetting("speed",10,100,0,1);
     private final ModuleListUI moduleListUI = new ModuleListUI();

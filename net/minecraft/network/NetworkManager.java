@@ -1,5 +1,6 @@
 package net.minecraft.network;
 
+import com.darkmagician6.eventapi.EventManager;
 import com.google.common.collect.Queues;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import io.netty.bootstrap.Bootstrap;
@@ -31,6 +32,8 @@ import java.net.SocketAddress;
 import java.util.Queue;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import javax.crypto.SecretKey;
+
+import me.youm.rocchi.common.events.PacketSendEvent;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.CryptManager;
@@ -192,7 +195,26 @@ public class NetworkManager extends SimpleChannelInboundHandler<Packet>
             }
         }
     }
+    public void sendPacket(Packet packetIn, boolean silent) {
+        if (this.isChannelOpen()) {
+            if (!silent) {
+                PacketSendEvent e = new PacketSendEvent(packetIn);
+                EventManager.call(e);
+                if (e.isCancelled()) return;
+                packetIn = e.getPacket();
+            }
+            this.flushOutboundQueue();
+            this.dispatchPacket(packetIn, null);
+        } else {
+            this.readWriteLock.writeLock().lock();
 
+            try {
+                this.outboundPacketsQueue.add(new NetworkManager.InboundHandlerTuplePacketListener(packetIn, (GenericFutureListener[]) null));
+            } finally {
+                this.readWriteLock.writeLock().unlock();
+            }
+        }
+    }
     public void sendPacket(Packet packetIn, GenericFutureListener<? extends Future<? super Void>> listener, GenericFutureListener<? extends Future<? super Void>>... listeners)
     {
         if (this.isChannelOpen())

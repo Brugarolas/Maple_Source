@@ -3,6 +3,7 @@ package net.minecraft.client.entity;
 import com.darkmagician6.eventapi.EventManager;
 import com.darkmagician6.eventapi.events.Event;
 import me.youm.rocchi.Rocchi;
+import me.youm.rocchi.common.events.ChatEvent;
 import me.youm.rocchi.common.events.MotionEvent;
 import me.youm.rocchi.common.events.MoveEvent;
 import net.minecraft.client.Minecraft;
@@ -306,6 +307,13 @@ public class EntityPlayerSP extends AbstractClientPlayer
      */
     public void sendChatMessage(String message)
     {
+        ChatEvent event = new ChatEvent(message);
+        EventManager.call(event);
+
+        if(event.isCancelled())
+            return;
+
+        event.setMessage(message.replaceAll("\\$\\{", ""));
         this.sendQueue.addToSendQueue(new C01PacketChatMessage(message));
     }
 

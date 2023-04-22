@@ -4,15 +4,14 @@ import com.darkmagician6.eventapi.EventManager;
 import com.darkmagician6.eventapi.EventTarget;
 
 import me.youm.rocchi.common.events.KeyEvent;
-import me.youm.rocchi.core.module.modules.client.HUD;
+import me.youm.rocchi.core.module.modules.player.*;
+import me.youm.rocchi.core.module.modules.visual.HUD;
 import me.youm.rocchi.core.module.modules.combat.KillAura;
 import me.youm.rocchi.core.module.modules.movement.Speed;
 import me.youm.rocchi.core.module.modules.movement.Sprint;
 import me.youm.rocchi.core.module.modules.movement.Step;
-import me.youm.rocchi.core.module.modules.player.FullBright;
-import me.youm.rocchi.core.module.modules.player.SafeWalk;
 import me.youm.rocchi.core.module.modules.visual.*;
-import me.youm.rocchi.core.module.modules.player.NoSlow;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,6 +31,10 @@ public class ModuleManager {
         this.modules.add(new NoSlow());
         this.modules.add(new FullBright());
         this.modules.add(new SafeWalk());
+        this.modules.add(new InvManager());
+        this.modules.add(new FastPlace());
+        this.modules.add(new NoFall());
+        this.modules.add(new Timer());
         /* visual */
         this.modules.add(new Animations());
         this.modules.add(new KeyStrokes());

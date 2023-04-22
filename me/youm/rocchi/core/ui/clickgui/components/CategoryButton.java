@@ -2,9 +2,11 @@ package me.youm.rocchi.core.ui.clickgui.components;
 
 import me.youm.rocchi.core.module.ModuleCategory;
 import me.youm.rocchi.core.ui.IComponent;
+import me.youm.rocchi.core.ui.Theme;
 import me.youm.rocchi.core.ui.clickgui.ClickGuiScreen;
 import me.youm.rocchi.core.ui.font.FontLoaders;
 import me.youm.rocchi.utils.render.RenderUtil;
+import me.youm.rocchi.utils.render.RoundedUtil;
 
 import java.awt.*;
 
@@ -21,7 +23,7 @@ public class CategoryButton implements IComponent {
     public void draw(float xPos, float yPos) {
         this.x = xPos;this.y = yPos;
         if(ClickGuiScreen.moduleCategory == this.category){
-            RenderUtil.drawRoundedRect(x, y,65,20,5,new Color(1, 138, 252).getRGB());
+            RoundedUtil.drawRound(x,y,FontLoaders.comfortaaR22.getStringWidth(category.name()) + 3,13,5, Theme.titleColor);
         }
         FontLoaders.comfortaaR22.drawStringWithShadow(category.name(),x + 2,y + 2,new Color(248,248,248).getRGB());
     }
