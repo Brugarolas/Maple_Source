@@ -1,6 +1,6 @@
-package me.youm.rocchi.utils.render;
+package top.youm.rocchi.utils.render;
 
-import me.youm.rocchi.utils.render.gl.ShaderUtil;
+import top.youm.rocchi.utils.render.gl.ShaderUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;

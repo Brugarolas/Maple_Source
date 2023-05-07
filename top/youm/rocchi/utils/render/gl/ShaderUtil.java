@@ -1,4 +1,4 @@
-package me.youm.rocchi.utils.render.gl;
+package top.youm.rocchi.utils.render.gl;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
