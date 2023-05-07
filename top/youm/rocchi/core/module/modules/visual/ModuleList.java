@@ -22,7 +22,7 @@ public class ModuleList extends Module {
     private final ModuleListUI moduleListUI = new ModuleListUI();
     public ModuleList() {
         super("ArrayList", ModuleCategory.VISUAL, Keyboard.KEY_U);
-        this.addSetting(mode,font,rect,shadow,border);
+        this.addSetting(mode,font,rect,shadow,border,rectAlpha,speed);
     }
     @EventTarget
     public void onRender2D(Render2DEvent event){

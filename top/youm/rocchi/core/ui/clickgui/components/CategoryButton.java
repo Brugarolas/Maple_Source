@@ -3,6 +3,7 @@ package top.youm.rocchi.core.ui.clickgui.components;
 import top.youm.rocchi.core.module.ModuleCategory;
 import top.youm.rocchi.core.ui.Component;
 import top.youm.rocchi.core.ui.clickgui.ClickGuiScreen;
+import top.youm.rocchi.core.ui.clickgui.MouseType;
 import top.youm.rocchi.core.ui.font.FontLoaders;
 import top.youm.rocchi.utils.AnimationUtils;
 import top.youm.rocchi.utils.render.RenderUtil;
@@ -30,11 +31,13 @@ public class CategoryButton extends Component {
     }
 
     @Override
-    public void mouse(int mouseX, int mouseY,int mouseButton) {
+    public void mouse(int mouseX, int mouseY,int mouseButton, MouseType mouseType) {
         this.mouseX = mouseX;this.mouseY = mouseY;
-        if(isHover((int) x, (int) y,64,20,this.mouseX,this.mouseY) && mouseButton == 0){
-            ClickGuiScreen.moduleCategory = this.category;
-            ClickGuiScreen.wheel = 0;
+        if(mouseType != MouseType.CLICK) {
+            if (isHover((int) x, (int) y, 64, 20, this.mouseX, this.mouseY) && mouseButton == 0) {
+                ClickGuiScreen.moduleCategory = this.category;
+                ClickGuiScreen.wheel = 0;
+            }
         }
     }
 

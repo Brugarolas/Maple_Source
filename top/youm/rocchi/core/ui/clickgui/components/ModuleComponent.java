@@ -6,10 +6,12 @@ import org.lwjgl.opengl.GL11;
 import top.youm.rocchi.Rocchi;
 import top.youm.rocchi.common.settings.BoolSetting;
 import top.youm.rocchi.common.settings.ModeSetting;
+import top.youm.rocchi.common.settings.NumberSetting;
 import top.youm.rocchi.common.settings.Setting;
 import top.youm.rocchi.core.module.Module;
 import top.youm.rocchi.core.ui.Component;
 import top.youm.rocchi.core.ui.clickgui.ClickGuiScreen;
+import top.youm.rocchi.core.ui.clickgui.MouseType;
 import top.youm.rocchi.core.ui.font.FontLoaders;
 import top.youm.rocchi.utils.AnimationUtils;
 import top.youm.rocchi.utils.render.RenderUtil;
@@ -24,6 +26,7 @@ import java.util.List;
 
 public class ModuleComponent extends Component {
     private Module module;
+    public int wheel;
     private final List<Component> subComponents = new ArrayList<>();
     public ModuleComponent(Module module) {
         super(module.getName());
@@ -33,6 +36,8 @@ public class ModuleComponent extends Component {
                 subComponents.add(new BooleanComponent((BoolSetting) setting));
             }else if(setting instanceof ModeSetting<?>){
                 subComponents.add(new ModeComponent((ModeSetting<Enum<?>>)setting));
+            }else if(setting instanceof NumberSetting){
+                subComponents.add(new NumberComponent((NumberSetting) setting));
             }
         }
     }
@@ -50,35 +55,38 @@ public class ModuleComponent extends Component {
                 FontLoaders.comfortaaR24.drawStringWithShadow("No setting in this module", (ClickGuiScreen.x + 110 + ClickGuiScreen.menuWidht / 2.0f) - (FontLoaders.comfortaaR24.getStringWidth("No setting in this module") / 2.0f) + 10,ClickGuiScreen.y + ClickGuiScreen.screenHeight / 2.0f - FontLoaders.comfortaaR24.getHeight() ,-1);
             }else {
                 for (Component subComponent : subComponents) {
-                    FontLoaders.comfortaaR20.drawStringWithShadow(subComponent.getName(), ClickGuiScreen.x + ClickGuiScreen.screenWidth - ClickGuiScreen.menuWidht + 2,ClickGuiScreen.y + 62 + offsetY ,-1);
-                    subComponent.draw(0,offsetY);
+                    FontLoaders.comfortaaR20.drawStringWithShadow(subComponent.getName(), ClickGuiScreen.x + ClickGuiScreen.screenWidth - ClickGuiScreen.menuWidht + 2,ClickGuiScreen.y + 62 + offsetY + wheel ,-1);
+                    subComponent.draw(0,offsetY + wheel);
                     offsetY += 25;
                 }
             }
         }
+
     }
     @Override
-    public void mouse(int mouseX, int mouseY, int mouseButton) {
+    public void mouse(int mouseX, int mouseY, int mouseButton,MouseType mouseType) {
         this.mouseX = mouseX;this.mouseY = mouseY;
-        if(isHover((int) x - 45, (int) y - 5,90,20,mouseX,mouseY) ){
-            if(mouseButton == 0) {
-                Rocchi.getInstance().getModuleManager().modules.forEach(module -> {
-                    if (module.getName().equals(this.module.getName())) {
-                        module.setToggle(!module.isToggle());
-                        this.mc.getSoundHandler().playSound(PositionedSoundRecord.create(new ResourceLocation("gui.button.press"), 1.0F));
+        if(mouseType != MouseType.CLICK){
+            if(isHover((int) x - 45, (int) y - 5,90,20,mouseX,mouseY) ){
+                if(mouseButton == 0) {
+                    Rocchi.getInstance().getModuleManager().modules.forEach(module -> {
+                        if (module.getName().equals(this.module.getName())) {
+                            module.setToggle(!module.isToggle());
+                            this.mc.getSoundHandler().playSound(PositionedSoundRecord.create(new ResourceLocation("gui.button.press"), 1.0F));
+                        }
+                    });
+                } else if(mouseButton == 1){
+                    this.mc.getSoundHandler().playSound(PositionedSoundRecord.create(new ResourceLocation("gui.button.press"), 1.0F));
+                    if(!this.module.equals(ClickGuiScreen.settingOpen)){
+                        ClickGuiScreen.settingOpen = this.module;
                     }
-                });
-            } else if(mouseButton == 1){
-                this.mc.getSoundHandler().playSound(PositionedSoundRecord.create(new ResourceLocation("gui.button.press"), 1.0F));
-                if(!this.module.equals(ClickGuiScreen.settingOpen)){
-                    ClickGuiScreen.settingOpen = this.module;
                 }
-            }
 
+            }
         }
         for (Component subComponent : subComponents) {
             if(this.module.equals(ClickGuiScreen.settingOpen)){
-                subComponent.mouse(mouseX,mouseY,mouseButton);
+                subComponent.mouse(mouseX,mouseY,mouseButton,mouseType);
             }
         }
     }

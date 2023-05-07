@@ -112,6 +112,13 @@ public class ClickGuiScreen extends GuiScreen {
         if(component != null){
             RenderUtil.startGlScissor(x + 110,y + margin + 30,menuWidht,menuHeight);
             component.renderSetting();
+            if (real != 0 && Mouse.hasWheel() && isHover((int) (x + 110), (int) (y + ClickGuiScreen.margin + 30),ClickGuiScreen.menuWidht,ClickGuiScreen.menuHeight,mouseX,mouseY)) {
+                if (real > 0) {
+                    component.wheel = AnimationUtils.animateI(component.wheel + 50, component.wheel, 0.08f);
+                } else {
+                    component.wheel = AnimationUtils.animateI(component.wheel - 50, component.wheel, 0.08f);
+                }
+            }
             RenderUtil.stopGlScissor();
         }
 
@@ -133,7 +140,7 @@ public class ClickGuiScreen extends GuiScreen {
             dragY = mouseY - y;
             isDragging = true;
         }
-        componentsClick(mouseX,mouseY,mouseButton);
+        componentsClick(mouseX,mouseY,mouseButton,MouseType.CLICK);
     }
 
     @Override
@@ -144,19 +151,20 @@ public class ClickGuiScreen extends GuiScreen {
             dragY = mouseY - y;
             isDragging = false;
         }
+        componentsClick(mouseX,mouseY,state,MouseType.RELEASED);
     }
 
     private boolean isHover(int x, int y, int width, int height, int mouseX, int mouseY){
         return mouseX >= x && mouseX <= x + width && mouseY > y && mouseY <= y + height;
     }
 
-    public void componentsClick(int mouseX, int mouseY,int mouseButton){
+    public void componentsClick(int mouseX, int mouseY,int mouseButton,MouseType mouseType){
         for (CategoryButton categoryButton : this.categoryButtons) {
-            categoryButton.mouse(mouseX,mouseY,mouseButton);
+            categoryButton.mouse(mouseX,mouseY,mouseButton,mouseType);
         }
         for (ModuleComponent moduleComponent : moduleComponents) {
             if(moduleComponent.getModule().getCategory() == this.moduleCategory){
-                moduleComponent.mouse(mouseX,mouseY,mouseButton);
+                moduleComponent.mouse(mouseX,mouseY,mouseButton,mouseType);
             }
         }
     }

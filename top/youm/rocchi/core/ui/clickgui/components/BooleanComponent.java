@@ -4,6 +4,7 @@ import top.youm.rocchi.common.settings.BoolSetting;
 import top.youm.rocchi.core.ui.Component;
 import top.youm.rocchi.core.ui.Theme;
 import top.youm.rocchi.core.ui.clickgui.ClickGuiScreen;
+import top.youm.rocchi.core.ui.clickgui.MouseType;
 import top.youm.rocchi.utils.AnimationUtils;
 import top.youm.rocchi.utils.render.RenderUtil;
 import top.youm.rocchi.utils.render.RoundedUtil;
@@ -35,10 +36,12 @@ public class BooleanComponent extends Component {
     }
 
     @Override
-    public void mouse(int mouseX, int mouseY, int mouseButton) {
+    public void mouse(int mouseX, int mouseY, int mouseButton, MouseType mouseType) {
         this.mouseX = mouseX;this.mouseY = mouseY;
-        if (isHover(ClickGuiScreen.x + ClickGuiScreen.screenWidth - 50, (int) (ClickGuiScreen.y + 50 + y + 10), 24, 12, mouseX, mouseY) && mouseButton == 0) {
-            setting.setValue(!setting.getValue());
+        if(mouseType != MouseType.CLICK){
+            if (isHover(ClickGuiScreen.x + ClickGuiScreen.screenWidth - 50, (int) (ClickGuiScreen.y + 50 + y + 10), 24, 12, mouseX, mouseY) && mouseButton == 0) {
+                setting.setValue(!setting.getValue());
+            }
         }
     }
 

@@ -4,6 +4,7 @@ import top.youm.rocchi.common.settings.ModeSetting;
 import top.youm.rocchi.core.ui.Component;
 import top.youm.rocchi.core.ui.Theme;
 import top.youm.rocchi.core.ui.clickgui.ClickGuiScreen;
+import top.youm.rocchi.core.ui.clickgui.MouseType;
 import top.youm.rocchi.core.ui.font.FontLoaders;
 import top.youm.rocchi.utils.render.RenderUtil;
 import top.youm.rocchi.utils.render.RoundedUtil;
@@ -48,13 +49,15 @@ public class ModeComponent extends Component {
     }
 
     @Override
-    public void mouse(int mouseX, int mouseY, int mouseButton) {
+    public void mouse(int mouseX, int mouseY, int mouseButton, MouseType mouseType) {
         this.mouseX = mouseX;this.mouseY = mouseY;
-        if(isHover(ClickGuiScreen.x + ClickGuiScreen.screenWidth - 100, (int) (ClickGuiScreen.y + 50 + y + 10),80,12,mouseX,mouseY) && mouseButton == 0){
+        if(mouseType != MouseType.CLICK) {
+            if (isHover(ClickGuiScreen.x + ClickGuiScreen.screenWidth - 100, (int) (ClickGuiScreen.y + 50 + y + 10), 80, 12, mouseX, mouseY) && mouseButton == 0) {
 
-            Enum<?> current = setting.getValue();
-            setting.setValue(setting.getEnums()[current.ordinal() - 1 < 0 ? setting.getEnums().length - 1 : current.ordinal() - 1]);
+                Enum<?> current = setting.getValue();
+                setting.setValue(setting.getEnums()[current.ordinal() - 1 < 0 ? setting.getEnums().length - 1 : current.ordinal() - 1]);
 
+            }
         }
     }
 }
