@@ -1,8 +1,7 @@
-package me.youm.rocchi.common.settings;
+package top.youm.rocchi.common.settings;
 
-import me.youm.rocchi.core.module.Module;
+import top.youm.rocchi.core.module.Module;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

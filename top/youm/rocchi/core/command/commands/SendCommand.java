@@ -1,10 +1,10 @@
-package me.youm.rocchi.core.command.commands;
+package top.youm.rocchi.core.command.commands;
 
-import me.youm.rocchi.Rocchi;
-import me.youm.rocchi.core.command.ICommand;
+import top.youm.rocchi.Rocchi;
 import org.apache.commons.lang3.StringUtils;
+import top.youm.rocchi.core.command.Command;
 
-public class SendCommand extends ICommand {
+public class SendCommand extends Command {
     public SendCommand() {
         super("send", "*send <player name> <message>");
     }

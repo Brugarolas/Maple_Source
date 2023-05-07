@@ -1,8 +1,8 @@
-package me.youm.rocchi.common.settings;
+package top.youm.rocchi.common.settings;
 
 public class Setting<T> {
     private String name;
-    private T value;
+    protected T value;
 
     public Setting(String name, T value) {
         this.name = name;
