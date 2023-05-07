@@ -4,7 +4,7 @@ import com.google.common.collect.Maps;
 import java.util.Collections;
 import java.util.Map;
 
-import me.youm.rocchi.utils.math.MathUtil;
+import top.youm.rocchi.utils.math.MathUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockBed;
 import net.minecraft.block.state.IBlockState;

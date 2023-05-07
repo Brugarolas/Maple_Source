@@ -1,7 +1,7 @@
 package net.minecraft.client.renderer;
 
-import me.youm.rocchi.Rocchi;
-import me.youm.rocchi.core.module.modules.visual.Animations;
+import top.youm.rocchi.Rocchi;
+import top.youm.rocchi.core.module.modules.visual.Animations;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;

@@ -5,11 +5,10 @@ import java.util.Random;
 import java.util.UUID;
 import java.util.concurrent.Callable;
 
-import me.youm.rocchi.Rocchi;
-import me.youm.rocchi.core.module.ModuleManager;
-import me.youm.rocchi.core.module.modules.player.SafeWalk;
-import me.youm.rocchi.utils.math.Vec2f;
-import me.youm.rocchi.utils.math.Vec3f;
+import top.youm.rocchi.Rocchi;
+import top.youm.rocchi.core.module.modules.player.SafeWalk;
+import top.youm.rocchi.utils.math.Vec2f;
+import top.youm.rocchi.utils.math.Vec3f;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockFence;
 import net.minecraft.block.BlockFenceGate;

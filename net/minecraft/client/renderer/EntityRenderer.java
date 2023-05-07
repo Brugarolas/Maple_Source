@@ -12,7 +12,8 @@ import java.util.List;
 import java.util.Random;
 import java.util.concurrent.Callable;
 
-import me.youm.rocchi.common.events.Render3DEvent;
+import top.youm.rocchi.common.events.Render3DEvent;
+import top.youm.rocchi.core.ui.screen.RocchiMainScreen;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockBed;
 import net.minecraft.block.material.Material;
@@ -21,7 +22,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.gui.GuiChat;
 import net.minecraft.client.gui.GuiDownloadTerrain;
-import net.minecraft.client.gui.GuiMainMenu;
 import net.minecraft.client.gui.MapItemRenderer;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.particle.EffectRenderer;
@@ -2698,9 +2698,9 @@ public class EntityRenderer implements IResourceManagerReloadListener
             }
         }
 
-        if (this.mc.currentScreen instanceof GuiMainMenu)
+        if (this.mc.currentScreen instanceof RocchiMainScreen)
         {
-            this.updateMainMenu((GuiMainMenu)this.mc.currentScreen);
+            this.updateMainMenu((RocchiMainScreen)this.mc.currentScreen);
         }
 
         if (this.updatedWorld != world)
@@ -2738,7 +2738,7 @@ public class EntityRenderer implements IResourceManagerReloadListener
         }
     }
 
-    private void updateMainMenu(GuiMainMenu p_updateMainMenu_1_)
+    private void updateMainMenu(RocchiMainScreen p_updateMainMenu_1_)
     {
         try
         {
