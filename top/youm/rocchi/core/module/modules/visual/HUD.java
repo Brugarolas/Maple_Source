@@ -13,6 +13,7 @@ import org.lwjgl.input.Keyboard;
 
 public class HUD extends Module {
     public BoolSetting ttf_font = new BoolSetting("ttf-font",false);
+    public BoolSetting notification = new BoolSetting("notification",true);
     public TabUI tabUI = new TabUI();
     public HUD() {
         super("HUD", ModuleCategory.VISUAL, Keyboard.KEY_V);
@@ -21,6 +22,8 @@ public class HUD extends Module {
     }
     @EventTarget
     public void onRender(Render2DEvent event){
+        if (notification.getValue()){
+        }
         if(this.ttf_font.getValue()){
             FontLoaders.robotoB32.drawStringWithShadow(Rocchi.getInstance().NAME,5,5, Theme.titleColor.getRGB());
         }else {

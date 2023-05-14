@@ -21,9 +21,9 @@ public class ModeComponent extends Component {
     }
 
     @Override
-    public void draw(float xPos, float yPos) {
+    public void draw(float xPos, float yPos,int mouseX, int mouseY) {
         this.x = xPos;this.y = yPos;
-
+        this.mouseX = mouseX;this.mouseY = mouseY;
         RenderUtil.drawRect(ClickGuiScreen.x + ClickGuiScreen.screenWidth - 100, (int) (ClickGuiScreen.y + 50 + y + 10),80,12,new Color(85, 178, 255));
         FontLoaders.comfortaaT18.drawString(setting.getValue().name(),ClickGuiScreen.x + ClickGuiScreen.screenWidth - 100 + (80/2.0f)-(FontLoaders.comfortaaT18.getStringWidth(setting.getValue().name()) / 2.0f),(ClickGuiScreen.y + 50 + y + 10) + 8 - FontLoaders.comfortaaT18.getHeight() / 2.0f,Theme.FONT_COLOR.getRGB());
         if(isHover(ClickGuiScreen.x + ClickGuiScreen.screenWidth - 100, (int) (ClickGuiScreen.y + 50 + y + 10),80,12,mouseX,mouseY)){
@@ -50,7 +50,6 @@ public class ModeComponent extends Component {
 
     @Override
     public void mouse(int mouseX, int mouseY, int mouseButton, MouseType mouseType) {
-        this.mouseX = mouseX;this.mouseY = mouseY;
         if(mouseType != MouseType.CLICK) {
             if (isHover(ClickGuiScreen.x + ClickGuiScreen.screenWidth - 100, (int) (ClickGuiScreen.y + 50 + y + 10), 80, 12, mouseX, mouseY) && mouseButton == 0) {
 

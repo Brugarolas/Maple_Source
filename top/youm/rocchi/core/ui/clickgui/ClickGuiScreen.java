@@ -1,6 +1,5 @@
 package top.youm.rocchi.core.ui.clickgui;
 
-import net.minecraft.client.renderer.GlStateManager;
 import org.lwjgl.input.Mouse;
 import top.youm.rocchi.Rocchi;
 import top.youm.rocchi.core.module.Module;
@@ -26,7 +25,7 @@ import java.util.List;
 public class ClickGuiScreen extends GuiScreen {
     public static int x,y;
     public static int screenWidth = 440, screenHeight = 250;
-    public static int navbarWidht = 90,navbarHeight = 180;
+    public static int navbarWidht = 100,navbarHeight = 180;
     public static final int margin = 20;
     public static int menuWidht = screenWidth - 120,menuHeight = 180;
     public static int dragX, dragY;
@@ -37,6 +36,7 @@ public class ClickGuiScreen extends GuiScreen {
     private final CFontRenderer font = FontLoaders.comfortaaR30;
     public static Module settingOpen;
     public static float animCategory = 0;
+    private AnimationUtils animator = new AnimationUtils();
     public ClickGuiScreen(){
         for (ModuleCategory category : ModuleCategory.values()) {
             categoryButtons.add(new CategoryButton(category));
@@ -73,34 +73,33 @@ public class ClickGuiScreen extends GuiScreen {
         float xOffset = 0;
 
         for (CategoryButton categoryButton : categoryButtons) {
-            categoryButton.draw(x + screenWidth - 340 + xOffset,y + 20);
+            categoryButton.draw(x + screenWidth - 340 + xOffset,y + 20,mouseX,mouseY);
             xOffset += 64;
         }
         RoundedUtil.drawRoundOutline(x + screenWidth - 340,y + 20,320,20,2,1,new Color(0,0,0,0),new Color(80, 80, 80,255));
 
-        /* navbar */
-        RoundedUtil.drawRoundOutline(x + 10,y + margin + 30,navbarWidht,navbarHeight,2,1,new Color(0,0,0,0),new Color(80, 80, 80,255));
-        RenderUtil.startGlScissor(x + 10,y + margin + 30,navbarWidht,navbarHeight);
+        /* Navbar Frame */
+        RenderUtil.startGlScissor(x,y + margin + 30,navbarWidht,navbarHeight);
         int real = Mouse.getDWheel();
         int offsetY = 0;
         for (ModuleComponent moduleComponent : moduleComponents) {
             if(moduleComponent.getModule().getCategory() != this.moduleCategory){
                 continue;
             }
-            moduleComponent.draw(x + 55,(y + 59 - FontLoaders.robotoR22.getHeight() / 2) + offsetY + wheel);
+            moduleComponent.draw(x + 55,(y + 59 - FontLoaders.robotoR22.getHeight() / 2) + offsetY + wheel,mouseX,mouseY);
             if(moduleComponent.getModule().equals(settingOpen)){
                 component = moduleComponent;
             }
-            offsetY += 22;
+            offsetY += 25;
 
         }
         RenderUtil.stopGlScissor();
 
         if (real != 0 && Mouse.hasWheel() && isHover(x + 10,y + margin + 30,navbarWidht,navbarHeight,mouseX,mouseY)) {
             if (real > 0) {
-                wheel = AnimationUtils.animateI(wheel + 50, wheel, 0.08f);
+                wheel = animator.animate(wheel + 50, wheel, 0.08f);
             } else {
-                wheel = AnimationUtils.animateI(wheel - 50, wheel, 0.08f);
+                wheel = animator.animate(wheel - 50, wheel, 0.08f);
             }
         }
         if(moduleCategory != null){
@@ -109,14 +108,16 @@ public class ClickGuiScreen extends GuiScreen {
         }else {
             font.drawStringWithShadow("Welcome!!",x + screenWidth / 2.0f + font.getStringWidth("Welcome!!") / 2.0f + 10,y + screenHeight / 2.0f - font.getHeight() , -1);
         }
+
+        /* Setting Frame */
         if(component != null){
             RenderUtil.startGlScissor(x + 110,y + margin + 30,menuWidht,menuHeight);
             component.renderSetting();
             if (real != 0 && Mouse.hasWheel() && isHover((int) (x + 110), (int) (y + ClickGuiScreen.margin + 30),ClickGuiScreen.menuWidht,ClickGuiScreen.menuHeight,mouseX,mouseY)) {
                 if (real > 0) {
-                    component.wheel = AnimationUtils.animateI(component.wheel + 50, component.wheel, 0.08f);
+                    component.wheel = animator.animate(component.wheel + 50, component.wheel, 0.08f);
                 } else {
-                    component.wheel = AnimationUtils.animateI(component.wheel - 50, component.wheel, 0.08f);
+                    component.wheel = animator.animate(component.wheel - 50, component.wheel, 0.08f);
                 }
             }
             RenderUtil.stopGlScissor();

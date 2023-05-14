@@ -20,10 +20,11 @@ public class CategoryButton extends Component {
         this.category = category;
     }
     @Override
-    public void draw(float xPos, float yPos) {
+    public void draw(float xPos, float yPos,int mouseX, int mouseY) {
         this.x = xPos;this.y = yPos;
+        this.mouseX = mouseX;this.mouseY = mouseY;
         if (ClickGuiScreen.moduleCategory == this.category) {
-            ClickGuiScreen.animCategory = AnimationUtils.animateF(x,ClickGuiScreen.animCategory,0.1f);
+            ClickGuiScreen.animCategory = animator.animate(x,ClickGuiScreen.animCategory,0.08f);
             isThis = ClickGuiScreen.isDragging;
             RenderUtil.drawRect(isThis ? (int) x :(int) ClickGuiScreen.animCategory, (int) y, 64, 20, new Color(181, 70, 255));
         }
@@ -32,7 +33,6 @@ public class CategoryButton extends Component {
 
     @Override
     public void mouse(int mouseX, int mouseY,int mouseButton, MouseType mouseType) {
-        this.mouseX = mouseX;this.mouseY = mouseY;
         if(mouseType != MouseType.CLICK) {
             if (isHover((int) x, (int) y, 64, 20, this.mouseX, this.mouseY) && mouseButton == 0) {
                 ClickGuiScreen.moduleCategory = this.category;

@@ -3,7 +3,7 @@ package top.youm.rocchi.utils;
 import net.minecraft.client.Minecraft;
 
 public final class AnimationUtils {
-    public static double animate(double target, double current, double speed) {
+    public double animate(double target, double current, double speed) {
         boolean larger;
         boolean bl = larger = target > current;
         if (speed < 0.0) speed = 0.0;
@@ -15,7 +15,7 @@ public final class AnimationUtils {
         else current -= factor;
         return current;
     }
-    public static float animateF(float target, float current, float speed) {
+    public float animate(float target, float current, float speed) {
         boolean larger;
         boolean bl = larger = target > current;
         if (speed < 0.0f) {
@@ -39,7 +39,7 @@ public final class AnimationUtils {
             return current;
         }
     }
-    public static int animateI(int target, int current, float speed) {
+    public int animate(int target, int current, float speed) {
         boolean larger;
         boolean bl = larger = target > current;
         if (speed < 0.0f) {

@@ -1,6 +1,7 @@
 package top.youm.rocchi.core.config.configs;
 
 import com.google.gson.reflect.TypeToken;
+import net.minecraft.client.Minecraft;
 import top.youm.rocchi.Rocchi;
 import top.youm.rocchi.common.config.ModuleConfiguration;
 import top.youm.rocchi.core.config.Config;
@@ -20,7 +21,6 @@ public class ModuleConfig extends Config {
 
     @Override
     public void loadConfig() {
-
         try {
             List<ModuleConfiguration> configurations = ConfigManager.gson.fromJson(
                     FileUtils.readFileToString(this.file),
@@ -28,8 +28,11 @@ public class ModuleConfig extends Config {
             }.getType());
             for (Module module : Rocchi.getInstance().getModuleManager().modules) {
                 for (ModuleConfiguration configuration : configurations) {
-                    if (configuration.getName().equals(module.getName())){
-                        module.setToggle(configuration.isEnable());
+                    if (configuration.getName().equals(module.getName())) {
+                        if (module.isToggle() != configuration.isEnable()) {
+                            module.toggled();
+                        }else if (!configuration.isEnable() && module.isToggle())
+                            module.setToggle(false);
                         module.setKey(Keyboard.getKeyIndex(configuration.getKey()));
                     }
                 }

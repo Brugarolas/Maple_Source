@@ -26,8 +26,8 @@ public class RenderUtil {
     public static void drawRect(int x,int y,int width,int height,Color color){
         drawRect(x,y,width,height,color.getRGB());
     }
-    public static void drawRectF(float x,float y,float width,float height,int color){
-        drawRect((int) x, (int) y, (int) width, (int) height,color);
+    public static void drawRect(float x,float y,float width,float height,Color color){
+        drawRect((int) x, (int) y, (int) width, (int) height,color.getRGB());
     }
 
     public static Framebuffer createFrameBuffer(Framebuffer framebuffer) {

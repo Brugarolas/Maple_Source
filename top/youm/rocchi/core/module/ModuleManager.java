@@ -4,12 +4,11 @@ import com.darkmagician6.eventapi.EventManager;
 import com.darkmagician6.eventapi.EventTarget;
 
 import top.youm.rocchi.common.events.KeyEvent;
+import top.youm.rocchi.core.module.modules.movement.*;
 import top.youm.rocchi.core.module.modules.player.*;
 import top.youm.rocchi.core.module.modules.visual.*;
 import top.youm.rocchi.core.module.modules.combat.KillAura;
-import top.youm.rocchi.core.module.modules.movement.Speed;
-import top.youm.rocchi.core.module.modules.movement.Sprint;
-import top.youm.rocchi.core.module.modules.movement.Step;
+import top.youm.rocchi.core.module.modules.world.Teams;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +23,9 @@ public class ModuleManager {
         this.modules.add(new Sprint());
         this.modules.add(new Speed());
         this.modules.add(new Step());
+        this.modules.add(new Fly());
+        this.modules.add(new Scaffold());
+        this.modules.add(new InventoryMove());
         /* client */
         this.modules.add(new HUD());
         /* player */
@@ -34,12 +36,18 @@ public class ModuleManager {
         this.modules.add(new FastPlace());
         this.modules.add(new NoFall());
         this.modules.add(new Timer());
+        this.modules.add(new Blink());
+        this.modules.add(new AutoArmor());
+        this.modules.add(new AutoTool());
+        this.modules.add(new Freecam());
         /* visual */
         this.modules.add(new Animations());
         this.modules.add(new KeyStrokes());
         this.modules.add(new ModuleList());
         this.modules.add(new GlowESP());
         this.modules.add(new ClickGui());
+        /* world*/
+        this.modules.add(new Teams());
         EventManager.register(this);
     }
     public <T extends Module> T getModuleByClass(Class<T> moduleClass){

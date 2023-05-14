@@ -2,6 +2,7 @@ package top.youm.rocchi;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import net.minecraft.client.Minecraft;
 import top.youm.rocchi.common.settings.SettingManager;
 import top.youm.rocchi.core.command.CommandManager;
 import top.youm.rocchi.core.config.ConfigManager;
@@ -33,11 +34,10 @@ public class Rocchi {
     public void startGame(){
         moduleManager = new ModuleManager();
         settingManager = new SettingManager();
-        configManager = new ConfigManager();
-        commandManager = new CommandManager();
-
         moduleManager.initialize();
+        configManager = new ConfigManager();
         configManager.initialize();
+        commandManager = new CommandManager();
         commandManager.initialize();
 
         log.info("developer: " + dev.toString());

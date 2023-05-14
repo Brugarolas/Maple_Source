@@ -579,7 +579,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage
         this.effectRenderer = new EffectRenderer(this.theWorld, this.renderEngine);
         this.checkGLError("Post startup");
         this.ingameGUI = new GuiIngame(this);
-
+        Rocchi.getInstance().startGame();
         if (this.serverName != null)
         {
             this.displayGuiScreen(new GuiConnecting(new RocchiMainScreen(), this, this.serverName, this.serverPort));
@@ -610,7 +610,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage
 
         this.renderGlobal.makeEntityOutlineShader();
 
-        Rocchi.getInstance().startGame();
+
     }
 
     private void registerMetadataSerializers()

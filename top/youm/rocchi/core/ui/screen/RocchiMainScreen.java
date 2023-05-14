@@ -82,30 +82,30 @@ public class RocchiMainScreen extends GuiScreen implements GuiYesNoCallback {
         super.onGuiClosed();
     }
     int anim = 255;
-    public void drawLoadingScreen(){
-        ScaledResolution sr = new ScaledResolution(this.mc);
-        new Thread(()->{
-            try {
-                Thread.sleep(4000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            atomic.set(true);
-        }).start();
-        if(atomic.get() && anim != 0) {
-            anim = AnimationUtils.animateI(0, anim, 0.07f);
-            if (anim == 32){
-                anim -= 1;
-            }
-            if(anim <= 3){
-                anim = 0;
-            }
-        }
-        if(anim != 0){
-            RenderUtil.drawRect(0,0,sr.getScaledWidth(),sr.getScaledHeight(),new Color(0,0,0, anim));
-            FontLoaders.robotoR34.drawCenteredStringWithShadow("Authenticating...",sr.getScaledWidth() / 2.0f, sr.getScaledHeight() / 2.0f - FontLoaders.robotoR34.getHeight() / 2.0f,new Color(255,255,255, anim).getRGB());
-        }
-    }
+//    public void drawLoadingScreen(){
+//        ScaledResolution sr = new ScaledResolution(this.mc);
+//        new Thread(()->{
+//            try {
+//                Thread.sleep(4000);
+//            } catch (InterruptedException e) {
+//                e.printStackTrace();
+//            }
+//            atomic.set(true);
+//        }).start();
+//        if(atomic.get() && anim != 0) {
+//            anim = AnimationUtils.animateI(0, anim, 0.07f);
+//            if (anim == 32){
+//                anim -= 1;
+//            }
+//            if(anim <= 3){
+//                anim = 0;
+//            }
+//        }
+//        if(anim != 0){
+//            RenderUtil.drawRect(0,0,sr.getScaledWidth(),sr.getScaledHeight(),new Color(0,0,0, anim));
+//            FontLoaders.robotoR34.drawCenteredStringWithShadow("Authenticating...",sr.getScaledWidth() / 2.0f, sr.getScaledHeight() / 2.0f - FontLoaders.robotoR34.getHeight() / 2.0f,new Color(255,255,255, anim).getRGB());
+//        }
+//    }
     public void drawCenteredStringWithShadow(String text, float x, float y, int color) {
         mc.fontRendererObj.drawStringWithShadow(text, x - (float) (mc.fontRendererObj.getStringWidth(text) / 2), y, color);
     }

@@ -1,6 +1,7 @@
 package net.minecraft.network;
 
 import com.darkmagician6.eventapi.EventManager;
+import com.darkmagician6.eventapi.EventTarget;
 import com.google.common.collect.Queues;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import io.netty.bootstrap.Bootstrap;
@@ -33,6 +34,7 @@ import java.util.Queue;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import javax.crypto.SecretKey;
 
+import top.youm.rocchi.common.events.PacketReceiveEvent;
 import top.youm.rocchi.common.events.PacketSendEvent;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChatComponentTranslation;
@@ -148,17 +150,14 @@ public class NetworkManager extends SimpleChannelInboundHandler<Packet>
         this.closeChannel(chatcomponenttranslation);
     }
 
-    protected void channelRead0(ChannelHandlerContext p_channelRead0_1_, Packet p_channelRead0_2_) throws Exception
-    {
-        if (this.channel.isOpen())
-        {
-            try
-            {
+    protected void channelRead0(ChannelHandlerContext p_channelRead0_1_, Packet p_channelRead0_2_) throws Exception {
+        if (this.channel.isOpen()) {
+            try {
+                PacketReceiveEvent event = new PacketReceiveEvent(p_channelRead0_2_);
+                EventManager.call(event);
+                if (event.isCancelled()) return;
                 p_channelRead0_2_.processPacket(this.packetListener);
-            }
-            catch (ThreadQuickExitException var4)
-            {
-                ;
+            } catch (ThreadQuickExitException ignored) {
             }
         }
     }

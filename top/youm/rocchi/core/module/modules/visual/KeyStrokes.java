@@ -8,7 +8,6 @@ import top.youm.rocchi.core.module.ModuleCategory;
 import top.youm.rocchi.core.module.modules.visual.keystrokes.KeyBox;
 import top.youm.rocchi.core.module.modules.visual.keystrokes.MouseBox;
 import top.youm.rocchi.core.ui.font.FontLoaders;
-import top.youm.rocchi.utils.AnimationUtils;
 import top.youm.rocchi.utils.render.RenderUtil;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;

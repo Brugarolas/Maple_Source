@@ -1,8 +1,5 @@
 package top.youm.rocchi.core.ui.clickgui.components;
 
-import net.minecraft.client.renderer.GlStateManager;
-import org.lwjgl.input.Mouse;
-import org.lwjgl.opengl.GL11;
 import top.youm.rocchi.Rocchi;
 import top.youm.rocchi.common.settings.BoolSetting;
 import top.youm.rocchi.common.settings.ModeSetting;
@@ -13,10 +10,9 @@ import top.youm.rocchi.core.ui.Component;
 import top.youm.rocchi.core.ui.clickgui.ClickGuiScreen;
 import top.youm.rocchi.core.ui.clickgui.MouseType;
 import top.youm.rocchi.core.ui.font.FontLoaders;
-import top.youm.rocchi.utils.AnimationUtils;
-import top.youm.rocchi.utils.render.RenderUtil;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.util.ResourceLocation;
+import top.youm.rocchi.utils.render.RoundedUtil;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -42,9 +38,16 @@ public class ModuleComponent extends Component {
         }
     }
     @Override
-    public void draw(float xPos, float yPos) {
+    public void draw(float xPos, float yPos,int mouseX, int mouseY) {
         this.x = xPos;this.y = yPos;
-        RenderUtil.drawRect((int) (x - 44), (int) (y - 8 + FontLoaders.robotoR22.getHeight() / 2.0f),88,18,new Color(103, 103, 103));
+        this.mouseX = mouseX;this.mouseY = mouseY;
+        if(isHover((int) (x - 44), (int) (y - 8 + FontLoaders.robotoR22.getHeight() / 2.0f),88,18,mouseX,mouseY)){
+            RoundedUtil.drawRound((int) (x - 44), (int) (y - 8 + FontLoaders.robotoR22.getHeight() / 2.0f),88,18,4,new Color(55, 128, 255));
+        } else if(module.isToggle()){
+            RoundedUtil.drawRound((int) (x - 44), (int) (y - 8 + FontLoaders.robotoR22.getHeight() / 2.0f),88,18,4,new Color(55, 128, 255));
+        } else {
+            RoundedUtil.drawRound((int) (x - 44), (int) (y - 8 + FontLoaders.robotoR22.getHeight() / 2.0f),88,18,4,new Color(175, 212, 255));
+        }
         FontLoaders.robotoR22.drawCenteredStringWithShadow(module.getName(),x,y,-1);
 
     }
@@ -56,7 +59,7 @@ public class ModuleComponent extends Component {
             }else {
                 for (Component subComponent : subComponents) {
                     FontLoaders.comfortaaR20.drawStringWithShadow(subComponent.getName(), ClickGuiScreen.x + ClickGuiScreen.screenWidth - ClickGuiScreen.menuWidht + 2,ClickGuiScreen.y + 62 + offsetY + wheel ,-1);
-                    subComponent.draw(0,offsetY + wheel);
+                    subComponent.draw(0,offsetY + wheel,mouseX,mouseY);
                     offsetY += 25;
                 }
             }
@@ -65,7 +68,6 @@ public class ModuleComponent extends Component {
     }
     @Override
     public void mouse(int mouseX, int mouseY, int mouseButton,MouseType mouseType) {
-        this.mouseX = mouseX;this.mouseY = mouseY;
         if(mouseType != MouseType.CLICK){
             if(isHover((int) x - 45, (int) y - 5,90,20,mouseX,mouseY) ){
                 if(mouseButton == 0) {

@@ -22,14 +22,15 @@ public class BooleanComponent extends Component {
         this.setting = setting;
     }
     @Override
-    public void draw(float xPos, float yPos) {
+    public void draw(float xPos, float yPos,int mouseX, int mouseY) {
         this.x = xPos;this.y = yPos;
+        this.mouseX = mouseX;this.mouseY = mouseY;
         if (setting.getValue()) {
-            animX = AnimationUtils.animateF(26, animX, 0.05f);
-            animAlpha = AnimationUtils.animateI(255, animAlpha, 0.05f);
+            animX = animator.animate(26, animX, 0.08f);
+            animAlpha = animator.animate(255, animAlpha, 0.08f);
         } else {
-            animX = AnimationUtils.animateF(44, animX, 0.05f);
-            animAlpha = AnimationUtils.animateI(0, animAlpha, 0.05f);
+            animX = animator.animate(44, animX, 0.08f);
+            animAlpha = animator.animate(0, animAlpha, 0.08f);
         }
         RoundedUtil.drawRoundOutline(ClickGuiScreen.x + ClickGuiScreen.screenWidth - 50, ClickGuiScreen.y + 50 + y + 10, 30, 12, 5, 0.2f, new Color(56, 138, 229, animAlpha), new Color(80, 80, 80, 255));
         RenderUtil.drawCircle(ClickGuiScreen.x + ClickGuiScreen.screenWidth - animX, ClickGuiScreen.y + 55 + y + 11, 5f, Theme.titleColor);
@@ -37,7 +38,6 @@ public class BooleanComponent extends Component {
 
     @Override
     public void mouse(int mouseX, int mouseY, int mouseButton, MouseType mouseType) {
-        this.mouseX = mouseX;this.mouseY = mouseY;
         if(mouseType != MouseType.CLICK){
             if (isHover(ClickGuiScreen.x + ClickGuiScreen.screenWidth - 50, (int) (ClickGuiScreen.y + 50 + y + 10), 24, 12, mouseX, mouseY) && mouseButton == 0) {
                 setting.setValue(!setting.getValue());
