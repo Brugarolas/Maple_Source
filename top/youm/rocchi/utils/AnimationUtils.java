@@ -40,8 +40,7 @@ public final class AnimationUtils {
         }
     }
     public int animate(int target, int current, float speed) {
-        boolean larger;
-        boolean bl = larger = target > current;
+        boolean larger = target > current;
         if (speed < 0.0f) {
             speed = 0.0f;
         } else if (speed > 1.0) {

@@ -24,6 +24,8 @@ public class ModuleComponent extends Component {
     private Module module;
     public int wheel;
     private final List<Component> subComponents = new ArrayList<>();
+
+    private int animX;
     public ModuleComponent(Module module) {
         super(module.getName());
         this.module = module;
@@ -42,12 +44,16 @@ public class ModuleComponent extends Component {
         this.x = xPos;this.y = yPos;
         this.mouseX = mouseX;this.mouseY = mouseY;
         if(isHover((int) (x - 44), (int) (y - 8 + FontLoaders.robotoR22.getHeight() / 2.0f),88,18,mouseX,mouseY)){
-            RoundedUtil.drawRound((int) (x - 44), (int) (y - 8 + FontLoaders.robotoR22.getHeight() / 2.0f),88,18,4,new Color(55, 128, 255));
+            animX = animator.animate(8,animX,0.05f);
+            RoundedUtil.drawRound((int) (x - 44), (int) (y - 8 + FontLoaders.robotoR22.getHeight() / 2.0f),88,18,8,new Color(55, 128, 255));
+            FontLoaders.robotoR22.drawCenteredStringWithShadow(module.getName(),x + animX,y,-1);
         } else if(module.isToggle()){
-            RoundedUtil.drawRound((int) (x - 44), (int) (y - 8 + FontLoaders.robotoR22.getHeight() / 2.0f),88,18,4,new Color(55, 128, 255));
+            RoundedUtil.drawRound((int) (x - 44), (int) (y - 8 + FontLoaders.robotoR22.getHeight() / 2.0f),88,18,8,new Color(55, 128, 255));
         } else {
-            RoundedUtil.drawRound((int) (x - 44), (int) (y - 8 + FontLoaders.robotoR22.getHeight() / 2.0f),88,18,4,new Color(175, 212, 255));
+            animX = animator.animate(0,animX,0.05f);
+            RoundedUtil.drawRound((int) (x - 44) + animX, (int) (y - 8 + FontLoaders.robotoR22.getHeight() / 2.0f),88,18,8,new Color(175, 212, 255));
         }
+
         FontLoaders.robotoR22.drawCenteredStringWithShadow(module.getName(),x,y,-1);
 
     }
