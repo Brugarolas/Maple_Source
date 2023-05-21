@@ -8,6 +8,7 @@ import top.youm.rocchi.common.settings.Setting;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class Module {
@@ -99,7 +100,6 @@ public class Module {
     }
     public void addSetting(Setting<?> ...setting){
         this.settings.addAll(Arrays.stream(setting).collect(Collectors.toCollection(ArrayList::new)));
-        Rocchi.getInstance().getSettingManager().settings.put(this,this.settings);
     }
 
 }

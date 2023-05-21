@@ -1,11 +1,10 @@
-package top.youm.rocchi.core.ui.clickgui.components;
+package top.youm.rocchi.core.ui.clickgui.old.components;
 
 import top.youm.rocchi.core.module.ModuleCategory;
 import top.youm.rocchi.core.ui.Component;
-import top.youm.rocchi.core.ui.clickgui.ClickGuiScreen;
-import top.youm.rocchi.core.ui.clickgui.MouseType;
+import top.youm.rocchi.core.ui.clickgui.old.ClickGuiScreen;
+import top.youm.rocchi.core.ui.clickgui.old.MouseType;
 import top.youm.rocchi.core.ui.font.FontLoaders;
-import top.youm.rocchi.utils.AnimationUtils;
 import top.youm.rocchi.utils.render.RenderUtil;
 
 import java.awt.*;

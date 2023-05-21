@@ -1,4 +1,4 @@
-package top.youm.rocchi.core.ui.clickgui.components;
+package top.youm.rocchi.core.ui.clickgui.old.components;
 
 import top.youm.rocchi.Rocchi;
 import top.youm.rocchi.common.settings.BoolSetting;
@@ -7,8 +7,8 @@ import top.youm.rocchi.common.settings.NumberSetting;
 import top.youm.rocchi.common.settings.Setting;
 import top.youm.rocchi.core.module.Module;
 import top.youm.rocchi.core.ui.Component;
-import top.youm.rocchi.core.ui.clickgui.ClickGuiScreen;
-import top.youm.rocchi.core.ui.clickgui.MouseType;
+import top.youm.rocchi.core.ui.clickgui.old.ClickGuiScreen;
+import top.youm.rocchi.core.ui.clickgui.old.MouseType;
 import top.youm.rocchi.core.ui.font.FontLoaders;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.util.ResourceLocation;

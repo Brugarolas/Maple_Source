@@ -1,12 +1,12 @@
-package top.youm.rocchi.core.ui.clickgui;
+package top.youm.rocchi.core.ui.clickgui.old;
 
 import org.lwjgl.input.Mouse;
 import top.youm.rocchi.Rocchi;
 import top.youm.rocchi.core.module.Module;
 import top.youm.rocchi.core.module.ModuleCategory;
 import top.youm.rocchi.core.module.modules.visual.ClickGui;
-import top.youm.rocchi.core.ui.clickgui.components.CategoryButton;
-import top.youm.rocchi.core.ui.clickgui.components.ModuleComponent;
+import top.youm.rocchi.core.ui.clickgui.old.components.CategoryButton;
+import top.youm.rocchi.core.ui.clickgui.old.components.ModuleComponent;
 import top.youm.rocchi.core.ui.font.CFontRenderer;
 import top.youm.rocchi.core.ui.font.FontLoaders;
 import top.youm.rocchi.utils.AnimationUtils;

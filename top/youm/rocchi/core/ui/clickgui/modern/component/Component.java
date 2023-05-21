@@ -1,4 +1,4 @@
-package top.youm.rocchi.core.ui;
+package top.youm.rocchi.core.ui.clickgui.modern.component;
 
 import net.minecraft.client.Minecraft;
 import top.youm.rocchi.core.ui.clickgui.old.MouseType;
@@ -16,11 +16,15 @@ public abstract class Component {
         this.name = name;
     }
 
-    protected boolean isHover(int x, int y, int width, int height, int mouseX, int mouseY){
+    public static boolean isHover(int x, int y, int width, int height, int mouseX, int mouseY){
         return mouseX >= x && mouseX <= x + width && mouseY > y && mouseY <= y + height;
     }
+
+    protected boolean componentHover(){
+        return isHover((int) this.x, (int) this.y,this.width,this.height,this.mouseX,this.mouseY);
+    }
     public abstract void draw(float xPos,float yPos,int mouseX, int mouseY);
-    public abstract void mouse(int mouseX, int mouseY,int mouseButton, MouseType mouseType);
+    public abstract void mouse(int mouseButton, MouseType mouseType);
 
     public String getName() {
         return name;
