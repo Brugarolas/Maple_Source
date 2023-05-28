@@ -52,12 +52,16 @@ public class DialogComponent extends Component {
         this.mouseX = mouseX;this.mouseY = mouseY;
         RoundedUtil.drawRound(x,y,width,height,3, Theme.background);
         FontLoaders.robotoR22.drawStringWithShadow(name,x + 5,y + 5,Theme.font.getRGB());
+        RenderUtil.startGlScissor((int) x, (int) y,width,height);
         int offsetY = 0;
         for (Component component : subComponents) {
             component.draw(x + width,y+25-3 + offsetY,mouseX,mouseY);
+            if(component instanceof DropdownComponent){
+                ((DropdownComponent)component).render();
+            }
             offsetY+=30;
         }
-
+        RenderUtil.stopGlScissor();
     }
 
     @Override

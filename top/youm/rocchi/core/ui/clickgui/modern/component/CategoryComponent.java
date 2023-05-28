@@ -24,6 +24,8 @@ public class CategoryComponent extends Component {
     private float minScroll;
     private float rawScroll;
     private Animation scrollAnimation;
+
+    private float animation;
     public CategoryComponent(ModuleCategory category) {
         super(category.name().substring(0, 1).toUpperCase() + category.name().substring(1).toLowerCase());
         this.scrollAnimation = new SmoothStepAnimation(0, 0.0, Direction.BACKWARDS);
@@ -39,10 +41,19 @@ public class CategoryComponent extends Component {
         this.mouseX = mouseX;this.mouseY = mouseY;
         if(UIState.currentCategory == category){
             RoundedUtil.drawRound(x,y,width,height,2, Theme.theme);
+            animation = animator.animate(7,animation,0.1f);
         }else if(componentHover()){
             RoundedUtil.drawRound(x,y,width,height,2, Theme.themeHover);
         }
-        FontLoaders.robotoB22.drawCenteredStringWithShadow(name,xPos + width / 2.0f,y + height / 2.0f - FontLoaders.robotoR22.getHeight() / 2.0f,Theme.font.getRGB());
+        if(UIState.currentCategory != category){
+            if(componentHover()){
+                animation = animator.animate(7,animation,0.1f);
+            } else {
+                animation = animator.animate(0,animation,0.1f);
+            }
+            animation = animator.animate(0,animation,0.1f);
+        }
+        FontLoaders.robotoB22.drawStringWithShadow(name,xPos + 3 + animation,y + height / 2.0f - FontLoaders.robotoR22.getHeight() / 2.0f ,Theme.font.getRGB());
 
     }
     public void moduleMenu(int mouseX,int mouseY){
