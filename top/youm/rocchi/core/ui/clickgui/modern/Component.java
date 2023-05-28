@@ -1,4 +1,4 @@
-package top.youm.rocchi.core.ui.clickgui.modern.component;
+package top.youm.rocchi.core.ui.clickgui.modern;
 
 import net.minecraft.client.Minecraft;
 import top.youm.rocchi.core.ui.clickgui.old.MouseType;
@@ -25,7 +25,7 @@ public abstract class Component {
     }
     public abstract void draw(float xPos,float yPos,int mouseX, int mouseY);
     public abstract void mouse(int mouseButton, MouseType mouseType);
-
+    public abstract void input(char typedChar, int keyCode);
     public String getName() {
         return name;
     }

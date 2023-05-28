@@ -17,14 +17,10 @@ import top.youm.rocchi.utils.render.RoundedUtil;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
-
-
-
 public class ModuleComponent extends Component {
     private Module module;
     public int wheel;
     private final List<Component> subComponents = new ArrayList<>();
-
     private int animX;
     public ModuleComponent(Module module) {
         super(module.getName());

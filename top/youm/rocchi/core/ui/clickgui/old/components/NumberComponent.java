@@ -17,7 +17,6 @@ import java.awt.*;
 public class NumberComponent extends Component {
     private NumberSetting setting;
     public float percentBar;
-    public boolean dragging;
 
     public NumberComponent(NumberSetting setting) {
         super(setting.getName());

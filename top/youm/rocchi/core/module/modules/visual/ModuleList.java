@@ -21,7 +21,7 @@ public class ModuleList extends Module {
     public NumberSetting speed = new NumberSetting("speed",10,100,0,1);
     private final ModuleListUI moduleListUI = new ModuleListUI();
     public ModuleList() {
-        super("ArrayList", ModuleCategory.VISUAL, Keyboard.KEY_U);
+        super("ModuleList", ModuleCategory.VISUAL, Keyboard.KEY_U);
         this.addSetting(mode,font,rect,shadow,border,rectAlpha,speed);
     }
     @EventTarget

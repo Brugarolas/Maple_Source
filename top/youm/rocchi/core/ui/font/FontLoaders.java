@@ -28,6 +28,9 @@ public abstract class FontLoaders {
     public static CFontRenderer comfortaaB30 = new CFontRenderer(FontLoaders.getComfortaa(30,Roughness.Bold), true, true);
 
     public static CFontRenderer robotoB22 = new CFontRenderer(FontLoaders.getRoboto(22,Roughness.Bold), true, true);
+    public static CFontRenderer robotoB24 = new CFontRenderer(FontLoaders.getRoboto(24,Roughness.Bold), true, true);
+    public static CFontRenderer robotoB26 = new CFontRenderer(FontLoaders.getRoboto(26,Roughness.Bold), true, true);
+
     public static CFontRenderer robotoB32 = new CFontRenderer(FontLoaders.getRoboto(32,Roughness.Bold), true, true);
 
     public static CFontRenderer robotoB40 = new CFontRenderer(FontLoaders.getRoboto(40,Roughness.Bold), true, true);
