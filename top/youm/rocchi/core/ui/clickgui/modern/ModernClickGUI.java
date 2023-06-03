@@ -23,13 +23,14 @@ public class ModernClickGUI extends GuiScreen{
     public static int screenWidth = 450, screenHeight = 260;
     public int dragX, dragY;
     public boolean isDragging = false;
-
     private final List<CategoryComponent> categoryButtons = new ArrayList<>();
-    private static final List<ModuleComponent> moduleComponents = new ArrayList<>();
+    private final List<ModuleComponent> moduleComponents = new ArrayList<>();
     public CategoryComponent currentComponent;
     public ModernClickGUI() {
         for (ModuleCategory value : ModuleCategory.values()) {
-            categoryButtons.add(new CategoryComponent(value));
+            CategoryComponent categoryComponent = new CategoryComponent(value);
+            categoryComponent.setModuleComponents(moduleComponents);
+            categoryButtons.add(categoryComponent);
         }
         for (Module value : Rocchi.getInstance().getModuleManager().modules) {
             moduleComponents.add(new ModuleComponent(value));
@@ -91,6 +92,9 @@ public class ModernClickGUI extends GuiScreen{
     @Override
     protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
         super.mouseClicked(mouseX, mouseY, mouseButton);
+        ScaledResolution sr = new ScaledResolution(mc);
+        float dialogX = sr.getScaledWidth() / 2.0f - 400 / 2.0f;
+        float dialogY = sr.getScaledHeight() / 2.0f - 350 / 2.0f;
         if(!UIState.settingFocused){
             if (Component.isHover(x, y, screenWidth, 30, mouseX, mouseY) && mouseButton == 0) {
                 dragX = mouseX - x;
@@ -100,14 +104,18 @@ public class ModernClickGUI extends GuiScreen{
             for (CategoryComponent categoryButton : categoryButtons) {
                 categoryButton.mouse(mouseButton, MouseType.CLICK);
             }
-            for (ModuleComponent moduleComponent : moduleComponents) {
-                if(moduleComponent.getModule().getCategory() != UIState.currentCategory){
-                    continue;
+            if(Component.isHover(x + navbarWidth,y + 30,screenWidth - navbarWidth - 10,screenHeight - 30,mouseX,mouseY)){
+                for (ModuleComponent moduleComponent : moduleComponents) {
+                    if(moduleComponent.getModule().getCategory() != UIState.currentCategory){
+                        continue;
+                    }
+                    moduleComponent.mouse(mouseButton, MouseType.CLICK);
                 }
-                moduleComponent.mouse(mouseButton, MouseType.CLICK);
             }
         }else{
-            UIState.dialog.mouse(mouseButton,MouseType.CLICK);
+            if(Component.isHover((int) dialogX, (int) dialogY,400,350,mouseX,mouseY)){
+                UIState.dialog.mouse(mouseButton,MouseType.CLICK);
+            }
         }
 
     }
@@ -125,7 +133,4 @@ public class ModernClickGUI extends GuiScreen{
         }
     }
 
-    public static List<ModuleComponent> getModuleComponents() {
-        return moduleComponents;
-    }
 }

@@ -1,6 +1,8 @@
 package top.youm.rocchi.core.ui.clickgui.modern.component;
 
+import top.youm.rocchi.Rocchi;
 import top.youm.rocchi.core.module.Module;
+import top.youm.rocchi.core.module.modules.visual.ClickGui;
 import top.youm.rocchi.core.ui.clickgui.modern.Component;
 import top.youm.rocchi.core.ui.clickgui.modern.ModernClickGUI;
 import top.youm.rocchi.core.ui.clickgui.modern.state.UIState;
@@ -21,7 +23,6 @@ public class ModuleComponent extends Component {
         this.width = ModernClickGUI.screenWidth - ModernClickGUI.navbarWidth - 15;
         this.height = 25;
         this.dialog = new DialogComponent(module);
-
     }
 
     @Override

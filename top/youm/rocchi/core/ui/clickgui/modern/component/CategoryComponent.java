@@ -14,6 +14,9 @@ import top.youm.rocchi.core.ui.font.FontLoaders;
 import top.youm.rocchi.utils.math.MathUtil;
 import top.youm.rocchi.utils.render.RoundedUtil;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static top.youm.rocchi.core.ui.clickgui.modern.ModernClickGUI.*;
 
 
@@ -24,7 +27,7 @@ public class CategoryComponent extends Component {
     private float minScroll;
     private float rawScroll;
     private Animation scrollAnimation;
-
+    private List<ModuleComponent> moduleComponents = new ArrayList<>();
     private float animation;
     public CategoryComponent(ModuleCategory category) {
         super(category.name().substring(0, 1).toUpperCase() + category.name().substring(1).toLowerCase());
@@ -60,9 +63,8 @@ public class CategoryComponent extends Component {
         if(!UIState.settingFocused && isHover((ModernClickGUI.x + ModernClickGUI.navbarWidth),  (ModernClickGUI.y + 30), ModernClickGUI.screenWidth - ModernClickGUI.navbarWidth - 10, ModernClickGUI.screenHeight - 30,mouseX,mouseY)){
             this.onScroll(30);
         }
-
         int yOffset = 0;
-        for (ModuleComponent moduleComponent : ModernClickGUI.getModuleComponents()) {
+        for (ModuleComponent moduleComponent : moduleComponents) {
             if(moduleComponent.getModule().getCategory() != this.category){
                 continue;
             }
@@ -96,5 +98,13 @@ public class CategoryComponent extends Component {
     }
     public float scroll() {
         return this.scroll = (float)(this.rawScroll - this.scrollAnimation.getOutput());
+    }
+
+    public List<ModuleComponent> getModuleComponents() {
+        return moduleComponents;
+    }
+
+    public void setModuleComponents(List<ModuleComponent> moduleComponents) {
+        this.moduleComponents = moduleComponents;
     }
 }

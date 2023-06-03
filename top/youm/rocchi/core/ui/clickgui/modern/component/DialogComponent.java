@@ -29,8 +29,6 @@ import static org.lwjgl.opengl.GL11.*;
 
 public class DialogComponent extends Component {
     private Module module;
-    private float animationNumber;
-    public float percentBar;
     private List<Component> subComponents = new ArrayList<>();
     public DialogComponent(Module module) {
         super(module.getName());
@@ -61,6 +59,7 @@ public class DialogComponent extends Component {
         RenderUtil.startGlScissor((int) x, (int) y,width,height);
         int offsetY = 0;
         for (Component component : subComponents) {
+            FontLoaders.comfortaaB18.drawStringWithShadow(component.getName(),x + 5,y+25-3 + offsetY,Theme.font.getRGB());
             component.draw(x + width,y+25-3 + offsetY,mouseX,mouseY);
             offsetY+=30;
         }
@@ -71,8 +70,6 @@ public class DialogComponent extends Component {
     @Override
     public void mouse(int mouseButton, MouseType mouseType){
         ScaledResolution sr = new ScaledResolution(mc);
-        float x = sr.getScaledWidth() / 2.0f - this.width / 2.0f;
-        float y = sr.getScaledHeight() / 2.0f - this.height / 2.0f;
         for (Component component : subComponents) {
             component.mouse(mouseButton,mouseType);
         }

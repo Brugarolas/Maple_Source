@@ -16,7 +16,7 @@ public class DropdownComponent extends Component {
     private boolean open;
     private float animation;
     public DropdownComponent(ModeSetting<?> modeSetting) {
-        super("dropdown");
+        super(modeSetting.getName());
         this.modeSetting = modeSetting;
     }
 

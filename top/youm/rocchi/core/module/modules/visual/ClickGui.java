@@ -13,27 +13,24 @@ public class ClickGui extends Module {
         super("ClickGui", ModuleCategory.VISUAL, Keyboard.KEY_RSHIFT);
         this.addSetting(clickGUIModeSetting);
     }
-    private final ClickGuiScreen old = new ClickGuiScreen();
-    public final ModernClickGUI modern = new ModernClickGUI();
     @Override
     public void onEnable(){
         switch (clickGUIModeSetting.getValue()){
             case MODERN:
-                this.mc.displayGuiScreen(modern);
+                this.mc.displayGuiScreen(new ModernClickGUI());
                 break;
             case OLD:
-                this.mc.displayGuiScreen(old);
+                this.mc.displayGuiScreen(new ClickGuiScreen());
                 break;
             default:
                 this.mc.displayGuiScreen(null);
         }
-
     }
-
     @Override
     public void onDisable() {
         this.mc.displayGuiScreen(null);
     }
+
     public enum ClickGUI{
         MODERN,OLD
     }

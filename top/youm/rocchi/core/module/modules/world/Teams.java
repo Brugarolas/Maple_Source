@@ -1,5 +1,6 @@
 package top.youm.rocchi.core.module.modules.world;
 
+import com.darkmagician6.eventapi.EventTarget;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -35,5 +36,5 @@ public class Teams extends Module {
             flag = targetName.startsWith(String.valueOf(clientName.charAt(0)));
         }
         return flag;
-    };
+    }
 }

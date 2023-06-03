@@ -26,10 +26,8 @@ public class ModuleManager {
         this.modules.add(new Fly());
         this.modules.add(new Scaffold());
         this.modules.add(new InventoryMove());
-        /* client */
-        this.modules.add(new HUD());
-        /* player */
         this.modules.add(new NoSlow());
+        /* player */
         this.modules.add(new FullBright());
         this.modules.add(new SafeWalk());
         this.modules.add(new InvManager());
@@ -43,8 +41,10 @@ public class ModuleManager {
         /* visual */
         this.modules.add(new Animations());
         this.modules.add(new KeyStrokes());
-        this.modules.add(new ModuleList());
+
         this.modules.add(new GlowESP());
+        this.modules.add(new HUD());
+        this.modules.add(new ModuleList());
         this.modules.add(new ClickGui());
         /* world*/
         this.modules.add(new Teams());

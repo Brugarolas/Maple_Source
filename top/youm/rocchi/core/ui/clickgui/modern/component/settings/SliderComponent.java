@@ -17,7 +17,7 @@ public class SliderComponent extends Component {
     private float animation;
     private boolean dragging;
     public SliderComponent(NumberSetting numberSetting) {
-        super("slider");
+        super(numberSetting.getName());
         this.numberSetting = numberSetting;
     }
 

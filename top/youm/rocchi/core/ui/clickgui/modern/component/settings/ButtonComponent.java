@@ -13,7 +13,7 @@ public class ButtonComponent extends Component {
     private final BoolSetting boolSetting;
     private float animationBool = 10;
     public ButtonComponent(BoolSetting boolSetting) {
-        super("button");
+        super(boolSetting.getName());
         this.boolSetting = boolSetting;
     }
 
