@@ -53,7 +53,7 @@ public class ModeComponent extends Component {
             if (isHover(ClickGuiScreen.x + ClickGuiScreen.screenWidth - 100, (int) (ClickGuiScreen.y + 50 + y + 10), 80, 12, mouseX, mouseY) && mouseButton == 0) {
 
                 Enum<?> current = setting.getValue();
-                setting.setValue(setting.getEnums()[current.ordinal() - 1 < 0 ? setting.getEnums().length - 1 : current.ordinal() - 1]);
+                setting.setValueEnum(setting.getEnums()[current.ordinal() - 1 < 0 ? setting.getEnums().length - 1 : current.ordinal() - 1]);
 
             }
         }

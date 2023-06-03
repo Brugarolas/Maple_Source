@@ -1,8 +1,10 @@
 package top.youm.rocchi.core.ui.clickgui.modern.component;
 
 import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.client.renderer.GlStateManager;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
+import org.lwjgl.opengl.GL11;
 import top.youm.rocchi.common.settings.BoolSetting;
 import top.youm.rocchi.common.settings.ModeSetting;
 import top.youm.rocchi.common.settings.NumberSetting;
@@ -21,6 +23,8 @@ import top.youm.rocchi.utils.render.RoundedUtil;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.lwjgl.opengl.GL11.*;
 
 
 public class DialogComponent extends Component {
@@ -56,9 +60,13 @@ public class DialogComponent extends Component {
         int offsetY = 0;
         for (Component component : subComponents) {
             component.draw(x + width,y+25-3 + offsetY,mouseX,mouseY);
+            GlStateManager.enableDepth();
+            GL11.glClear(GL_DEPTH_BUFFER_BIT);
+            glDepthMask(false);
             if(component instanceof DropdownComponent){
                 ((DropdownComponent)component).render();
             }
+            GlStateManager.disableDepth();
             offsetY+=30;
         }
         RenderUtil.stopGlScissor();

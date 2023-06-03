@@ -1,19 +1,16 @@
 package top.youm.rocchi.common.settings;
 
 public class ModeSetting<T extends Enum<?>> extends Setting<T>{
-    private final Enum<?>[] enums;
+    private final T[] enums;
     public ModeSetting(String name,T[] enums, T value) {
         super(name, value);
         this.enums = enums;
     }
 
-    @Override
-    public void setValue(T value) {
-        this.value = value;
-    }
-
-    public Enum<?>[] getEnums() {
+    public T[] getEnums() {
         return enums;
     }
-
+    public void setValueEnum(Enum<?> value) {
+        this.value = (T) value;
+    }
 }

@@ -27,7 +27,7 @@ public class DropdownComponent extends Component {
         if(open){
             animation = animator.animate(0,animation,0.1f);
         }else {
-            animation = animator.animate(-5,animation,0.1f);
+            animation = animator.animate(-12,animation,0.1f);
         }
         if(isHover((int) (x - 160), (int) (y - 6),150,14,mouseX,mouseY) && !open){
             RoundedUtil.drawRound(x - 160,y - 6,150,14,1, Theme.moduleTheme);
@@ -44,7 +44,11 @@ public class DropdownComponent extends Component {
             int offsetY = 0;
             for (Enum<?> e : this.modeSetting.getEnums()) {
                 if (!e.name().equals(modeSetting.getValue().name())) {
-                    FontLoaders.comfortaaB18.drawStringWithShadow(e.name(), x - 85 - (FontLoaders.comfortaaB18.getStringWidth(e.name()) / 2.0f), y + 14 / 2.0f - FontLoaders.comfortaaB18.getHeight() / 2.0f - 6 + offsetY + 14, Theme.font.getRGB());
+                    if(isHover((int) (x - 160), (int) y + 6 + offsetY,150,14,mouseX,mouseY)){
+                        RenderUtil.drawRect((int) (x - 160), (int) (y - 5 + animation) + 14 + offsetY, 1, 14, Theme.moduleTheme);
+                        RenderUtil.drawRect((int) (x - 12), (int) (y - 5 + animation) + 14 + offsetY, 1, 14, Theme.moduleTheme);
+                    }
+                    FontLoaders.comfortaaB18.drawStringWithShadow(e.name(), x - 85 - (FontLoaders.comfortaaB18.getStringWidth(e.name()) / 2.0f), y + 14 / 2.0f - FontLoaders.comfortaaB18.getHeight() / 2.0f - 6 + offsetY + 14+ animation, Theme.font.getRGB());
                     offsetY += 14;
                 }
             }
@@ -52,8 +56,21 @@ public class DropdownComponent extends Component {
     }
     @Override
     public void mouse(int mouseButton, MouseType mouseType) {
-        if(mouseType == MouseType.CLICK && mouseButton == 0 && isHover((int) (x - 160), (int) (y - 6),150,14,mouseX,mouseY)){
-            open = !open;
+        if(mouseType == MouseType.CLICK && mouseButton == 0){
+            if(isHover((int) (x - 160), (int) (y - 6),150,14,mouseX,mouseY)){
+                open = !open;
+            }
+            int offsetY = 0;
+            if(open){
+                for (Enum<?> e : this.modeSetting.getEnums()) {
+                    if (!e.name().equals(modeSetting.getValue().name())) {
+                        if(isHover((int) (x - 160), (int) (y + 6) + offsetY,150,14,mouseX,mouseY)){
+                            this.modeSetting.setValueEnum(e);
+                        }
+                        offsetY += 14;
+                    }
+                }
+            }
         }
     }
 
