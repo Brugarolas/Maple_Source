@@ -18,7 +18,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Screen extends GuiScreen{
+public class ModernClickGUI extends GuiScreen{
     public static int x,y;
     public static int screenWidth = 450, screenHeight = 260;
     public int dragX, dragY;
@@ -27,7 +27,7 @@ public class Screen extends GuiScreen{
     private final List<CategoryComponent> categoryButtons = new ArrayList<>();
     private static final List<ModuleComponent> moduleComponents = new ArrayList<>();
     public CategoryComponent currentComponent;
-    public Screen() {
+    public ModernClickGUI() {
         for (ModuleCategory value : ModuleCategory.values()) {
             categoryButtons.add(new CategoryComponent(value));
         }

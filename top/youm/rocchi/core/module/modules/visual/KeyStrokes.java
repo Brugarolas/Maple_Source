@@ -17,7 +17,7 @@ import java.awt.*;
 public class KeyStrokes extends Module {
 
     public KeyStrokes() {
-        super("KeyStrokes", ModuleCategory.VISUAL, Keyboard.KEY_K);
+        super("KeyStrokes", ModuleCategory.VISUAL, Keyboard.KEY_NONE);
         this.addSetting(ttf);
         this.forward = new KeyBox(this.mc.gameSettings.keyBindForward);
         this.back = new KeyBox(this.mc.gameSettings.keyBindBack);

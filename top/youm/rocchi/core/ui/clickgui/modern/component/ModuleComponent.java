@@ -1,15 +1,8 @@
 package top.youm.rocchi.core.ui.clickgui.modern.component;
 
-import top.youm.rocchi.common.settings.BoolSetting;
-import top.youm.rocchi.common.settings.ModeSetting;
-import top.youm.rocchi.common.settings.NumberSetting;
-import top.youm.rocchi.common.settings.Setting;
 import top.youm.rocchi.core.module.Module;
 import top.youm.rocchi.core.ui.clickgui.modern.Component;
-import top.youm.rocchi.core.ui.clickgui.modern.Screen;
-import top.youm.rocchi.core.ui.clickgui.modern.component.settings.ButtonComponent;
-import top.youm.rocchi.core.ui.clickgui.modern.component.settings.DropdownComponent;
-import top.youm.rocchi.core.ui.clickgui.modern.component.settings.SliderComponent;
+import top.youm.rocchi.core.ui.clickgui.modern.ModernClickGUI;
 import top.youm.rocchi.core.ui.clickgui.modern.state.UIState;
 import top.youm.rocchi.core.ui.clickgui.modern.theme.Theme;
 import top.youm.rocchi.core.ui.clickgui.old.MouseType;
@@ -25,7 +18,7 @@ public class ModuleComponent extends Component {
     public ModuleComponent(Module module) {
         super(module.getName());
         this.module = module;
-        this.width = Screen.screenWidth - Screen.navbarWidth - 15;
+        this.width = ModernClickGUI.screenWidth - ModernClickGUI.navbarWidth - 15;
         this.height = 25;
         this.dialog = new DialogComponent(module);
 

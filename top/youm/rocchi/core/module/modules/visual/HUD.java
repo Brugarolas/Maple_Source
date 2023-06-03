@@ -16,7 +16,7 @@ public class HUD extends Module {
     public BoolSetting notification = new BoolSetting("notification",true);
     public TabUI tabUI = new TabUI();
     public HUD() {
-        super("HUD", ModuleCategory.VISUAL, Keyboard.KEY_V);
+        super("HUD", ModuleCategory.VISUAL, Keyboard.KEY_NONE);
         this.setToggle(true);
         this.addSetting(ttf_font);
     }

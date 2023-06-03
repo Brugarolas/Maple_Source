@@ -17,7 +17,7 @@ public class FastPlace extends Module {
     private final BoolSetting projectiles = new BoolSetting("Projectiles", true);
     private final NumberSetting ticks = new NumberSetting("Ticks", 0, 4, 0, 1);
     public FastPlace() {
-        super("FastPlace", ModuleCategory.PLAYER, Keyboard.KEY_M);
+        super("FastPlace", ModuleCategory.PLAYER, Keyboard.KEY_NONE);
         this.addSetting(ticks, blocks, projectiles);
     }
     @EventTarget

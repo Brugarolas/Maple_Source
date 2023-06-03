@@ -35,6 +35,7 @@ public class DropdownComponent extends Component {
             RoundedUtil.drawRound(x - 160,y - 6 ,150,14,1, Theme.theme);
         }
         FontLoaders.comfortaaB18.drawStringWithShadow(modeSetting.getValue().name(),x - 85 - FontLoaders.comfortaaB18.getStringWidth(modeSetting.getValue().name()) / 2.0f,y + 14 / 2.0f - FontLoaders.comfortaaB18.getHeight() / 2.0f - 6,Theme.font.getRGB());
+        render();
     }
     public void render(){
         if(open) {

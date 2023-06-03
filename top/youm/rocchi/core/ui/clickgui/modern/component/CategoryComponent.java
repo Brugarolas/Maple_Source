@@ -3,7 +3,7 @@ package top.youm.rocchi.core.ui.clickgui.modern.component;
 import org.lwjgl.input.Mouse;
 import top.youm.rocchi.core.module.ModuleCategory;
 import top.youm.rocchi.core.ui.clickgui.modern.Component;
-import top.youm.rocchi.core.ui.clickgui.modern.Screen;
+import top.youm.rocchi.core.ui.clickgui.modern.ModernClickGUI;
 import top.youm.rocchi.core.ui.clickgui.modern.animation.Animation;
 import top.youm.rocchi.core.ui.clickgui.modern.animation.Direction;
 import top.youm.rocchi.core.ui.clickgui.modern.animation.SmoothStepAnimation;
@@ -14,7 +14,7 @@ import top.youm.rocchi.core.ui.font.FontLoaders;
 import top.youm.rocchi.utils.math.MathUtil;
 import top.youm.rocchi.utils.render.RoundedUtil;
 
-import static top.youm.rocchi.core.ui.clickgui.modern.Screen.*;
+import static top.youm.rocchi.core.ui.clickgui.modern.ModernClickGUI.*;
 
 
 public class CategoryComponent extends Component {
@@ -57,16 +57,16 @@ public class CategoryComponent extends Component {
 
     }
     public void moduleMenu(int mouseX,int mouseY){
-        if(!UIState.settingFocused && isHover((Screen.x + Screen.navbarWidth),  (Screen.y + 30),Screen.screenWidth - Screen.navbarWidth - 10,Screen.screenHeight - 30,mouseX,mouseY)){
+        if(!UIState.settingFocused && isHover((ModernClickGUI.x + ModernClickGUI.navbarWidth),  (ModernClickGUI.y + 30), ModernClickGUI.screenWidth - ModernClickGUI.navbarWidth - 10, ModernClickGUI.screenHeight - 30,mouseX,mouseY)){
             this.onScroll(30);
         }
 
         int yOffset = 0;
-        for (ModuleComponent moduleComponent : Screen.getModuleComponents()) {
+        for (ModuleComponent moduleComponent : ModernClickGUI.getModuleComponents()) {
             if(moduleComponent.getModule().getCategory() != this.category){
                 continue;
             }
-            moduleComponent.draw(Screen.x + navbarWidth,  (Screen.y + 35 + yOffset + getScroll()),mouseX,mouseY);
+            moduleComponent.draw(ModernClickGUI.x + navbarWidth,  (ModernClickGUI.y + 35 + yOffset + getScroll()),mouseX,mouseY);
             yOffset += 35;
         }
     }

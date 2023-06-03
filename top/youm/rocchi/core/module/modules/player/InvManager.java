@@ -57,7 +57,7 @@ public class InvManager extends Module {
     private boolean isInvOpen;
 
     public InvManager() {
-        super("InvManager", ModuleCategory.PLAYER, Keyboard.KEY_X);
+        super("InvManager", ModuleCategory.PLAYER, Keyboard.KEY_NONE);
         this.addSetting(delay, inventoryPackets, onlyWhileNotMoving, inventoryOnly, dropArchery, moveArrows, dropFood, slotWeapon, slotPick, slotAxe, slotShovel, slotBow, slotBlock);
     }
     @EventTarget

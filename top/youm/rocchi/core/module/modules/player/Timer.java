@@ -16,7 +16,7 @@ public final class Timer extends Module {
     }
 
     public Timer() {
-        super("Timer", ModuleCategory.PLAYER, Keyboard.KEY_B);
+        super("Timer", ModuleCategory.PLAYER, Keyboard.KEY_NONE);
         this.addSetting(amount);
     }
 

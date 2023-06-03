@@ -13,7 +13,7 @@ public class Step extends Module {
     private NumberSetting height = new NumberSetting("Height", 1.0, 10.0, 1.0, 0.5);
     private BoolSetting ncp = new BoolSetting("NCP", false);
     public Step() {
-        super("Step", ModuleCategory.MOVEMENT, Keyboard.KEY_Y);
+        super("Step", ModuleCategory.MOVEMENT, Keyboard.KEY_NONE);
     }
     @EventTarget
     private void onMotion(MotionEvent e) {

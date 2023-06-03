@@ -40,7 +40,7 @@ public class GlowESP extends Module {
     private final BoolSetting seperate = new BoolSetting("Seperate Texture", true);
 
     public GlowESP() {
-        super("GlowESP", ModuleCategory.VISUAL, Keyboard.KEY_B);
+        super("GlowESP", ModuleCategory.VISUAL, Keyboard.KEY_NONE);
         this.addSetting(radius,exposure, seperate);
     }
 

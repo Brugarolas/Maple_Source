@@ -18,10 +18,10 @@ public class ModuleList extends Module {
     public BoolSetting shadow = new BoolSetting("shadow",false);
     public BoolSetting border = new BoolSetting("border",true);
     public NumberSetting rectAlpha = new NumberSetting("alpha",100,255,0,1);
-    public NumberSetting speed = new NumberSetting("speed",10,100,0,1);
+    public NumberSetting speed = new NumberSetting("speed",10,30,1,1);
     private final ModuleListUI moduleListUI = new ModuleListUI();
     public ModuleList() {
-        super("ModuleList", ModuleCategory.VISUAL, Keyboard.KEY_U);
+        super("ModuleList", ModuleCategory.VISUAL, Keyboard.KEY_NONE);
         this.addSetting(mode,font,rect,shadow,border,rectAlpha,speed);
     }
     @EventTarget

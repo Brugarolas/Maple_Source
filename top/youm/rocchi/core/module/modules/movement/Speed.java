@@ -8,7 +8,7 @@ import org.lwjgl.input.Keyboard;
 
 public class Speed extends Module {
     public Speed() {
-        super("Speed", ModuleCategory.MOVEMENT, Keyboard.KEY_V);
+        super("Speed", ModuleCategory.MOVEMENT, Keyboard.KEY_NONE);
     }
     private float speed;
     @EventTarget

@@ -21,18 +21,20 @@ public class ButtonComponent extends Component {
     public void draw(float xPos, float yPos, int mouseX, int mouseY) {
         this.x = xPos;this.y = yPos;
         this.mouseX = mouseX;this.mouseY = mouseY;
-        RoundedUtil.drawRound(x - 30, y, 20, 6, 3, Theme.enableButton);
+
         if(boolSetting.getValue()) {
             if(animationBool > 10){
                 animationBool = animator.animate(10,animationBool,0.08f);
             }
+            RoundedUtil.drawRound(x - 30, y, 20, 6, 3, Theme.theme);
+            RenderUtil.drawCircle(x - animationBool, y + 3, 6, Theme.buttonCircleTheme);
         }else {
             if(animationBool < 30){
                 animationBool = animator.animate(30,animationBool,0.08f);
             }
+            RoundedUtil.drawRound(x - 30, y, 20, 6, 3, Theme.enableButton);
+            RenderUtil.drawCircle(x - animationBool, y + 3, 6, Theme.buttonCircleTheme);
         }
-        RenderUtil.drawCircle(x - animationBool, y + 3, 6, Theme.buttonCircleTheme);
-
     }
 
     @Override

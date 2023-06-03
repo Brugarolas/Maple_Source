@@ -46,30 +46,26 @@ public class DialogComponent extends Component {
                 subComponents.add(new DropdownComponent((ModeSetting<?>) setting));
             }
         }
+        this.y = -350;
     }
 
     @Override
     public void draw(float xPos,float yPos,int mouseX, int mouseY) {
         ScaledResolution sr = new ScaledResolution(mc);
         this.x = sr.getScaledWidth() / 2.0f - this.width / 2.0f;
-        this.y = sr.getScaledHeight() / 2.0f - this.height / 2.0f;
         this.mouseX = mouseX;this.mouseY = mouseY;
+        GlStateManager.pushMatrix();
+        y = (float) animator.animate(sr.getScaledHeight() / 2.0 - this.height / 2.0f,y,0.09f);
         RoundedUtil.drawRound(x,y,width,height,3, Theme.background);
         FontLoaders.robotoR22.drawStringWithShadow(name,x + 5,y + 5,Theme.font.getRGB());
         RenderUtil.startGlScissor((int) x, (int) y,width,height);
         int offsetY = 0;
         for (Component component : subComponents) {
             component.draw(x + width,y+25-3 + offsetY,mouseX,mouseY);
-            GlStateManager.enableDepth();
-            GL11.glClear(GL_DEPTH_BUFFER_BIT);
-            glDepthMask(false);
-            if(component instanceof DropdownComponent){
-                ((DropdownComponent)component).render();
-            }
-            GlStateManager.disableDepth();
             offsetY+=30;
         }
         RenderUtil.stopGlScissor();
+        GlStateManager.popMatrix();
     }
 
     @Override
