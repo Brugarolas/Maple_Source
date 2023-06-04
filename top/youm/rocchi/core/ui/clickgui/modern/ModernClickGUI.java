@@ -7,7 +7,8 @@ import top.youm.rocchi.Rocchi;
 import top.youm.rocchi.core.module.Module;
 import top.youm.rocchi.core.module.ModuleCategory;
 import top.youm.rocchi.core.module.modules.visual.ClickGui;
-import top.youm.rocchi.core.ui.clickgui.modern.component.*;
+import top.youm.rocchi.core.ui.clickgui.modern.component.CategoryComponent;
+import top.youm.rocchi.core.ui.clickgui.modern.component.ModuleComponent;
 import top.youm.rocchi.core.ui.clickgui.modern.state.UIState;
 import top.youm.rocchi.core.ui.clickgui.modern.theme.Theme;
 import top.youm.rocchi.core.ui.clickgui.old.MouseType;
@@ -18,14 +19,15 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ModernClickGUI extends GuiScreen{
-    public static int x,y;
+public class ModernClickGUI extends GuiScreen {
+    public static int x, y;
     public static int screenWidth = 450, screenHeight = 260;
     public int dragX, dragY;
     public boolean isDragging = false;
     private final List<CategoryComponent> categoryButtons = new ArrayList<>();
     private final List<ModuleComponent> moduleComponents = new ArrayList<>();
     public CategoryComponent currentComponent;
+
     public ModernClickGUI() {
         for (ModuleCategory value : ModuleCategory.values()) {
             CategoryComponent categoryComponent = new CategoryComponent(value);
@@ -36,6 +38,7 @@ public class ModernClickGUI extends GuiScreen{
             moduleComponents.add(new ModuleComponent(value));
         }
     }
+
     @Override
     public void initGui() {
         super.initGui();
@@ -43,6 +46,7 @@ public class ModernClickGUI extends GuiScreen{
         x = sr.getScaledWidth() / 2 - screenWidth / 2;
         y = sr.getScaledHeight() / 2 - screenHeight / 2;
     }
+
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
         super.drawScreen(mouseX, mouseY, partialTicks);
@@ -50,43 +54,53 @@ public class ModernClickGUI extends GuiScreen{
             x = mouseX - dragX;
             y = mouseY - dragY;
         }
-        RoundedUtil.drawRound(x,y,screenWidth,screenHeight,2, Theme.background);
-        topRouter(mouseX,mouseY);
-        navbar(mouseX,mouseY);
-        RenderUtil.startGlScissor(x + navbarWidth,y + 30,screenWidth - navbarWidth - 10,screenHeight - 30);
-        currentComponent.moduleMenu(mouseX,mouseY);
+        RoundedUtil.drawRound(x, y, screenWidth, screenHeight, 2, Theme.background);
+        /* top menu */
+        topRouter(mouseX, mouseY);
+        /* navbar menu */
+        navbar(mouseX, mouseY);
+        /* modules list */
+        RenderUtil.startGlScissor(x + navbarWidth, y + 30, screenWidth - navbarWidth - 10, screenHeight - 30);
+        currentComponent.moduleMenu(mouseX, mouseY);
         RenderUtil.stopGlScissor();
 
-        if(UIState.settingFocused){
-           UIState.dialog.draw(0,0,mouseX,mouseY);
+        if (UIState.settingFocused) {
+            UIState.dialog.draw(0, 0, mouseX, mouseY);
         }
     }
 
-    public void topRouter(int mouseX, int mouseY){
-        RoundedUtil.drawRound(x,y,screenWidth,20,2, Theme.theme);
-        RenderUtil.drawRect(x - 1 ,y + 19,screenWidth + 2,10,Theme.theme);
+    public void topRouter(int mouseX, int mouseY) {
+        RoundedUtil.drawRound(x, y, screenWidth, 20, 2, Theme.theme);
+        RenderUtil.drawRect(x - 1, y + 19, screenWidth + 2, 10, Theme.theme);
     }
+
     public static int navbarWidth = 110;
-    public void navbar(int mouseX, int mouseY){
+
+    public void navbar(int mouseX, int mouseY) {
         int yOffset = 0;
         for (CategoryComponent categoryButton : categoryButtons) {
-            categoryButton.draw(x + 15,y + 35 + yOffset,mouseX,mouseY);
+            categoryButton.draw(x + 15, y + 35 + yOffset, mouseX, mouseY);
             yOffset += 30;
-            if(UIState.currentCategory == categoryButton.category){
+            if (UIState.currentCategory == categoryButton.category) {
                 this.currentComponent = categoryButton;
             }
         }
     }
+
     @Override
     protected void keyTyped(char typedChar, int keyCode) throws IOException {
-        if(!UIState.settingFocused) {
+        if (!UIState.settingFocused) {
             if (keyCode == Keyboard.KEY_RSHIFT || keyCode == Keyboard.KEY_ESCAPE) {
                 this.onGuiClosed();
                 ClickGui clickGui = Rocchi.getInstance().getModuleManager().getModuleByClass(ClickGui.class);
                 clickGui.setToggle(false);
             }
+            for (ModuleComponent moduleComponent : moduleComponents) {
+                moduleComponent.input(typedChar, keyCode);
+            }
+        } else {
+            UIState.dialog.input(typedChar, keyCode);
         }
-        UIState.dialog.input(typedChar,keyCode);
     }
 
     @Override
@@ -95,7 +109,7 @@ public class ModernClickGUI extends GuiScreen{
         ScaledResolution sr = new ScaledResolution(mc);
         float dialogX = sr.getScaledWidth() / 2.0f - 400 / 2.0f;
         float dialogY = sr.getScaledHeight() / 2.0f - 350 / 2.0f;
-        if(!UIState.settingFocused){
+        if (!UIState.settingFocused) {
             if (Component.isHover(x, y, screenWidth, 30, mouseX, mouseY) && mouseButton == 0) {
                 dragX = mouseX - x;
                 dragY = mouseY - y;
@@ -104,32 +118,32 @@ public class ModernClickGUI extends GuiScreen{
             for (CategoryComponent categoryButton : categoryButtons) {
                 categoryButton.mouse(mouseButton, MouseType.CLICK);
             }
-            if(Component.isHover(x + navbarWidth,y + 30,screenWidth - navbarWidth - 10,screenHeight - 30,mouseX,mouseY)){
+            if (Component.isHover(x + navbarWidth, y + 30, screenWidth - navbarWidth - 10, screenHeight - 30, mouseX, mouseY)) {
                 for (ModuleComponent moduleComponent : moduleComponents) {
-                    if(moduleComponent.getModule().getCategory() != UIState.currentCategory){
+                    if (moduleComponent.getModule().getCategory() != UIState.currentCategory) {
                         continue;
                     }
                     moduleComponent.mouse(mouseButton, MouseType.CLICK);
                 }
             }
-        }else{
-            if(Component.isHover((int) dialogX, (int) dialogY,400,350,mouseX,mouseY)){
-                UIState.dialog.mouse(mouseButton,MouseType.CLICK);
+        } else {
+            if (Component.isHover((int) dialogX, (int) dialogY, 400, 350, mouseX, mouseY)) {
+                UIState.dialog.mouse(mouseButton, MouseType.CLICK);
             }
         }
-
     }
+
     @Override
     protected void mouseReleased(int mouseX, int mouseY, int state) {
         super.mouseReleased(mouseX, mouseY, state);
-        if(!UIState.settingFocused) {
+        if (!UIState.settingFocused) {
             if (Component.isHover(x, y, screenWidth, 30, mouseX, mouseY) && state == 0) {
                 dragX = mouseX - x;
                 dragY = mouseY - y;
                 isDragging = false;
             }
-        }else {
-            UIState.dialog.mouse(state,MouseType.RELEASED);
+        } else {
+            UIState.dialog.mouse(state, MouseType.RELEASED);
         }
     }
 

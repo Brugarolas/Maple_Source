@@ -1,6 +1,5 @@
 package top.youm.rocchi.core.ui.clickgui.modern.component.settings;
 
-import net.minecraft.client.gui.Gui;
 import top.youm.rocchi.common.settings.ModeSetting;
 import top.youm.rocchi.core.ui.clickgui.modern.Component;
 import top.youm.rocchi.core.ui.clickgui.modern.theme.Theme;
@@ -15,6 +14,7 @@ public class DropdownComponent extends Component {
     private final ModeSetting<?> modeSetting;
     private boolean open;
     private float animation;
+
     public DropdownComponent(ModeSetting<?> modeSetting) {
         super(modeSetting.getName());
         this.modeSetting = modeSetting;
@@ -22,54 +22,59 @@ public class DropdownComponent extends Component {
 
     @Override
     public void draw(float xPos, float yPos, int mouseX, int mouseY) {
-        this.x = xPos;this.y = yPos;
-        this.mouseX = mouseX;this.mouseY = mouseY;
-        if(open){
-            animation = animator.animate(0,animation,0.1f);
-        }else {
-            animation = animator.animate(-12,animation,0.1f);
+        this.x = xPos;
+        this.y = yPos;
+        this.mouseX = mouseX;
+        this.mouseY = mouseY;
+        if (open) {
+            animation = animator.animate(0, animation, 0.1f);
+        } else {
+            animation = animator.animate(-12, animation, 0.1f);
         }
-        if(isHover((int) (x - 160), (int) (y - 6),150,14,mouseX,mouseY) && !open){
-            RoundedUtil.drawRound(x - 160,y - 6,150,14,1, Theme.moduleTheme);
-        }else {
-            RoundedUtil.drawRound(x - 160,y - 6 ,150,14,1, Theme.theme);
+        if (isHover((int) (x - 160), (int) (y - 6), 150, 14, mouseX, mouseY) && !open) {
+            RoundedUtil.drawRound(x - 160, y - 6, 150, 14, 1, Theme.moduleTheme);
+        } else {
+            RoundedUtil.drawRound(x - 160, y - 6, 150, 14, 1, Theme.theme);
         }
-        FontLoaders.comfortaaB18.drawStringWithShadow(modeSetting.getValue().name(),x - 85 - FontLoaders.comfortaaB18.getStringWidth(modeSetting.getValue().name()) / 2.0f,y + 14 / 2.0f - FontLoaders.comfortaaB18.getHeight() / 2.0f - 6,Theme.font.getRGB());
+        FontLoaders.comfortaaB18.drawStringWithShadow(modeSetting.getValue().name(), x - 85 - FontLoaders.comfortaaB18.getStringWidth(modeSetting.getValue().name()) / 2.0f, y + 14 / 2.0f - FontLoaders.comfortaaB18.getHeight() / 2.0f - 6, Theme.font.getRGB());
         render();
     }
-    public void render(){
-        if(open) {
+
+    public void render() {
+        if (open) {
             int height = 14 * (this.modeSetting.getEnums().length - 1);
             RoundedUtil.drawRound(x - 160, y - 6 + animation + 14, 150, height, 1, Theme.theme);
             RenderUtil.drawRect((int) (x - 140), (int) (y - 5 + animation) + 14, 110, 1, new Color(183, 183, 183).getRGB());
             int offsetY = 0;
             for (Enum<?> e : this.modeSetting.getEnums()) {
                 if (!e.name().equals(modeSetting.getValue().name())) {
-                    if(isHover((int) (x - 160), (int) y + 6 + offsetY,150,14,mouseX,mouseY)){
+                    if (isHover((int) (x - 160), (int) y + 6 + offsetY, 150, 14, mouseX, mouseY)) {
                         RenderUtil.drawRect((int) (x - 160), (int) (y - 5 + animation) + 14 + offsetY, 1, 14, Theme.moduleTheme);
                         RenderUtil.drawRect((int) (x - 12), (int) (y - 5 + animation) + 14 + offsetY, 1, 14, Theme.moduleTheme);
                     }
-                    FontLoaders.comfortaaB18.drawStringWithShadow(e.name(), x - 85 - (FontLoaders.comfortaaB18.getStringWidth(e.name()) / 2.0f), y + 14 / 2.0f - FontLoaders.comfortaaB18.getHeight() / 2.0f - 6 + offsetY + 14+ animation, Theme.font.getRGB());
+                    FontLoaders.comfortaaB18.drawStringWithShadow(e.name(), x - 85 - (FontLoaders.comfortaaB18.getStringWidth(e.name()) / 2.0f), y + 14 / 2.0f - FontLoaders.comfortaaB18.getHeight() / 2.0f - 6 + offsetY + 14 + animation, Theme.font.getRGB());
                     offsetY += 14;
                 }
             }
         }
     }
+
     @Override
     public void mouse(int mouseButton, MouseType mouseType) {
-        if(mouseType == MouseType.CLICK && mouseButton == 0){
-            if(isHover((int) (x - 160), (int) (y - 6),150,14,mouseX,mouseY)){
+        if (mouseType == MouseType.CLICK && mouseButton == 0) {
+            if (isHover((int) (x - 160), (int) (y - 6), 150, 14, mouseX, mouseY)) {
                 open = !open;
             }
             int offsetY = 0;
-            if(open){
+            if (open) {
                 for (Enum<?> e : this.modeSetting.getEnums()) {
-                    if (!e.name().equals(modeSetting.getValue().name())) {
-                        if(isHover((int) (x - 160), (int) (y + 6) + offsetY,150,14,mouseX,mouseY)){
-                            this.modeSetting.setValueEnum(e);
-                        }
-                        offsetY += 14;
+                    if (e.name().equals(modeSetting.getValue().name())) {
+                        continue;
                     }
+                    if (isHover((int) (x - 160), (int) (y + 6) + offsetY, 150, 14, mouseX, mouseY)) {
+                        this.modeSetting.setValueEnum(e);
+                    }
+                    offsetY += 14;
                 }
             }
         }

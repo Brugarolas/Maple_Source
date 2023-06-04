@@ -17,7 +17,7 @@ import top.youm.rocchi.utils.render.RoundedUtil;
 import java.util.ArrayList;
 import java.util.List;
 
-import static top.youm.rocchi.core.ui.clickgui.modern.ModernClickGUI.*;
+import static top.youm.rocchi.core.ui.clickgui.modern.ModernClickGUI.navbarWidth;
 
 
 public class CategoryComponent extends Component {
@@ -29,6 +29,7 @@ public class CategoryComponent extends Component {
     private Animation scrollAnimation;
     private List<ModuleComponent> moduleComponents = new ArrayList<>();
     private float animation;
+
     public CategoryComponent(ModuleCategory category) {
         super(category.name().substring(0, 1).toUpperCase() + category.name().substring(1).toLowerCase());
         this.scrollAnimation = new SmoothStepAnimation(0, 0.0, Direction.BACKWARDS);
@@ -38,43 +39,48 @@ public class CategoryComponent extends Component {
         this.width = 80;
         this.height = 20;
     }
+
     @Override
-    public void draw(float xPos, float yPos,int mouseX, int mouseY) {
-        this.x = xPos;this.y = yPos;
-        this.mouseX = mouseX;this.mouseY = mouseY;
-        if(UIState.currentCategory == category){
-            RoundedUtil.drawRound(x,y,width,height,2, Theme.theme);
-            animation = animator.animate(7,animation,0.1f);
-        }else if(componentHover()){
-            RoundedUtil.drawRound(x,y,width,height,2, Theme.themeHover);
+    public void draw(float xPos, float yPos, int mouseX, int mouseY) {
+        this.x = xPos;
+        this.y = yPos;
+        this.mouseX = mouseX;
+        this.mouseY = mouseY;
+        if (UIState.currentCategory == category) {
+            RoundedUtil.drawRound(x, y, width, height, 2, Theme.theme);
+            animation = animator.animate(7, animation, 0.1f);
+        } else if (componentHover()) {
+            RoundedUtil.drawRound(x, y, width, height, 2, Theme.themeHover);
         }
-        if(UIState.currentCategory != category){
-            if(componentHover()){
-                animation = animator.animate(7,animation,0.1f);
+        if (UIState.currentCategory != category) {
+            if (componentHover()) {
+                animation = animator.animate(7, animation, 0.1f);
             } else {
-                animation = animator.animate(0,animation,0.1f);
+                animation = animator.animate(0, animation, 0.1f);
             }
-            animation = animator.animate(0,animation,0.1f);
+            animation = animator.animate(0, animation, 0.1f);
         }
-        FontLoaders.robotoB22.drawStringWithShadow(name,xPos + 3 + animation,y + height / 2.0f - FontLoaders.robotoR22.getHeight() / 2.0f ,Theme.font.getRGB());
+        FontLoaders.robotoB22.drawStringWithShadow(name, xPos + 3 + animation, y + height / 2.0f - FontLoaders.robotoR22.getHeight() / 2.0f, Theme.font.getRGB());
 
     }
-    public void moduleMenu(int mouseX,int mouseY){
-        if(!UIState.settingFocused && isHover((ModernClickGUI.x + ModernClickGUI.navbarWidth),  (ModernClickGUI.y + 30), ModernClickGUI.screenWidth - ModernClickGUI.navbarWidth - 10, ModernClickGUI.screenHeight - 30,mouseX,mouseY)){
+
+    public void moduleMenu(int mouseX, int mouseY) {
+        if (!UIState.settingFocused && isHover((ModernClickGUI.x + ModernClickGUI.navbarWidth), (ModernClickGUI.y + 30), ModernClickGUI.screenWidth - ModernClickGUI.navbarWidth - 10, ModernClickGUI.screenHeight - 30, mouseX, mouseY)) {
             this.onScroll(30);
         }
         int yOffset = 0;
         for (ModuleComponent moduleComponent : moduleComponents) {
-            if(moduleComponent.getModule().getCategory() != this.category){
+            if (moduleComponent.getModule().getCategory() != this.category) {
                 continue;
             }
-            moduleComponent.draw(ModernClickGUI.x + navbarWidth,  (ModernClickGUI.y + 35 + yOffset + getScroll()),mouseX,mouseY);
+            moduleComponent.draw(ModernClickGUI.x + navbarWidth, (ModernClickGUI.y + 35 + yOffset + getScroll()), mouseX, mouseY);
             yOffset += 35;
         }
     }
+
     @Override
     public void mouse(int mouseButton, MouseType mouseType) {
-        if(mouseType == MouseType.CLICK) {
+        if (mouseType == MouseType.CLICK) {
             if (componentHover() && mouseButton == 0) {
                 UIState.currentCategory = this.category;
             }
@@ -91,13 +97,14 @@ public class CategoryComponent extends Component {
     }
 
     public void onScroll(final int ms) {
-        this.scroll = (float)(this.rawScroll - this.scrollAnimation.getOutput());
+        this.scroll = (float) (this.rawScroll - this.scrollAnimation.getOutput());
         this.rawScroll += Mouse.getDWheel() / 4.0f;
         this.rawScroll = Math.max(Math.min(this.minScroll, this.rawScroll), -this.maxScroll);
         this.scrollAnimation = new SmoothStepAnimation(ms, this.rawScroll - this.scroll, Direction.BACKWARDS);
     }
+
     public float scroll() {
-        return this.scroll = (float)(this.rawScroll - this.scrollAnimation.getOutput());
+        return this.scroll = (float) (this.rawScroll - this.scrollAnimation.getOutput());
     }
 
     public List<ModuleComponent> getModuleComponents() {
