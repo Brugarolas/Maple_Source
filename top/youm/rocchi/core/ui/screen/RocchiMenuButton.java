@@ -1,6 +1,6 @@
 package top.youm.rocchi.core.ui.screen;
 
-import top.youm.rocchi.core.ui.Theme;
+import top.youm.rocchi.core.ui.theme.Theme;
 import top.youm.rocchi.core.ui.font.CFontRenderer;
 import top.youm.rocchi.core.ui.font.FontLoaders;
 import top.youm.rocchi.utils.render.RoundedUtil;
@@ -29,9 +29,9 @@ public class RocchiMenuButton extends GuiButton {
         this.hovered = mouseX >= this.xPosition && mouseY >= this.yPosition && mouseX < this.xPosition + this.width && mouseY < this.yPosition + this.height;
         RoundedUtil.drawRound(this.xPosition, this.yPosition, this.width, this.height, 2, new Color(255, 255, 255, 44));
         if(big) {
-            font.drawCenteredStringWithShadow(this.displayString, this.xPosition + this.width / 2.0f + 5, this.yPosition + 5, Theme.FONT_COLOR.getRGB());
+            font.drawCenteredStringWithShadow(this.displayString, this.xPosition + this.width / 2.0f + 5, this.yPosition + 5, Theme.font.getRGB());
         } else{
-            font.drawStringWithShadow(this.displayString, this.xPosition + 5, this.yPosition + 5, Theme.FONT_COLOR.getRGB());
+            font.drawStringWithShadow(this.displayString, this.xPosition + 5, this.yPosition + 5, Theme.font.getRGB());
         }
     }
 }

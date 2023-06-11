@@ -8,6 +8,7 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.shader.Framebuffer;
+import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
 import java.awt.Color;
@@ -20,6 +21,130 @@ public class RenderUtil {
     }
 
     public static Minecraft mc = Minecraft.getMinecraft();
+    public static void drawCircleImage(ResourceLocation image, int x, int y, int width, int height){
+
+        GL11.glPushMatrix();
+        GL11.glEnable(GL11.GL_POLYGON_SMOOTH);
+        GL11.glColor4f(1F, 1F, 1F, 1F);
+        mc.getTextureManager().bindTexture(image);
+        drawScaledCustomSizeModalCircle(x,y,0f,0,256,256,width,height,256f,256f);
+        GL11.glDisable(GL11.GL_POLYGON_SMOOTH);
+        GL11.glPopMatrix();
+    }
+    public static int reAlpha(int color, float alpha) {
+        try {
+            Color c = new Color(color);
+            float r = ((float) 1 / 255) * c.getRed();
+            float g = ((float) 1 / 255) * c.getGreen();
+            float b = ((float) 1 / 255) * c.getBlue();
+            return new Color(r, g, b, alpha).getRGB();
+        } catch (Throwable e) {
+            e.printStackTrace();
+        }
+        return color;
+    }
+    public static void drawScaledCustomSizeModalCircle(int x, int y, float u, float v, int uWidth, int vHeight, int width, int height, float tileWidth, float tileHeight) {
+        float f = 1.0F / tileWidth;
+        float f1 = 1.0F / tileHeight;
+        Tessellator tessellator = Tessellator.getInstance();
+        WorldRenderer worldrenderer = tessellator.getWorldRenderer();
+        worldrenderer.begin(GL_POLYGON, DefaultVertexFormats.POSITION_TEX);
+        float xRadius = width / 2f;
+        float yRadius = height / 2f;
+        float uRadius = (((u + (float) uWidth) * f) - (u * f)) / 2f;
+        float vRadius = (((v + (float) vHeight) * f1) - (v * f1)) / 2f;
+        for(int i = 0; i <= 360; i+=10) {
+            double xPosOffset = Math.sin(i * Math.PI / 180.0D);
+            double yPosOffset = Math.cos(i * Math.PI / 180.0D);
+            worldrenderer.pos(x + xRadius + xPosOffset * xRadius, y + yRadius + yPosOffset * yRadius, 0)
+                    .tex(u * f + uRadius + xPosOffset * uRadius, v * f1 + vRadius + yPosOffset * vRadius).endVertex();
+        }
+        tessellator.draw();
+    }
+    public static void drawTexturedRect(float x, float y, float width, float height, String image) {
+        GlStateManager.pushMatrix();
+        final boolean enableBlend = glIsEnabled(GL_BLEND);
+        final boolean disableAlpha = !glIsEnabled(GL_ALPHA_TEST);
+        if (!enableBlend) glEnable(GL_BLEND);
+        if (!disableAlpha) glDisable(GL_ALPHA_TEST);
+        mc.getTextureManager().bindTexture(new ResourceLocation("Rocchi/image/" + image + ".jpg"));
+        GlStateManager.color(1F, 1F, 1F, 1F);
+        drawModalRectWithCustomSizedTexture(x, y, 0, 0, width, height, width, height);
+        if (!enableBlend) glDisable(GL_BLEND);
+        if (!disableAlpha) glEnable(GL_ALPHA_TEST);
+        GlStateManager.popMatrix();
+    }
+    public static void drawModalRectWithCustomSizedTexture(float x, float y, float u, float v, float width, float height, float textureWidth, float textureHeight)
+    {
+        float f = 1.0F / textureWidth;
+        float f1 = 1.0F / textureHeight;
+        Tessellator tessellator = Tessellator.getInstance();
+        WorldRenderer worldrenderer = tessellator.getWorldRenderer();
+        worldrenderer.begin(7, DefaultVertexFormats.POSITION_TEX);
+        worldrenderer.pos(x, (y + height), 0.0D).tex((u * f), ((v + height) * f1)).endVertex();
+        worldrenderer.pos((x + width), (y + height), 0.0D).tex(((u + width) * f), ((v + height) * f1)).endVertex();
+        worldrenderer.pos((x + width), y, 0.0D).tex(((u + width) * f), (v * f1)).endVertex();
+        worldrenderer.pos(x, y, 0.0D).tex((u * f), (v * f1)).endVertex();
+        tessellator.draw();
+    }
+    public static void color(int color) {
+        float f = (float) (color >> 24 & 255) / 255.0f;
+        float f1 = (float) (color >> 16 & 255) / 255.0f;
+        float f2 = (float) (color >> 8 & 255) / 255.0f;
+        float f3 = (float) (color & 255) / 255.0f;
+        GL11.glColor4f((float) f1, (float) f2, (float) f3, (float) f);
+    }
+    public static void arcEllipse(float x, float y, float start, float end, float w, float h, int color) {
+        float ldy;
+        float ldx;
+        float i;
+        GlStateManager.color((float) 0.0f, (float) 0.0f, (float) 0.0f);
+        GL11.glColor4f((float) 0.0f, (float) 0.0f, (float) 0.0f, (float) 0.0f);
+        float temp = 0.0f;
+        if (start > end) {
+            temp = end;
+            end = start;
+            start = temp;
+        }
+        float var11 = (float) (color >> 24 & 255) / 255.0f;
+        float var6 = (float) (color >> 16 & 255) / 255.0f;
+        float var7 = (float) (color >> 8 & 255) / 255.0f;
+        float var8 = (float) (color & 255) / 255.0f;
+        Tessellator var9 = Tessellator.getInstance();
+        WorldRenderer var10 = var9.getWorldRenderer();
+        GlStateManager.enableBlend();
+        GlStateManager.disableTexture2D();
+        GlStateManager.tryBlendFuncSeparate((int) 770, (int) 771, (int) 1, (int) 0);
+        GlStateManager.color((float) var6, (float) var7, (float) var8, (float) var11);
+        if (var11 > 0.5f) {
+            GL11.glEnable((int) 2848);
+            GL11.glLineWidth((float) 2.0f);
+            GL11.glBegin((int) 3);
+            i = end;
+            while (i >= start) {
+                ldx = (float) Math.cos((double) ((double) i * 3.141592653589793 / 180.0)) * (w * 1.001f);
+                ldy = (float) Math.sin((double) ((double) i * 3.141592653589793 / 180.0)) * (h * 1.001f);
+                GL11.glVertex2f((float) (x + ldx), (float) (y + ldy));
+                i -= 4.0f;
+            }
+            GL11.glEnd();
+            GL11.glDisable((int) 2848);
+        }
+        GL11.glBegin((int) 6);
+        i = end;
+        while (i >= start) {
+            ldx = (float) Math.cos((double) ((double) i * 3.141592653589793 / 180.0)) * w;
+            ldy = (float) Math.sin((double) ((double) i * 3.141592653589793 / 180.0)) * h;
+            GL11.glVertex2f((float) (x + ldx), (float) (y + ldy));
+            i -= 4.0f;
+        }
+        GL11.glEnd();
+        GlStateManager.enableTexture2D();
+        GlStateManager.disableBlend();
+    }
+    public static void arc(float x, float y, float start, float end, float radius, int color) {
+        arcEllipse(x, y, start, end, radius, radius, color);
+    }
     public static void drawRect(int x,int y,int width,int height,int color){
         Gui.drawRect(x,y,x+width,y+height,color);
     }

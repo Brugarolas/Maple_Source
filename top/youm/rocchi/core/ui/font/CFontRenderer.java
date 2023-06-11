@@ -6,12 +6,13 @@
  */
 package top.youm.rocchi.core.ui.font;
 
-import java.awt.Font;
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import org.lwjgl.opengl.GL11;
+import top.youm.rocchi.utils.render.RenderUtil;
 
 public class CFontRenderer
 extends CFont {
@@ -46,8 +47,124 @@ extends CFont {
     public void drawCenteredStringWithShadow(String text, float x, float y, int color) {
         this.drawStringWithShadow(text, x - (float) (this.getStringWidth(text) / 2), y, color);
     }
+    public float DisplayFonts(String str, float x, float y, int color) {
+        GlStateManager.color(1.0f, 1.0f, 1.0f);
+        RenderUtil.color(color);
+        this.displayString(str, x-0.5f, y+1, color,false);
+        x += (float)this.getStringWidth(str);
+        return x;
+    }
 
-
+    public float displayString(String text, double x, double y, int color, boolean shadow) {
+        GlStateManager.enableBlend();
+        GlStateManager.disableBlend();
+        double x2 = x - 1.0d;
+        if (text == null) {
+            return 0.0f;
+        }
+        if (color == 553648127) {
+            color = 16777215;
+        }
+        if ((color & -67108864) == 0) {
+            color |= -16777216;
+        }
+        if (shadow) {
+            color = new Color(0, 0, 0).getRGB();
+        }
+        CFont.CharData[] currentData = this.charData;
+        float alpha = ((float) ((color >> 24) & 255)) / 255.0f;
+        boolean bold = false;
+        boolean italic = false;
+        boolean strikethrough = false;
+        boolean underline = false;
+        char c = (char) (x2 * 2.0d);
+        double y2 = (y - 3.0d) * 2.0d;
+        GL11.glPushMatrix();
+        GlStateManager.scale(0.5d, 0.5d, 0.5d);
+        GlStateManager.enableBlend();
+        GlStateManager.blendFunc(770, 771);
+        GlStateManager.color(((float) ((color >> 16) & 255)) / 255.0f, ((float) ((color >> 8) & 255)) / 255.0f, ((float) (color & 255)) / 255.0f, alpha);
+        int size = text.length();
+        GlStateManager.enableTexture2D();
+        GlStateManager.bindTexture(this.tex.getGlTextureId());
+        GL11.glBindTexture(3553, this.tex.getGlTextureId());
+        int i = 0;
+        while (i < size) {
+            char character = text.charAt(i);
+            if (character == '\u00a7') {
+                int colorIndex = 21;
+                try {
+                    colorIndex = "0123456789abcdefklmnor".indexOf(text.charAt(i + 1));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                if (colorIndex < 16) {
+                    bold = false;
+                    italic = false;
+                    underline = false;
+                    strikethrough = false;
+                    GlStateManager.bindTexture(this.tex.getGlTextureId());
+                    currentData = this.charData;
+                    if (colorIndex < 0) {
+                        colorIndex = 15;
+                    }
+                    if (shadow) {
+                        colorIndex += 16;
+                    }
+                    int colorcode = this.colorCode[colorIndex];
+                    GlStateManager.color(((float) ((colorcode >> 16) & 255)) / 255.0f, ((float) ((colorcode >> 8) & 255)) / 255.0f, ((float) (colorcode & 255)) / 255.0f, alpha);
+                } else if (colorIndex != 16) {
+                    if (colorIndex == 17) {
+                        bold = true;
+                        if (italic) {
+                            GlStateManager.bindTexture(this.texItalicBold.getGlTextureId());
+                            currentData = this.boldItalicChars;
+                        } else {
+                            GlStateManager.bindTexture(this.texBold.getGlTextureId());
+                            currentData = this.boldChars;
+                        }
+                    } else if (colorIndex == 18) {
+                        strikethrough = true;
+                    } else if (colorIndex == 19) {
+                        underline = true;
+                    } else if (colorIndex == 20) {
+                        italic = true;
+                        if (bold) {
+                            GlStateManager.bindTexture(this.texItalicBold.getGlTextureId());
+                            currentData = this.boldItalicChars;
+                        } else {
+                            GlStateManager.bindTexture(this.texItalic.getGlTextureId());
+                            currentData = this.italicChars;
+                        }
+                    } else {
+                        bold = false;
+                        italic = false;
+                        underline = false;
+                        strikethrough = false;
+                        GlStateManager.color(((float) ((color >> 16) & 255)) / 255.0f, ((float) ((color >> 8) & 255)) / 255.0f, ((float) (color & 255)) / 255.0f, alpha);
+                        GlStateManager.bindTexture(this.tex.getGlTextureId());
+                        currentData = this.charData;
+                    }
+                }
+                i++;
+            } else if (character < currentData.length) {
+                GL11.glBegin(4);
+                drawChar(currentData, character, (float) c, (float) y2);
+                GL11.glEnd();
+                if (strikethrough) {
+                    this.drawLine(x, y + (double)(currentData[character].height / 2), x + (double)currentData[character].width - 8.0, y + (double)(currentData[character].height / 2), 1.0f);
+                }
+                if (underline) {
+                    this.drawLine(x, y + (double)currentData[character].height - 2.0, x + (double)currentData[character].width - 8.0, y + (double)currentData[character].height - 2.0, 1.0f);
+                }
+                c += (double) ((currentData[character].width - 8) + this.charOffset);
+            }
+            i++;
+        }
+        GL11.glHint(3155, 4352);
+        GL11.glPopMatrix();
+        return ((float) c) / 2.0f;
+    }
     public float drawString(String text, double x, double y, int color, boolean shadow) {
         x -= 1.0;
         if (text == null) {

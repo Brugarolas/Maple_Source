@@ -2,7 +2,7 @@ package top.youm.rocchi.core.ui.clickgui.old.components;
 
 import top.youm.rocchi.common.settings.BoolSetting;
 import top.youm.rocchi.core.ui.Component;
-import top.youm.rocchi.core.ui.Theme;
+import top.youm.rocchi.core.ui.theme.Theme;
 import top.youm.rocchi.core.ui.clickgui.old.ClickGuiScreen;
 import top.youm.rocchi.core.ui.clickgui.old.MouseType;
 import top.youm.rocchi.utils.render.RenderUtil;
@@ -32,7 +32,7 @@ public class BooleanComponent extends Component {
             animAlpha = animator.animate(0, animAlpha, 0.08f);
         }
         RoundedUtil.drawRoundOutline(ClickGuiScreen.x + ClickGuiScreen.screenWidth - 50, ClickGuiScreen.y + 50 + y + 10, 30, 12, 5, 0.2f, new Color(56, 138, 229, animAlpha), new Color(80, 80, 80, 255));
-        RenderUtil.drawCircle(ClickGuiScreen.x + ClickGuiScreen.screenWidth - animX, ClickGuiScreen.y + 55 + y + 11, 5f, Theme.titleColor);
+        RenderUtil.drawCircle(ClickGuiScreen.x + ClickGuiScreen.screenWidth - animX, ClickGuiScreen.y + 55 + y + 11, 5f, Theme.theme);
     }
 
     @Override

@@ -38,8 +38,22 @@ public abstract class FontLoaders {
     public static CFontRenderer robotoR22 = new CFontRenderer(FontLoaders.getRoboto(22,Roughness.Regular), true, true);
 
     public static CFontRenderer robotoR34 = new CFontRenderer(FontLoaders.getRoboto(34,Roughness.Regular), true, true);
+    public static GlyphPageFontRenderer chinese22 = GlyphPageFontRenderer.create(getFont("wqy_microhei",22), true);
 
-
+    private static Font getFont(String name ,int size) {
+        Font font;
+        try {
+            InputStream is = Minecraft.getMinecraft().getResourceManager().getResource(new ResourceLocation("Rocchi/font/"+name+".ttf")).getInputStream();
+            font = Font.createFont(0, is);
+            font = font.deriveFont(Font.PLAIN, size);
+        }
+        catch (Exception ex) {
+            ex.printStackTrace();
+            System.out.println("Error loading font");
+            font = new Font("default", Font.PLAIN, size);
+        }
+        return font;
+    }
     private static Font getComfortaa(int size,Roughness roughness) {
         Font font;
         try {

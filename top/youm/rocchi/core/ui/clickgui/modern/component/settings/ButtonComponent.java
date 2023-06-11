@@ -2,7 +2,7 @@ package top.youm.rocchi.core.ui.clickgui.modern.component.settings;
 
 import top.youm.rocchi.common.settings.BoolSetting;
 import top.youm.rocchi.core.ui.clickgui.modern.Component;
-import top.youm.rocchi.core.ui.clickgui.modern.theme.Theme;
+import top.youm.rocchi.core.ui.theme.Theme;
 import top.youm.rocchi.core.ui.clickgui.old.MouseType;
 import top.youm.rocchi.utils.render.RenderUtil;
 import top.youm.rocchi.utils.render.RoundedUtil;

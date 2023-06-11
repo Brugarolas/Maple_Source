@@ -1,20 +1,16 @@
 package top.youm.rocchi.core.ui.clickgui.modern.component;
 
-import javafx.scene.paint.Color;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
 import org.lwjgl.input.Keyboard;
-import org.lwjgl.input.Mouse;
-import org.lwjgl.opengl.GL11;
 import top.youm.rocchi.common.settings.*;
 import top.youm.rocchi.core.module.Module;
 import top.youm.rocchi.core.ui.clickgui.modern.Component;
 import top.youm.rocchi.core.ui.clickgui.modern.component.settings.ButtonComponent;
-import top.youm.rocchi.core.ui.clickgui.modern.component.settings.ColorComponent;
 import top.youm.rocchi.core.ui.clickgui.modern.component.settings.DropdownComponent;
 import top.youm.rocchi.core.ui.clickgui.modern.component.settings.SliderComponent;
 import top.youm.rocchi.core.ui.clickgui.modern.state.UIState;
-import top.youm.rocchi.core.ui.clickgui.modern.theme.Theme;
+import top.youm.rocchi.core.ui.theme.Theme;
 import top.youm.rocchi.core.ui.clickgui.old.MouseType;
 import top.youm.rocchi.core.ui.font.FontLoaders;
 import top.youm.rocchi.utils.render.RenderUtil;

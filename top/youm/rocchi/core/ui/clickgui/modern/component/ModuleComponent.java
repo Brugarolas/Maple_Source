@@ -5,7 +5,7 @@ import top.youm.rocchi.core.module.Module;
 import top.youm.rocchi.core.ui.clickgui.modern.Component;
 import top.youm.rocchi.core.ui.clickgui.modern.ModernClickGUI;
 import top.youm.rocchi.core.ui.clickgui.modern.state.UIState;
-import top.youm.rocchi.core.ui.clickgui.modern.theme.Theme;
+import top.youm.rocchi.core.ui.theme.Theme;
 import top.youm.rocchi.core.ui.clickgui.old.MouseType;
 import top.youm.rocchi.core.ui.font.FontLoaders;
 import top.youm.rocchi.utils.render.RenderUtil;
@@ -73,7 +73,10 @@ public class ModuleComponent extends Component {
     @Override
     public void input(char typedChar, int keyCode) {
         if (this.equals(UIState.focusKey)) {
-            this.module.setKey(keyCode);
+            if(keyCode != Keyboard.KEY_END)
+                this.module.setKey(keyCode);
+            else
+                this.module.setKey(Keyboard.KEY_NONE);
             UIState.focusKey = null;
         }
     }

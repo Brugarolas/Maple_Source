@@ -7,8 +7,7 @@ import top.youm.rocchi.common.settings.BoolSetting;
 import top.youm.rocchi.common.settings.ColorSetting;
 import top.youm.rocchi.core.module.Module;
 import top.youm.rocchi.core.module.ModuleCategory;
-import top.youm.rocchi.core.ui.TabUI;
-import top.youm.rocchi.core.ui.Theme;
+import top.youm.rocchi.core.ui.theme.Theme;
 import top.youm.rocchi.core.ui.font.FontLoaders;
 import org.lwjgl.input.Keyboard;
 
@@ -18,7 +17,7 @@ public class HUD extends Module {
     public BoolSetting ttf_font = new BoolSetting("ttf-font",false);
     public BoolSetting notification = new BoolSetting("notification",true);
     public ColorSetting colorSetting = new ColorSetting("theme color",new Color(188, 81, 188));
-    public TabUI tabUI = new TabUI();
+
     public HUD() {
         super("HUD", ModuleCategory.VISUAL, Keyboard.KEY_NONE);
         this.setToggle(true);
@@ -27,9 +26,9 @@ public class HUD extends Module {
     @EventTarget
     public void onRender(Render2DEvent event){
         if(this.ttf_font.getValue()){
-            FontLoaders.robotoB32.drawStringWithShadow(Rocchi.getInstance().NAME,5,5, Theme.titleColor.getRGB());
+            FontLoaders.chinese22.drawString("枫",5,5, Theme.theme.getRGB());
         }else {
-            this.mc.fontRendererObj.drawStringWithShadow(Rocchi.getInstance().NAME,5,5, Theme.titleColor.getRGB());
+            this.mc.fontRendererObj.drawStringWithShadow(Rocchi.getInstance().NAME,5,5, Theme.theme.getRGB());
         }
     }
 }

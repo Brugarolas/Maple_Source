@@ -4,7 +4,7 @@ package top.youm.rocchi.core.ui.clickgui.old.components;
 import org.lwjgl.input.Mouse;
 import top.youm.rocchi.common.settings.NumberSetting;
 import top.youm.rocchi.core.ui.Component;
-import top.youm.rocchi.core.ui.Theme;
+import top.youm.rocchi.core.ui.theme.Theme;
 import top.youm.rocchi.core.ui.clickgui.old.ClickGuiScreen;
 import top.youm.rocchi.core.ui.clickgui.old.MouseType;
 import top.youm.rocchi.core.ui.font.FontLoaders;
@@ -36,8 +36,8 @@ public class NumberComponent extends Component {
 
         animX = animator.animate( percentBar,animX,0.05f);
         RoundedUtil.drawRound(ClickGuiScreen.x + ClickGuiScreen.screenWidth - 150, (int) (ClickGuiScreen.y + 50 + y + 10),this.width,2,2,new Color(231, 231, 231));
-        RoundedUtil.drawRound(ClickGuiScreen.x + ClickGuiScreen.screenWidth - 150, (int) (ClickGuiScreen.y + 50 + y + 10),animX,2,2, Theme.titleColor);
-        RenderUtil.drawCircle(ClickGuiScreen.x + ClickGuiScreen.screenWidth - 150 + animX, ClickGuiScreen.y + 50 + y + 11,5,Theme.titleColor);
+        RoundedUtil.drawRound(ClickGuiScreen.x + ClickGuiScreen.screenWidth - 150, (int) (ClickGuiScreen.y + 50 + y + 10),animX,2,2, Theme.theme);
+        RenderUtil.drawCircle(ClickGuiScreen.x + ClickGuiScreen.screenWidth - 150 + animX, ClickGuiScreen.y + 50 + y + 11,5, Theme.theme);
 
         if (isHover(ClickGuiScreen.x + ClickGuiScreen.screenWidth - 150, (int) (ClickGuiScreen.y + 50 + y + 8), width, 5, mouseX, mouseY) ) {
             setValue();

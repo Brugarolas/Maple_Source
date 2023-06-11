@@ -186,6 +186,7 @@ import org.lwjgl.opengl.GLContext;
 import org.lwjgl.opengl.OpenGLException;
 import org.lwjgl.opengl.PixelFormat;
 import org.lwjgl.util.glu.GLU;
+import top.youm.rocchi.utils.AnimationUtils;
 
 public class Minecraft implements IThreadListener, IPlayerUsage
 {
@@ -1095,13 +1096,19 @@ public class Minecraft implements IThreadListener, IPlayerUsage
 
         System.gc();
     }
-
+    long lastFrame;
     /**
      * Called repeatedly from run()
      */
     private void runGameLoop() throws IOException
     {
         long i = System.nanoTime();
+
+        final long currentTime = (Sys.getTime() * 1000) / Sys.getTimerResolution();
+        final double deltaTime = (int) (currentTime - lastFrame);
+        lastFrame = currentTime;
+        AnimationUtils.delta = deltaTime;
+
         this.mcProfiler.startSection("root");
 
         if (Display.isCreated() && Display.isCloseRequested())

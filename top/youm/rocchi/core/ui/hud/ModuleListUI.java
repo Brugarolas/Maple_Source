@@ -6,6 +6,7 @@ import top.youm.rocchi.core.module.Module;
 import top.youm.rocchi.core.module.modules.visual.ModuleList;
 import top.youm.rocchi.core.ui.font.CFontRenderer;
 import top.youm.rocchi.core.ui.font.FontLoaders;
+import top.youm.rocchi.core.ui.theme.Theme;
 import top.youm.rocchi.utils.AnimationUtils;
 import top.youm.rocchi.utils.TimerUtil;
 import top.youm.rocchi.utils.render.ColorUtil;
@@ -78,8 +79,8 @@ public class ModuleListUI implements HUDComponent {
 
                 case FADE:
                     if(UIModule.border.getValue() && module.isToggle()){
-                        RenderUtil.drawRect((int) (module.animX - 5) - 3, (int) (2 + module.animY),1,(font ?  comfortaaR18.getHeight() + 3 : Minecraft.getMinecraft().fontRendererObj.FONT_HEIGHT + 3), ColorUtil.fade(UIModule.speed.getValue().intValue(),30 * index,new Color(24, 165, 255), 1f));
-                        RenderUtil.drawRect((int) (module.animX + (font ?comfortaaR18.getStringWidth(text) : Minecraft.getMinecraft().fontRendererObj.getStringWidth(text)) - 3),(int) (2 + module.animY ),1,(font ?  comfortaaR18.getHeight() + 3 : Minecraft.getMinecraft().fontRendererObj.FONT_HEIGHT + 3),ColorUtil.fade(UIModule.speed.getValue().intValue(),30 * index,new Color(24, 165, 255), 1f));
+                        RenderUtil.drawRect((int) (module.animX - 5) - 3, (int) (2 + module.animY),1,(font ?  comfortaaR18.getHeight() + 3 : Minecraft.getMinecraft().fontRendererObj.FONT_HEIGHT + 3), ColorUtil.fade(UIModule.speed.getValue().intValue(),30 * index, Theme.theme, 1f));
+                        RenderUtil.drawRect((int) (module.animX + (font ?comfortaaR18.getStringWidth(text) : Minecraft.getMinecraft().fontRendererObj.getStringWidth(text)) - 3),(int) (2 + module.animY ),1,(font ?  comfortaaR18.getHeight() + 3 : Minecraft.getMinecraft().fontRendererObj.FONT_HEIGHT + 3),ColorUtil.fade(UIModule.speed.getValue().intValue(),30 * index,Theme.theme, 1f));
                         if (module != modules.get(0)) {
                             int differ = font ?
                                     comfortaaR18.getStringWidth(
@@ -104,18 +105,18 @@ public class ModuleListUI implements HUDComponent {
                                                     "" :
                                                     ChatFormatting.BLUE +" - " + ChatFormatting.WHITE + module.getSuffixes())
                                     );
-                            RenderUtil.drawRect((int) (module.animX - 8) - differ,(int) (2 + module.animY),differ,1,ColorUtil.fade(UIModule.speed.getValue().intValue(),30 * index,new Color(24, 165, 255), 1f));
+                            RenderUtil.drawRect((int) (module.animX - 8) - differ,(int) (2 + module.animY),differ,1,ColorUtil.fade(UIModule.speed.getValue().intValue(),30 * index,Theme.theme, 1f));
                             if(index == modules.size() - 1){
-                                RenderUtil.drawRect((int) (module.animX - 8),(int) (2 + module.animY + (font ?  comfortaaR18.getHeight() + 3 : Minecraft.getMinecraft().fontRendererObj.FONT_HEIGHT + 3)),(font ? comfortaaR18.getStringWidth(text) : Minecraft.getMinecraft().fontRendererObj.getStringWidth(text)) + 6,1,ColorUtil.fade(UIModule.speed.getValue().intValue(),30 * index,new Color(24, 165, 255), 1f));
+                                RenderUtil.drawRect((int) (module.animX - 8),(int) (2 + module.animY + (font ?  comfortaaR18.getHeight() + 3 : Minecraft.getMinecraft().fontRendererObj.FONT_HEIGHT + 3)),(font ? comfortaaR18.getStringWidth(text) : Minecraft.getMinecraft().fontRendererObj.getStringWidth(text)) + 6,1,ColorUtil.fade(UIModule.speed.getValue().intValue(),30 * index,Theme.theme, 1f));
                             }
                         }else {
-                            RenderUtil.drawRect((int) (module.animX - 8),(int) (2 + module.animY),(font ? comfortaaR18.getStringWidth(text) : Minecraft.getMinecraft().fontRendererObj.getStringWidth(text)) + 6,1,ColorUtil.fade(UIModule.speed.getValue().intValue(),30 * index,new Color(24, 165, 255), 1f));
+                            RenderUtil.drawRect((int) (module.animX - 8),(int) (2 + module.animY),(font ? comfortaaR18.getStringWidth(text) : Minecraft.getMinecraft().fontRendererObj.getStringWidth(text)) + 6,1,ColorUtil.fade(UIModule.speed.getValue().intValue(),30 * index,Theme.theme, 1f));
                         }
                     }
                     if(font){
-                        comfortaaR18.drawStringWithShadow(text, module.animX - 5, (4 + module.animY), ColorUtil.fade(UIModule.speed.getValue().intValue(), 30 * index, new Color(24, 165, 255), 1f).getRGB());
+                        comfortaaR18.drawStringWithShadow(text, module.animX - 5, (4 + module.animY), ColorUtil.fade(UIModule.speed.getValue().intValue(), 30 * index, Theme.theme, 1f).getRGB());
                     }else {
-                        Minecraft.getMinecraft().fontRendererObj.drawStringWithShadow(text, module.animX - 5, (4 + module.animY), ColorUtil.fade(UIModule.speed.getValue().intValue(), 30 * index, new Color(24, 165, 255), 1f).getRGB());
+                        Minecraft.getMinecraft().fontRendererObj.drawStringWithShadow(text, module.animX - 5, (4 + module.animY), ColorUtil.fade(UIModule.speed.getValue().intValue(), 30 * index, Theme.theme, 1f).getRGB());
                     }
                     break;
                 case RAINBOW:

@@ -8,7 +8,7 @@ import top.youm.rocchi.core.ui.clickgui.modern.animation.Animation;
 import top.youm.rocchi.core.ui.clickgui.modern.animation.Direction;
 import top.youm.rocchi.core.ui.clickgui.modern.animation.SmoothStepAnimation;
 import top.youm.rocchi.core.ui.clickgui.modern.state.UIState;
-import top.youm.rocchi.core.ui.clickgui.modern.theme.Theme;
+import top.youm.rocchi.core.ui.theme.Theme;
 import top.youm.rocchi.core.ui.clickgui.old.MouseType;
 import top.youm.rocchi.core.ui.font.FontLoaders;
 import top.youm.rocchi.utils.math.MathUtil;
@@ -48,17 +48,16 @@ public class CategoryComponent extends Component {
         this.mouseY = mouseY;
         if (UIState.currentCategory == category) {
             RoundedUtil.drawRound(x, y, width, height, 2, Theme.theme);
-            animation = animator.animate(7, animation, 0.1f);
+            animation = animator.animate(7, animation, 0.08f);
         } else if (componentHover()) {
             RoundedUtil.drawRound(x, y, width, height, 2, Theme.themeHover);
         }
         if (UIState.currentCategory != category) {
             if (componentHover()) {
-                animation = animator.animate(7, animation, 0.1f);
+                animation = animator.animate(7, animation, 0.08f);
             } else {
-                animation = animator.animate(0, animation, 0.1f);
+                animation = animator.animate(0, animation, 0.08f);
             }
-            animation = animator.animate(0, animation, 0.1f);
         }
         FontLoaders.robotoB22.drawStringWithShadow(name, xPos + 3 + animation, y + height / 2.0f - FontLoaders.robotoR22.getHeight() / 2.0f, Theme.font.getRGB());
 

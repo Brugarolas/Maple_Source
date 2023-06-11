@@ -2,6 +2,7 @@ package top.youm.rocchi.core.ui.clickgui.modern;
 
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.util.ResourceLocation;
 import org.lwjgl.input.Keyboard;
 import top.youm.rocchi.Rocchi;
 import top.youm.rocchi.core.module.Module;
@@ -10,7 +11,7 @@ import top.youm.rocchi.core.module.modules.visual.ClickGui;
 import top.youm.rocchi.core.ui.clickgui.modern.component.CategoryComponent;
 import top.youm.rocchi.core.ui.clickgui.modern.component.ModuleComponent;
 import top.youm.rocchi.core.ui.clickgui.modern.state.UIState;
-import top.youm.rocchi.core.ui.clickgui.modern.theme.Theme;
+import top.youm.rocchi.core.ui.theme.Theme;
 import top.youm.rocchi.core.ui.clickgui.old.MouseType;
 import top.youm.rocchi.utils.render.RenderUtil;
 import top.youm.rocchi.utils.render.RoundedUtil;
@@ -67,11 +68,13 @@ public class ModernClickGUI extends GuiScreen {
         if (UIState.settingFocused) {
             UIState.dialog.draw(0, 0, mouseX, mouseY);
         }
+
     }
 
     public void topRouter(int mouseX, int mouseY) {
         RoundedUtil.drawRound(x, y, screenWidth, 20, 2, Theme.theme);
         RenderUtil.drawRect(x - 1, y + 19, screenWidth + 2, 10, Theme.theme);
+        RenderUtil.drawCircleImage(new ResourceLocation("Rocchi/image/head.jpg"),x + screenWidth -50, y, 30, 30);
     }
 
     public static int navbarWidth = 110;
