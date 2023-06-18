@@ -2,7 +2,7 @@ package net.minecraft.client.gui;
 
 import java.io.IOException;
 
-import top.youm.rocchi.core.ui.screen.RocchiMainScreen;
+import top.youm.rocchi.core.ui.screen.MainScreen;
 import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
@@ -75,7 +75,7 @@ public class GuiGameOver extends GuiScreen implements GuiYesNoCallback
             case 1:
                 if (this.mc.theWorld.getWorldInfo().isHardcoreModeEnabled())
                 {
-                    this.mc.displayGuiScreen(new RocchiMainScreen());
+                    this.mc.displayGuiScreen(new MainScreen());
                 }
                 else
                 {
@@ -92,7 +92,7 @@ public class GuiGameOver extends GuiScreen implements GuiYesNoCallback
         {
             this.mc.theWorld.sendQuittingDisconnectingPacket();
             this.mc.loadWorld((WorldClient)null);
-            this.mc.displayGuiScreen(new RocchiMainScreen());
+            this.mc.displayGuiScreen(new MainScreen());
         }
         else
         {

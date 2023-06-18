@@ -1,23 +1,18 @@
 package top.youm.rocchi.core.ui.screen;
 
-import net.minecraft.client.renderer.GlStateManager;
-import top.youm.rocchi.core.ui.font.FontLoaders;
-import top.youm.rocchi.utils.AnimationUtils;
-import top.youm.rocchi.utils.render.RenderUtil;
 import top.youm.rocchi.utils.render.gl.ShaderUtil;
 import net.minecraft.client.gui.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 
-import java.awt.*;
 import java.io.IOException;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * @author You_M
  */
-public class RocchiMainScreen extends GuiScreen implements GuiYesNoCallback {
+public class MainScreen extends GuiScreen implements GuiYesNoCallback {
     private final ShaderUtil backgroundShader = new ShaderUtil("Rocchi/shader/background.frag");
     private static final Logger logger = LogManager.getLogger();
     private long initTime = System.currentTimeMillis();
@@ -28,10 +23,10 @@ public class RocchiMainScreen extends GuiScreen implements GuiYesNoCallback {
     public void initGui() {
         initTime = System.currentTimeMillis();
         /* 初始化按钮组件 */
-        this.buttonList.add(new RocchiMenuButton(true,0,this.width / 2 - 87 ,this.height / 2 - 40,177,"Single Player"));
-        this.buttonList.add(new RocchiMenuButton(true,1,this.width / 2 - 87 ,this.height / 2 - 10,177,"Multi Player"));
-        this.buttonList.add(new RocchiMenuButton(2,this.width / 2 - 50 ,this.height / 2 + 50,"Game Option"));
-        this.buttonList.add(new RocchiMenuButton(3,this.width / 2 + 50 ,this.height / 2 + 50,"Quit Game"));
+        this.buttonList.add(new MenuButton(0,this.width / 2 ,this.height / 2 - 30,"Single Player","g"));
+        this.buttonList.add(new MenuButton(1,this.width / 2 ,this.height / 2,"Multi Player","h"));
+        this.buttonList.add(new MenuButton(2,this.width / 2 ,this.height / 2 + 30,"Game Option","q"));
+        this.buttonList.add(new IconButton(3,this.width - 25 ,5,20,20,"u"));
     }
 
     @Override

@@ -4,6 +4,9 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.settings.GameSettings;
 import net.minecraft.util.MathHelper;
+import top.youm.rocchi.utils.render.RenderUtil;
+
+import java.awt.*;
 
 public class GuiOptionSlider extends GuiButton
 {
@@ -55,10 +58,7 @@ public class GuiOptionSlider extends GuiButton
                 this.displayString = mc.gameSettings.getKeyBinding(this.options);
             }
 
-            mc.getTextureManager().bindTexture(buttonTextures);
-            GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-            this.drawTexturedModalRect(this.xPosition + (int)(this.sliderValue * (float)(this.width - 8)), this.yPosition, 0, 66, 4, 20);
-            this.drawTexturedModalRect(this.xPosition + (int)(this.sliderValue * (float)(this.width - 8)) + 4, this.yPosition, 196, 66, 4, 20);
+            RenderUtil.drawRect(this.xPosition + (int)(this.sliderValue * (float)(this.width - 8)), this.yPosition, 8, 20,new Color(232, 232, 232, 232));
         }
     }
 

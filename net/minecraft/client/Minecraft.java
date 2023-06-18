@@ -40,7 +40,9 @@ import javax.imageio.ImageIO;
 
 import top.youm.rocchi.Rocchi;
 import top.youm.rocchi.common.events.KeyEvent;
-import top.youm.rocchi.core.ui.screen.RocchiMainScreen;
+import top.youm.rocchi.core.ui.font.FontLoaders;
+import top.youm.rocchi.core.ui.font.GlyphPageFontRenderer;
+import top.youm.rocchi.core.ui.screen.MainScreen;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.audio.MusicTicker;
@@ -142,7 +144,6 @@ import net.minecraft.profiler.Profiler;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.integrated.IntegratedServer;
 import net.minecraft.stats.AchievementList;
-import net.minecraft.stats.IStatStringFormat;
 import net.minecraft.stats.StatFileWriter;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockPos;
@@ -186,7 +187,10 @@ import org.lwjgl.opengl.GLContext;
 import org.lwjgl.opengl.OpenGLException;
 import org.lwjgl.opengl.PixelFormat;
 import org.lwjgl.util.glu.GLU;
+import top.youm.rocchi.core.ui.screen.ProgressScreen;
 import top.youm.rocchi.utils.AnimationUtils;
+
+import static top.youm.rocchi.core.ui.font.FontLoaders.getFont;
 
 public class Minecraft implements IThreadListener, IPlayerUsage
 {
@@ -479,7 +483,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage
          
         
     }
-
+    private final ProgressScreen progressScreen = new ProgressScreen();
     /**
      * Starts the game: initializes the canvas, the title, the settings, etcetera.
      */
@@ -511,37 +515,40 @@ public class Minecraft implements IThreadListener, IPlayerUsage
         this.refreshResources();
         this.renderEngine = new TextureManager(this.mcResourceManager);
         this.mcResourceManager.registerReloadListener(this.renderEngine);
-        this.drawSplashScreen(this.renderEngine);
+
+        progressScreen.drawScreen();
+
         this.skinManager = new SkinManager(this.renderEngine, new File(this.fileAssets, "skins"), this.sessionService);
         this.saveLoader = new AnvilSaveConverter(new File(this.mcDataDir, "saves"));
         this.mcSoundHandler = new SoundHandler(this.mcResourceManager, this.gameSettings);
+        progressScreen.makeProgress("resource loading...");
         this.mcResourceManager.registerReloadListener(this.mcSoundHandler);
         this.mcMusicTicker = new MusicTicker(this);
         this.fontRendererObj = new FontRenderer(this.gameSettings, new ResourceLocation("textures/font/ascii.png"), this.renderEngine, false);
-
         if (this.gameSettings.language != null)
         {
             this.fontRendererObj.setUnicodeFlag(this.isUnicode());
             this.fontRendererObj.setBidiFlag(this.mcLanguageManager.isCurrentLanguageBidirectional());
         }
-
+        progressScreen.makeProgress("minecraft font loading...");
         this.standardGalacticFontRenderer = new FontRenderer(this.gameSettings, new ResourceLocation("textures/font/ascii_sga.png"), this.renderEngine, false);
         this.mcResourceManager.registerReloadListener(this.fontRendererObj);
         this.mcResourceManager.registerReloadListener(this.standardGalacticFontRenderer);
         this.mcResourceManager.registerReloadListener(new GrassColorReloadListener());
         this.mcResourceManager.registerReloadListener(new FoliageColorReloadListener());
-        AchievementList.openInventory.setStatStringFormatter(new IStatStringFormat()
-        {
-            public String formatString(String str)
+        progressScreen.makeProgress("register listener loading...");
+        FontLoaders.chinese22 = GlyphPageFontRenderer.create(getFont("wqy_microhei",22), true);
+        FontLoaders.chinese18 = GlyphPageFontRenderer.create(getFont("wqy_microhei",18), true);
+        logger.info("loading unicode font...");
+        progressScreen.makeProgress("unicode font loading...");
+        AchievementList.openInventory.setStatStringFormatter(str -> {
+            try
             {
-                try
-                {
-                    return String.format(str, GameSettings.getKeyDisplayString(Minecraft.this.gameSettings.keyBindInventory.getKeyCode()));
-                }
-                catch (Exception exception)
-                {
-                    return "Error: " + exception.getLocalizedMessage();
-                }
+                return String.format(str, GameSettings.getKeyDisplayString(Minecraft.this.gameSettings.keyBindInventory.getKeyCode()));
+            }
+            catch (Exception exception)
+            {
+                return "Error: " + exception.getLocalizedMessage();
             }
         });
         this.mouseHelper = new MouseHelper();
@@ -562,12 +569,14 @@ public class Minecraft implements IThreadListener, IPlayerUsage
         this.textureMapBlocks.setMipmapLevels(this.gameSettings.mipmapLevels);
         this.renderEngine.loadTickableTexture(TextureMap.locationBlocksTexture, this.textureMapBlocks);
         this.renderEngine.bindTexture(TextureMap.locationBlocksTexture);
+        progressScreen.makeProgress("render engine loading...");
         this.textureMapBlocks.setBlurMipmapDirect(false, this.gameSettings.mipmapLevels > 0);
         this.modelManager = new ModelManager(this.textureMapBlocks);
         this.mcResourceManager.registerReloadListener(this.modelManager);
         this.renderItem = new RenderItem(this.renderEngine, this.modelManager);
         this.renderManager = new RenderManager(this.renderEngine, this.renderItem);
         this.itemRenderer = new ItemRenderer(this);
+        progressScreen.makeProgress("item renderer load...");
         this.mcResourceManager.registerReloadListener(this.renderItem);
         this.entityRenderer = new EntityRenderer(this, this.mcResourceManager);
         this.mcResourceManager.registerReloadListener(this.entityRenderer);
@@ -576,6 +585,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage
         this.renderGlobal = new RenderGlobal(this);
         this.mcResourceManager.registerReloadListener(this.renderGlobal);
         this.guiAchievement = new GuiAchievement(this);
+        progressScreen.makeProgress("gui loading...");
         GlStateManager.viewport(0, 0, this.displayWidth, this.displayHeight);
         this.effectRenderer = new EffectRenderer(this.theWorld, this.renderEngine);
         this.checkGLError("Post startup");
@@ -583,11 +593,11 @@ public class Minecraft implements IThreadListener, IPlayerUsage
         Rocchi.getInstance().startGame();
         if (this.serverName != null)
         {
-            this.displayGuiScreen(new GuiConnecting(new RocchiMainScreen(), this, this.serverName, this.serverPort));
+            this.displayGuiScreen(new GuiConnecting(new MainScreen(), this, this.serverName, this.serverPort));
         }
         else
         {
-            this.displayGuiScreen(new RocchiMainScreen());
+            this.displayGuiScreen(new MainScreen());
         }
 
         this.renderEngine.deleteTexture(this.mojangLogo);
@@ -598,7 +608,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage
         {
             this.toggleFullscreen();
         }
-
+        progressScreen.makeProgress("main screen loading...");
         try
         {
             Display.setVSyncEnabled(this.gameSettings.enableVsync);
@@ -610,7 +620,6 @@ public class Minecraft implements IThreadListener, IPlayerUsage
         }
 
         this.renderGlobal.makeEntityOutlineShader();
-
 
     }
 
@@ -1007,14 +1016,14 @@ public class Minecraft implements IThreadListener, IPlayerUsage
 
         if (guiScreenIn == null && this.theWorld == null)
         {
-            guiScreenIn = new RocchiMainScreen();
+            guiScreenIn = new MainScreen();
         }
         else if (guiScreenIn == null && this.thePlayer.getHealth() <= 0.0F)
         {
             guiScreenIn = new GuiGameOver();
         }
 
-        if (guiScreenIn instanceof RocchiMainScreen)
+        if (guiScreenIn instanceof MainScreen)
         {
             this.gameSettings.showDebugInfo = false;
             this.ingameGUI.getChatGUI().clearChatMessages();

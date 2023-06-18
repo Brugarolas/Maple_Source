@@ -14,7 +14,7 @@ import java.util.Random;
 import java.util.UUID;
 import java.util.Map.Entry;
 
-import top.youm.rocchi.core.ui.screen.RocchiMainScreen;
+import top.youm.rocchi.core.ui.screen.MainScreen;
 import net.minecraft.block.Block;
 import net.minecraft.client.ClientBrandRetriever;
 import net.minecraft.client.Minecraft;
@@ -807,7 +807,7 @@ public class NetHandlerPlayClient implements INetHandlerPlayClient
         }
         else
         {
-            this.gameController.displayGuiScreen(new GuiDisconnected(new GuiMultiplayer(new RocchiMainScreen()), "disconnect.lost", reason));
+            this.gameController.displayGuiScreen(new GuiDisconnected(new GuiMultiplayer(new MainScreen()), "disconnect.lost", reason));
         }
     }
 

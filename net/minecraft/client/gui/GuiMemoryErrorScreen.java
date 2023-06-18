@@ -2,7 +2,7 @@ package net.minecraft.client.gui;
 
 import java.io.IOException;
 
-import top.youm.rocchi.core.ui.screen.RocchiMainScreen;
+import top.youm.rocchi.core.ui.screen.MainScreen;
 import net.minecraft.client.resources.I18n;
 
 public class GuiMemoryErrorScreen extends GuiScreen
@@ -25,7 +25,7 @@ public class GuiMemoryErrorScreen extends GuiScreen
     {
         if (button.id == 0)
         {
-            this.mc.displayGuiScreen(new RocchiMainScreen());
+            this.mc.displayGuiScreen(new MainScreen());
         }
         else if (button.id == 1)
         {

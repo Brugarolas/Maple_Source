@@ -26,7 +26,7 @@ public class HUD extends Module {
     @EventTarget
     public void onRender(Render2DEvent event){
         if(this.ttf_font.getValue()){
-            FontLoaders.chinese22.drawString("枫",5,5, Theme.theme.getRGB());
+            FontLoaders.robotoR22.drawStringWithShadow(Rocchi.getInstance().NAME,5,5, Theme.theme.getRGB());
         }else {
             this.mc.fontRendererObj.drawStringWithShadow(Rocchi.getInstance().NAME,5,5, Theme.theme.getRGB());
         }

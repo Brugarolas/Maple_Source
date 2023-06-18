@@ -34,13 +34,17 @@ public abstract class FontLoaders {
     public static CFontRenderer robotoB32 = new CFontRenderer(FontLoaders.getRoboto(32,Roughness.Bold), true, true);
 
     public static CFontRenderer robotoB40 = new CFontRenderer(FontLoaders.getRoboto(40,Roughness.Bold), true, true);
+    public static CFontRenderer robotoR18 = new CFontRenderer(FontLoaders.getRoboto(18,Roughness.Regular), true, true);
 
     public static CFontRenderer robotoR22 = new CFontRenderer(FontLoaders.getRoboto(22,Roughness.Regular), true, true);
-
     public static CFontRenderer robotoR34 = new CFontRenderer(FontLoaders.getRoboto(34,Roughness.Regular), true, true);
-    public static GlyphPageFontRenderer chinese22 = GlyphPageFontRenderer.create(getFont("wqy_microhei",22), true);
-
-    private static Font getFont(String name ,int size) {
+    public static CFontRenderer icon20 = new CFontRenderer(getFont("iconfont",20),true,true);
+    public static CFontRenderer icon24 = new CFontRenderer(getFont("iconfont",24),true,true);
+    public static CFontRenderer icon28 = new CFontRenderer(getFont("iconfont",28),true,true);
+    public static CFontRenderer icon32 = new CFontRenderer(getFont("iconfont",32),true,true);
+    public static GlyphPageFontRenderer chinese22;
+    public static GlyphPageFontRenderer chinese18;
+    public static Font getFont(String name ,int size) {
         Font font;
         try {
             InputStream is = Minecraft.getMinecraft().getResourceManager().getResource(new ResourceLocation("Rocchi/font/"+name+".ttf")).getInputStream();

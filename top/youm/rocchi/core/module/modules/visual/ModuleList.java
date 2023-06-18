@@ -29,6 +29,6 @@ public class ModuleList extends Module {
         moduleListUI.draw();
     }
     public enum Mode{
-        RAINBOW,FADE
+        RAINBOW,FADE,GRADIENT
     }
 }

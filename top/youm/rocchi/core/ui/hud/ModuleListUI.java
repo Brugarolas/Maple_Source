@@ -162,6 +162,48 @@ public class ModuleListUI implements HUDComponent {
                     }
                     break;
                 default:
+                    Color textcolor = ColorUtil.interpolateColorsBackAndForth(UIModule.speed.getValue().intValue(),50*index,Theme.theme,Theme.theme2,true);
+
+                    if(UIModule.border.getValue() && module.isToggle()){
+                        RenderUtil.drawRect((int) (module.animX - 5) - 3, (int) (2 + module.animY),1,(font ?  comfortaaR18.getHeight() + 3 : Minecraft.getMinecraft().fontRendererObj.FONT_HEIGHT + 3),textcolor);
+                        RenderUtil.drawRect((int) (module.animX + (font ? comfortaaR18.getStringWidth(text) : Minecraft.getMinecraft().fontRendererObj.getStringWidth(text)) - 3),(int) (2 + module.animY ),1,(font ?  comfortaaR18.getHeight() + 3 : Minecraft.getMinecraft().fontRendererObj.FONT_HEIGHT + 3),textcolor);
+                        if (module != modules.get(0)) {
+                            int differ = font ?
+                                    comfortaaR18.getStringWidth(
+                                            modules.get(index - 1).getName()
+                                                    + (modules.get(index - 1).getSuffixes().isEmpty() ?
+                                                    "" :
+                                                    ChatFormatting.BLUE + " - " + ChatFormatting.WHITE + modules.get(index - 1).getSuffixes())
+                                    ) - comfortaaR18.getStringWidth(
+                                            module.getName()
+                                                    + (module.getSuffixes().isEmpty() ?
+                                                    "" :
+                                                    ChatFormatting.BLUE +" - " + ChatFormatting.WHITE + module.getSuffixes())
+                                    ) :
+                                    Minecraft.getMinecraft().fontRendererObj.getStringWidth(
+                                            modules.get(index - 1).getName()
+                                                    + (modules.get(index - 1).getSuffixes().isEmpty() ?
+                                                    "" :
+                                                    ChatFormatting.BLUE + " - " + ChatFormatting.WHITE + modules.get(index - 1).getSuffixes())
+                                    ) - Minecraft.getMinecraft().fontRendererObj.getStringWidth(
+                                            module.getName()
+                                                    + (module.getSuffixes().isEmpty() ?
+                                                    "" :
+                                                    ChatFormatting.BLUE +" - " + ChatFormatting.WHITE + module.getSuffixes())
+                                    );
+                            RenderUtil.drawRect((int) (module.animX - 8) - differ,(int) (2 + module.animY),differ,1,textcolor);
+                            if(index == modules.size() - 1){
+                                RenderUtil.drawRect((int) (module.animX - 8),(int) (2 + module.animY + (font ?  comfortaaR18.getHeight() + 3 : Minecraft.getMinecraft().fontRendererObj.FONT_HEIGHT + 3)),(font ? comfortaaR18.getStringWidth(text) : Minecraft.getMinecraft().fontRendererObj.getStringWidth(text)) + 6,1,textcolor);
+                            }
+                        }else {
+                            RenderUtil.drawRect((int) (module.animX - 8),(int) (2 + module.animY),(font ? comfortaaR18.getStringWidth(text) : Minecraft.getMinecraft().fontRendererObj.getStringWidth(text)) + 6,1,textcolor);
+                        }
+                    }
+                    if(font){
+                        comfortaaR18.drawStringWithShadow(text, module.animX - 5,  (4 + module.animY),textcolor.getRGB());
+                    }else {
+                        Minecraft.getMinecraft().fontRendererObj.drawStringWithShadow(text, module.animX - 5,  (4 + module.animY),textcolor.getRGB());
+                    }
             }
             index++;
         }
