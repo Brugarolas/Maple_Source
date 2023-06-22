@@ -3,8 +3,9 @@ package top.youm.rocchi.core.ui.clickgui.modern.component.settings;
 
 import top.youm.rocchi.common.settings.NumberSetting;
 import top.youm.rocchi.core.ui.clickgui.modern.Component;
+import top.youm.rocchi.core.ui.font.FontLoaders;
 import top.youm.rocchi.core.ui.theme.Theme;
-import top.youm.rocchi.core.ui.clickgui.old.MouseType;
+import top.youm.rocchi.core.ui.MouseType;
 import top.youm.rocchi.utils.render.RenderUtil;
 import top.youm.rocchi.utils.render.RoundedUtil;
 
@@ -28,9 +29,10 @@ public class SliderComponent extends Component {
         this.percentBar = 200 * ((numberSetting.getValue().floatValue() - numberSetting.getMin().floatValue()) / (numberSetting.getMax().floatValue() - numberSetting.getMin().floatValue()));
         boolean hover = isHover((int) (x - 210), (int) y, 200, 6, mouseX, mouseY);
         animation = animator.animate(percentBar, animation, 0.08f);
+        FontLoaders.comfortaaB22.drawStringWithShadow(String.valueOf(this.numberSetting.getValue().floatValue()),x - 215 + animation,y - 13,-1);
         RoundedUtil.drawRound(x - 210, y, 200, 5, 3, Theme.enableButton);
         RoundedUtil.drawRound(x - 210, y, animation, 5, 3, Theme.theme);
-        RenderUtil.drawCircle(x - 210 + animation, y + 2, hover ? 7 : 6, Theme.theme);
+        RenderUtil.drawSmoothCircle(x - 210 + animation, y + 2, hover ? 7 : 6, -1);
         if (hover && dragging) {
             setValue(numberSetting);
         }

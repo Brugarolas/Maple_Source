@@ -1,7 +1,6 @@
 package top.youm.rocchi.core.ui;
 
 import net.minecraft.client.Minecraft;
-import top.youm.rocchi.core.ui.clickgui.old.MouseType;
 import top.youm.rocchi.utils.AnimationUtils;
 
 public abstract class Component {

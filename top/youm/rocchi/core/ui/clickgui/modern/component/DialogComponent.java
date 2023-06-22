@@ -11,7 +11,7 @@ import top.youm.rocchi.core.ui.clickgui.modern.component.settings.DropdownCompon
 import top.youm.rocchi.core.ui.clickgui.modern.component.settings.SliderComponent;
 import top.youm.rocchi.core.ui.clickgui.modern.state.UIState;
 import top.youm.rocchi.core.ui.theme.Theme;
-import top.youm.rocchi.core.ui.clickgui.old.MouseType;
+import top.youm.rocchi.core.ui.MouseType;
 import top.youm.rocchi.core.ui.font.FontLoaders;
 import top.youm.rocchi.utils.render.RenderUtil;
 import top.youm.rocchi.utils.render.RoundedUtil;

@@ -164,6 +164,7 @@ public class GuiIngame extends Gui
             }
         }
 
+
         if (this.mc.playerController.isSpectator())
         {
             this.spectatorGui.renderTooltip(scaledresolution, partialTicks);
@@ -172,6 +173,8 @@ public class GuiIngame extends Gui
         {
             this.renderTooltip(scaledresolution, partialTicks);
         }
+        /* Rocchi: 2D render event */
+        EventManager.call(new Render2DEvent(partialTicks));
 
 
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
@@ -190,8 +193,7 @@ public class GuiIngame extends Gui
         this.mc.mcProfiler.startSection("bossHealth");
         this.renderBossHealth();
         this.mc.mcProfiler.endSection();
-        /* Rocchi: 2D render event */
-        EventManager.call(new Render2DEvent(partialTicks));
+
         if (this.mc.playerController.shouldDrawHUD())
         {
             this.renderPlayerStats(scaledresolution);

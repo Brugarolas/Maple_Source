@@ -3,7 +3,7 @@ package top.youm.rocchi.core.ui.clickgui.modern.component.settings;
 import top.youm.rocchi.common.settings.BoolSetting;
 import top.youm.rocchi.core.ui.clickgui.modern.Component;
 import top.youm.rocchi.core.ui.theme.Theme;
-import top.youm.rocchi.core.ui.clickgui.old.MouseType;
+import top.youm.rocchi.core.ui.MouseType;
 import top.youm.rocchi.utils.render.RenderUtil;
 import top.youm.rocchi.utils.render.RoundedUtil;
 
@@ -28,13 +28,13 @@ public class ButtonComponent extends Component {
                 animationBool = animator.animate(10, animationBool, 0.08f);
             }
             RoundedUtil.drawRound(x - 30, y, 20, 6, 3, Theme.theme);
-            RenderUtil.drawCircle(x - animationBool, y + 3, 6, Theme.buttonCircleTheme);
+            RenderUtil.drawSmoothCircle(x - animationBool, y + 3, 6, -1);
         } else {
             if (animationBool < 30) {
                 animationBool = animator.animate(30, animationBool, 0.08f);
             }
             RoundedUtil.drawRound(x - 30, y, 20, 6, 3, Theme.enableButton);
-            RenderUtil.drawCircle(x - animationBool, y + 3, 6, Theme.buttonCircleTheme);
+            RenderUtil.drawSmoothCircle(x - animationBool, y + 3, 6,-1);
         }
     }
 

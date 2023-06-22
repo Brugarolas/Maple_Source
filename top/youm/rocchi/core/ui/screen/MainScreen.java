@@ -25,8 +25,8 @@ public class MainScreen extends GuiScreen implements GuiYesNoCallback {
         /* 初始化按钮组件 */
         this.buttonList.add(new MenuButton(0,this.width / 2 ,this.height / 2 - 30,"Single Player","g"));
         this.buttonList.add(new MenuButton(1,this.width / 2 ,this.height / 2,"Multi Player","h"));
-        this.buttonList.add(new MenuButton(2,this.width / 2 ,this.height / 2 + 30,"Game Option","q"));
-        this.buttonList.add(new IconButton(3,this.width - 25 ,5,20,20,"u"));
+        this.buttonList.add(new MenuButton(2,this.width / 2 ,this.height / 2 + 30,"Game Option","m"));
+        this.buttonList.add(new IconButton(3,this.width - 25 ,5,20,20,"l"));
     }
 
     @Override

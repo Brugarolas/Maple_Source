@@ -13,11 +13,11 @@ import org.lwjgl.opengl.GL11;
 
 import java.awt.Color;
 import java.util.Objects;
-import java.util.regex.Pattern;
 
 import static net.minecraft.client.renderer.GlStateManager.disableBlend;
 import static net.minecraft.client.renderer.GlStateManager.enableTexture2D;
 import static org.lwjgl.opengl.GL11.*;
+import static top.youm.rocchi.utils.render.gl.GLUtils.glColor;
 
 public class RenderUtil {
     public static void resetColor() {
@@ -400,9 +400,9 @@ public class RenderUtil {
         GL11.glDisable(3089);
         GL11.glPopMatrix();
     }
-    public static void drawCircle(double x, double y, float radius, Color color) {
-        GlStateManager.pushMatrix();
+    public static void drawSmoothCircle(double x, double y, float radius, Color color) {
         GlStateManager.color(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
+        GlStateManager.pushMatrix();
         GlStateManager.enableBlend();
         GlStateManager.blendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         GlStateManager.disableTexture2D();
@@ -417,5 +417,40 @@ public class RenderUtil {
         GlStateManager.enableTexture2D();
         GlStateManager.disableBlend();
         GlStateManager.popMatrix();
+    }
+    public static void drawSmoothCircle(double x, double y, float radius, int color) {
+        GlStateManager.pushMatrix();
+        color(color);
+        GlStateManager.enableBlend();
+        GlStateManager.blendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        GlStateManager.disableTexture2D();
+        glEnable(GL_POINT_SMOOTH);
+        glHint(GL_POINT_SMOOTH_HINT, GL_NICEST);
+        glPointSize(radius * (2 * mc.gameSettings.guiScale));
+
+        glBegin(GL_POINTS);
+        glVertex2d(x, y);
+        glEnd();
+
+        GlStateManager.enableTexture2D();
+        GlStateManager.disableBlend();
+        GlStateManager.popMatrix();
+    }
+    public static void drawCircle(float x, float y, float radius, int start, int end) {
+        GlStateManager.enableBlend();
+        GlStateManager.disableTexture2D();
+        GlStateManager.tryBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ZERO);
+        glColor(Color.WHITE.getRGB());
+
+        glEnable(GL_LINE_SMOOTH);
+        glLineWidth(2F);
+        glBegin(GL_LINE_STRIP);
+        for (float i = end; i >= start; i -= (360 / 90.0f))
+            glVertex2f((float) (x + (Math.cos(i * Math.PI / 180) * (radius * 1.001F))), (float) (y + (Math.sin(i * Math.PI / 180) * (radius * 1.001F))));
+        glEnd();
+        glDisable(GL_LINE_SMOOTH);
+
+        enableTexture2D();
+        disableBlend();
     }
 }

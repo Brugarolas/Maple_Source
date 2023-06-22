@@ -1,4 +1,4 @@
-package top.youm.rocchi.core.ui.clickgui.old;
+package top.youm.rocchi.core.ui;
 
 public enum MouseType {
     CLICK,RELEASED

@@ -8,8 +8,9 @@ import top.youm.rocchi.core.ui.clickgui.modern.animation.Animation;
 import top.youm.rocchi.core.ui.clickgui.modern.animation.Direction;
 import top.youm.rocchi.core.ui.clickgui.modern.animation.SmoothStepAnimation;
 import top.youm.rocchi.core.ui.clickgui.modern.state.UIState;
+import top.youm.rocchi.core.ui.theme.Icon;
 import top.youm.rocchi.core.ui.theme.Theme;
-import top.youm.rocchi.core.ui.clickgui.old.MouseType;
+import top.youm.rocchi.core.ui.MouseType;
 import top.youm.rocchi.core.ui.font.FontLoaders;
 import top.youm.rocchi.utils.math.MathUtil;
 import top.youm.rocchi.utils.render.RoundedUtil;
@@ -59,10 +60,24 @@ public class CategoryComponent extends Component {
                 animation = animator.animate(0, animation, 0.08f);
             }
         }
-        FontLoaders.robotoB22.drawStringWithShadow(name, xPos + 3 + animation, y + height / 2.0f - FontLoaders.robotoR22.getHeight() / 2.0f, Theme.font.getRGB());
+        FontLoaders.icon28.drawStringWithShadow(renderIcon().icon, xPos + 2 + animation, y + height / 2.0f - FontLoaders.robotoR22.getHeight() / 2.0f, Theme.font.getRGB());
+        FontLoaders.robotoB22.drawStringWithShadow(name, xPos + 1 + animation + FontLoaders.icon28.getStringWidth(renderIcon().icon) + 3, y + height / 2.0f - FontLoaders.robotoR22.getHeight() / 2.0f, Theme.font.getRGB());
 
     }
-
+    public Icon renderIcon(){
+        switch (this.category){
+            case COMBAT:
+                return Icon.COMBAT;
+            case MOVEMENT:
+                return Icon.MOVEMENT;
+            case VISUAL:
+                return Icon.VISUAL;
+            case WORLD:
+                return Icon.WORLD;
+            default:
+                return Icon.PLAYER;
+        }
+    }
     public void moduleMenu(int mouseX, int mouseY) {
         if (!UIState.settingFocused && isHover((ModernClickGUI.x + ModernClickGUI.navbarWidth), (ModernClickGUI.y + 30), ModernClickGUI.screenWidth - ModernClickGUI.navbarWidth - 10, ModernClickGUI.screenHeight - 30, mouseX, mouseY)) {
             this.onScroll(30);

@@ -8,6 +8,7 @@ import net.minecraft.network.play.client.C0APacketAnimation;
 import net.minecraft.network.play.server.S18PacketEntityTeleport;
 import net.minecraft.util.*;
 import org.lwjgl.input.Keyboard;
+import top.youm.rocchi.Rocchi;
 import top.youm.rocchi.common.events.MotionEvent;
 import top.youm.rocchi.common.events.PacketReceiveEvent;
 import top.youm.rocchi.common.settings.BoolSetting;
@@ -15,6 +16,7 @@ import top.youm.rocchi.common.settings.ModeSetting;
 import top.youm.rocchi.common.settings.NumberSetting;
 import top.youm.rocchi.core.module.Module;
 import top.youm.rocchi.core.module.ModuleCategory;
+import top.youm.rocchi.core.module.modules.movement.Scaffold;
 import top.youm.rocchi.core.module.modules.world.Teams;
 import top.youm.rocchi.utils.TimerUtil;
 import top.youm.rocchi.utils.math.MathUtil;
@@ -68,8 +70,8 @@ public class KillAura extends Module {
     public void onMotion(MotionEvent event){
         sortTargets();
         this.setSuffixes(autoBlockMode.getValue().name());
-//        if (Tenacity.INSTANCE.isToggled(Scaffold.class) || mc.thePlayer.isDead || mc.thePlayer.isSpectator())
-//            return;
+        if (targets.get(0).isDead || targets.get(0).getHealth() <= 0|| Rocchi.getInstance().getModuleManager().getModuleByClass(Scaffold.class).isToggle() || mc.thePlayer.isDead || mc.thePlayer.isSpectator())
+            return;
         if (!targets.isEmpty()) {
             if (event.getState() == Event.State.PRE) {
                 target = targets.get(0);
@@ -112,11 +114,13 @@ public class KillAura extends Module {
                     case WatchDog:
                         if (event.getState() == Event.State.POST) {
                             if (mc.thePlayer.swingProgressInt == -1) {
+
                                 PacketUtil.sendPacket(new C07PacketPlayerDigging(
                                         C07PacketPlayerDigging.Action.RELEASE_USE_ITEM, new BlockPos(-1, -1, -1), EnumFacing.DOWN));
                             } else if (mc.thePlayer.swingProgressInt == 0) {
                                 PacketUtil.sendPacket(new C08PacketPlayerBlockPlacement(
                                         new BlockPos(-1, -1, -1), 255, mc.thePlayer.getHeldItem(), 0, 0, 0));
+                                mc.playerController.sendUseItem(mc.thePlayer, mc.theWorld, mc.thePlayer.getHeldItem());
                             }
                         }
                         break;

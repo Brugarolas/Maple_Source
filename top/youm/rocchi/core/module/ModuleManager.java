@@ -4,6 +4,8 @@ import com.darkmagician6.eventapi.EventManager;
 import com.darkmagician6.eventapi.EventTarget;
 
 import top.youm.rocchi.common.events.KeyEvent;
+import top.youm.rocchi.core.module.modules.combat.Criticals;
+import top.youm.rocchi.core.module.modules.combat.FastBow;
 import top.youm.rocchi.core.module.modules.movement.*;
 import top.youm.rocchi.core.module.modules.player.*;
 import top.youm.rocchi.core.module.modules.visual.*;
@@ -19,6 +21,8 @@ public class ModuleManager {
     public void initialize(){
         /* combat */
         this.modules.add(new KillAura());
+        this.modules.add(new FastBow());
+        this.modules.add(new Criticals());
         /* movement */
         this.modules.add(new Sprint());
         this.modules.add(new Speed());
@@ -41,7 +45,6 @@ public class ModuleManager {
         /* visual */
         this.modules.add(new Animations());
         this.modules.add(new KeyStrokes());
-
         this.modules.add(new GlowESP());
         this.modules.add(new HUD());
         this.modules.add(new ModuleList());

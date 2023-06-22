@@ -6,7 +6,7 @@ import top.youm.rocchi.core.ui.clickgui.modern.Component;
 import top.youm.rocchi.core.ui.clickgui.modern.ModernClickGUI;
 import top.youm.rocchi.core.ui.clickgui.modern.state.UIState;
 import top.youm.rocchi.core.ui.theme.Theme;
-import top.youm.rocchi.core.ui.clickgui.old.MouseType;
+import top.youm.rocchi.core.ui.MouseType;
 import top.youm.rocchi.core.ui.font.FontLoaders;
 import top.youm.rocchi.utils.render.RenderUtil;
 import top.youm.rocchi.utils.render.RoundedUtil;
@@ -42,7 +42,7 @@ public class ModuleComponent extends Component {
             }
             RoundedUtil.drawRound(x + width - 30, y + height / 2.0f - 3, 20, 6, 3, Theme.enableButton);
         }
-        RenderUtil.drawCircle(x + width - animation, y + height / 2.0f, 6, Theme.buttonCircleTheme);
+        RenderUtil.drawSmoothCircle(x + width - animation, y + height / 2.0f, 6, -1);
 
         RoundedUtil.drawRound((x + width - 70 - 4),  (y + height / 2.0f - 4), 28, 8,2,Theme.theme);
         if(this.equals(UIState.focusKey)){

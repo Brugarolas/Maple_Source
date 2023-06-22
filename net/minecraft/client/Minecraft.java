@@ -521,7 +521,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage
         this.skinManager = new SkinManager(this.renderEngine, new File(this.fileAssets, "skins"), this.sessionService);
         this.saveLoader = new AnvilSaveConverter(new File(this.mcDataDir, "saves"));
         this.mcSoundHandler = new SoundHandler(this.mcResourceManager, this.gameSettings);
-        progressScreen.makeProgress("resource loading...");
+        progressScreen.makeProgress();
         this.mcResourceManager.registerReloadListener(this.mcSoundHandler);
         this.mcMusicTicker = new MusicTicker(this);
         this.fontRendererObj = new FontRenderer(this.gameSettings, new ResourceLocation("textures/font/ascii.png"), this.renderEngine, false);
@@ -530,17 +530,17 @@ public class Minecraft implements IThreadListener, IPlayerUsage
             this.fontRendererObj.setUnicodeFlag(this.isUnicode());
             this.fontRendererObj.setBidiFlag(this.mcLanguageManager.isCurrentLanguageBidirectional());
         }
-        progressScreen.makeProgress("minecraft font loading...");
+        progressScreen.makeProgress();
         this.standardGalacticFontRenderer = new FontRenderer(this.gameSettings, new ResourceLocation("textures/font/ascii_sga.png"), this.renderEngine, false);
         this.mcResourceManager.registerReloadListener(this.fontRendererObj);
         this.mcResourceManager.registerReloadListener(this.standardGalacticFontRenderer);
         this.mcResourceManager.registerReloadListener(new GrassColorReloadListener());
         this.mcResourceManager.registerReloadListener(new FoliageColorReloadListener());
-        progressScreen.makeProgress("register listener loading...");
+        progressScreen.makeProgress();
         FontLoaders.chinese22 = GlyphPageFontRenderer.create(getFont("wqy_microhei",22), true);
         FontLoaders.chinese18 = GlyphPageFontRenderer.create(getFont("wqy_microhei",18), true);
         logger.info("loading unicode font...");
-        progressScreen.makeProgress("unicode font loading...");
+        progressScreen.makeProgress();
         AchievementList.openInventory.setStatStringFormatter(str -> {
             try
             {
@@ -569,14 +569,14 @@ public class Minecraft implements IThreadListener, IPlayerUsage
         this.textureMapBlocks.setMipmapLevels(this.gameSettings.mipmapLevels);
         this.renderEngine.loadTickableTexture(TextureMap.locationBlocksTexture, this.textureMapBlocks);
         this.renderEngine.bindTexture(TextureMap.locationBlocksTexture);
-        progressScreen.makeProgress("render engine loading...");
+        progressScreen.makeProgress();
         this.textureMapBlocks.setBlurMipmapDirect(false, this.gameSettings.mipmapLevels > 0);
         this.modelManager = new ModelManager(this.textureMapBlocks);
         this.mcResourceManager.registerReloadListener(this.modelManager);
         this.renderItem = new RenderItem(this.renderEngine, this.modelManager);
         this.renderManager = new RenderManager(this.renderEngine, this.renderItem);
         this.itemRenderer = new ItemRenderer(this);
-        progressScreen.makeProgress("item renderer load...");
+        progressScreen.makeProgress();
         this.mcResourceManager.registerReloadListener(this.renderItem);
         this.entityRenderer = new EntityRenderer(this, this.mcResourceManager);
         this.mcResourceManager.registerReloadListener(this.entityRenderer);
@@ -585,7 +585,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage
         this.renderGlobal = new RenderGlobal(this);
         this.mcResourceManager.registerReloadListener(this.renderGlobal);
         this.guiAchievement = new GuiAchievement(this);
-        progressScreen.makeProgress("gui loading...");
+        progressScreen.makeProgress();
         GlStateManager.viewport(0, 0, this.displayWidth, this.displayHeight);
         this.effectRenderer = new EffectRenderer(this.theWorld, this.renderEngine);
         this.checkGLError("Post startup");
@@ -608,7 +608,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage
         {
             this.toggleFullscreen();
         }
-        progressScreen.makeProgress("main screen loading...");
+        progressScreen.makeProgress();
         try
         {
             Display.setVSyncEnabled(this.gameSettings.enableVsync);

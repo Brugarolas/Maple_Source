@@ -11,6 +11,7 @@ import top.youm.rocchi.irc.client.Client;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.lwjgl.opengl.Display;
+import top.youm.rocchi.utils.math.MathUtil;
 
 /**
  * @author You_M
@@ -27,11 +28,13 @@ public class Rocchi {
     public String NAME = "Rocchi";
     public String VERSION = "alpha-0.1";
     public String dev = "YouM";
+    public String username = "YouM"+ MathUtil.getRandomInRange(1,999);;
     private ModuleManager moduleManager;
     private SettingManager settingManager;
     private ConfigManager configManager;
     private CommandManager commandManager;
     public void startGame(){
+
         moduleManager = new ModuleManager();
         settingManager = new SettingManager();
         moduleManager.initialize();

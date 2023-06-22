@@ -4,7 +4,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import top.youm.rocchi.common.settings.ModeSetting;
 import top.youm.rocchi.core.ui.clickgui.modern.Component;
 import top.youm.rocchi.core.ui.theme.Theme;
-import top.youm.rocchi.core.ui.clickgui.old.MouseType;
+import top.youm.rocchi.core.ui.MouseType;
 import top.youm.rocchi.core.ui.font.FontLoaders;
 import top.youm.rocchi.utils.render.RenderUtil;
 import top.youm.rocchi.utils.render.RoundedUtil;

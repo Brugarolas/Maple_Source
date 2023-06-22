@@ -11,8 +11,10 @@ import top.youm.rocchi.core.module.modules.visual.ClickGui;
 import top.youm.rocchi.core.ui.clickgui.modern.component.CategoryComponent;
 import top.youm.rocchi.core.ui.clickgui.modern.component.ModuleComponent;
 import top.youm.rocchi.core.ui.clickgui.modern.state.UIState;
+import top.youm.rocchi.core.ui.font.FontLoaders;
+import top.youm.rocchi.core.ui.theme.Icon;
 import top.youm.rocchi.core.ui.theme.Theme;
-import top.youm.rocchi.core.ui.clickgui.old.MouseType;
+import top.youm.rocchi.core.ui.MouseType;
 import top.youm.rocchi.utils.render.RenderUtil;
 import top.youm.rocchi.utils.render.RoundedUtil;
 
@@ -43,7 +45,7 @@ public class ModernClickGUI extends GuiScreen {
     @Override
     public void initGui() {
         super.initGui();
-        ScaledResolution sr = new ScaledResolution(this.mc);
+        ScaledResolution sr = new ScaledResolution(mc);
         x = sr.getScaledWidth() / 2 - screenWidth / 2;
         y = sr.getScaledHeight() / 2 - screenHeight / 2;
     }
@@ -70,13 +72,17 @@ public class ModernClickGUI extends GuiScreen {
         }
 
     }
-
     public void topRouter(int mouseX, int mouseY) {
         RoundedUtil.drawRound(x, y, screenWidth, 20, 2, Theme.theme);
         RenderUtil.drawRect(x - 1, y + 19, screenWidth + 2, 10, Theme.theme);
         RenderUtil.drawCircleImage(new ResourceLocation("Rocchi/image/head.jpg"),x + screenWidth -50, y, 30, 30);
-    }
+        FontLoaders.comfortaaB40.drawStringWithShadow(Rocchi.getInstance().NAME,x + 10,y + 6,-1);
+        FontLoaders.icon32.drawStringWithShadow(Icon.HOME.icon,x + 120,y+8,-1);
+        FontLoaders.robotoB26.drawStringWithShadow("Home",x + 120 + FontLoaders.icon32.getStringWidth(Icon.HOME.icon),y + 10,-1);
+        FontLoaders.icon32.drawStringWithShadow(Icon.CHAT.icon, x + 180,y+8,-1);
+        FontLoaders.robotoB26.drawStringWithShadow("IRC",x + 120 + FontLoaders.robotoB26.getStringWidth("Home") + 20 + FontLoaders.icon32.getStringWidth(Icon.CHAT.icon) + 5,y + 10,-1);
 
+    }
     public static int navbarWidth = 110;
 
     public void navbar(int mouseX, int mouseY) {

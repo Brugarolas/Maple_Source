@@ -26,6 +26,7 @@ public abstract class FontLoaders {
     public static CFontRenderer comfortaaB22 = new CFontRenderer(FontLoaders.getComfortaa(22,Roughness.Bold), true, true);
 
     public static CFontRenderer comfortaaB30 = new CFontRenderer(FontLoaders.getComfortaa(30,Roughness.Bold), true, true);
+    public static CFontRenderer comfortaaB40 = new CFontRenderer(FontLoaders.getComfortaa(40,Roughness.Bold), true, true);
 
     public static CFontRenderer robotoB22 = new CFontRenderer(FontLoaders.getRoboto(22,Roughness.Bold), true, true);
     public static CFontRenderer robotoB24 = new CFontRenderer(FontLoaders.getRoboto(24,Roughness.Bold), true, true);
@@ -38,10 +39,10 @@ public abstract class FontLoaders {
 
     public static CFontRenderer robotoR22 = new CFontRenderer(FontLoaders.getRoboto(22,Roughness.Regular), true, true);
     public static CFontRenderer robotoR34 = new CFontRenderer(FontLoaders.getRoboto(34,Roughness.Regular), true, true);
-    public static CFontRenderer icon20 = new CFontRenderer(getFont("iconfont",20),true,true);
-    public static CFontRenderer icon24 = new CFontRenderer(getFont("iconfont",24),true,true);
-    public static CFontRenderer icon28 = new CFontRenderer(getFont("iconfont",28),true,true);
-    public static CFontRenderer icon32 = new CFontRenderer(getFont("iconfont",32),true,true);
+    public static CFontRenderer icon20 = new CFontRenderer(getFont("iconfont2",20),true,true);
+    public static CFontRenderer icon24 = new CFontRenderer(getFont("iconfont2",24),true,true);
+    public static CFontRenderer icon28 = new CFontRenderer(getFont("iconfont2",28),true,true);
+    public static CFontRenderer icon32 = new CFontRenderer(getFont("iconfont2",32),true,true);
     public static GlyphPageFontRenderer chinese22;
     public static GlyphPageFontRenderer chinese18;
     public static Font getFont(String name ,int size) {

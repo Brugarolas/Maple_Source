@@ -16,17 +16,13 @@ import java.util.Random;
 
 public class ProgressScreen {
     private Framebuffer framebuffer;
-    private String text;
-    private int progress;
     private int number;
-    public void makeProgress(String text){
-        this.text = text;
-        this.progress += 17;
+    public void makeProgress(){
         drawScreen();
     }
 
     public ProgressScreen() {
-        number = MathUtil.getRandomInRange(1, 3);
+        number = MathUtil.getRandomInRange(1, 4);
     }
 
     public void drawScreen(){
@@ -60,8 +56,7 @@ public class ProgressScreen {
     }
     public void draw(ScaledResolution sr){
         RenderUtil.drawTexturedRect(0,0,sr.getScaledWidth(),sr.getScaledHeight(),"background"+number+".png");
-        FontLoaders.robotoR34.drawStringWithShadow(text,sr.getScaledWidth() / 2.0 - FontLoaders.robotoR34.getStringWidth(text) / 2.0f, sr.getScaledHeight() - 150, Theme.font.getRGB());
-        RenderUtil.drawBorder(sr.getScaledWidth() / 2.0f - 75, sr.getScaledHeight()/2.0f,150,20,2,new Color(233,233,233));
-        RenderUtil.drawRect(sr.getScaledWidth() / 2.0f - 71, sr.getScaledHeight() / 2.0f + 6,progress + 0.5f,10,new Color(233,233,233));
+        FontLoaders.robotoB40.drawStringWithShadow("Loading",sr.getScaledWidth() / 2.0 - FontLoaders.robotoB40.getStringWidth("Loading") / 2.0f, sr.getScaledHeight() - 150, Theme.font.getRGB());
     }
+
 }
