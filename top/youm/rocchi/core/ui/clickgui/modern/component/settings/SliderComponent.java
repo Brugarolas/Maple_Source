@@ -2,7 +2,7 @@ package top.youm.rocchi.core.ui.clickgui.modern.component.settings;
 
 
 import top.youm.rocchi.common.settings.NumberSetting;
-import top.youm.rocchi.core.ui.clickgui.modern.Component;
+import top.youm.rocchi.core.ui.Component;
 import top.youm.rocchi.core.ui.font.FontLoaders;
 import top.youm.rocchi.core.ui.theme.Theme;
 import top.youm.rocchi.core.ui.MouseType;
@@ -22,10 +22,7 @@ public class SliderComponent extends Component {
 
     @Override
     public void draw(float xPos, float yPos, int mouseX, int mouseY) {
-        this.x = xPos;
-        this.y = yPos;
-        this.mouseX = mouseX;
-        this.mouseY = mouseY;
+        super.draw(xPos,yPos,mouseX,mouseY);
         this.percentBar = 200 * ((numberSetting.getValue().floatValue() - numberSetting.getMin().floatValue()) / (numberSetting.getMax().floatValue() - numberSetting.getMin().floatValue()));
         boolean hover = isHover((int) (x - 210), (int) y, 200, 6, mouseX, mouseY);
         animation = animator.animate(percentBar, animation, 0.08f);

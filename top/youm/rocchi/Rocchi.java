@@ -2,6 +2,7 @@ package top.youm.rocchi;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import javafx.embed.swing.JFXPanel;
 import net.minecraft.client.Minecraft;
 import top.youm.rocchi.common.settings.SettingManager;
 import top.youm.rocchi.core.command.CommandManager;
@@ -12,6 +13,9 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.lwjgl.opengl.Display;
 import top.youm.rocchi.utils.math.MathUtil;
+
+import javax.swing.*;
+import java.util.concurrent.CountDownLatch;
 
 /**
  * @author You_M
@@ -33,8 +37,21 @@ public class Rocchi {
     private SettingManager settingManager;
     private ConfigManager configManager;
     private CommandManager commandManager;
+    public void initializeToolkit()
+    {
+        final CountDownLatch latch = new CountDownLatch(1);
+        SwingUtilities.invokeLater(() -> {
+            new JFXPanel();
+            latch.countDown();
+        });
+        try {
+            latch.await();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
     public void startGame(){
-
+        initializeToolkit();
         moduleManager = new ModuleManager();
         settingManager = new SettingManager();
         moduleManager.initialize();

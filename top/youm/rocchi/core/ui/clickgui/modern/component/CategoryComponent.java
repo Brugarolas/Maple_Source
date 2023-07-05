@@ -2,7 +2,7 @@ package top.youm.rocchi.core.ui.clickgui.modern.component;
 
 import org.lwjgl.input.Mouse;
 import top.youm.rocchi.core.module.ModuleCategory;
-import top.youm.rocchi.core.ui.clickgui.modern.Component;
+import top.youm.rocchi.core.ui.Component;
 import top.youm.rocchi.core.ui.clickgui.modern.ModernClickGUI;
 import top.youm.rocchi.core.ui.clickgui.modern.animation.Animation;
 import top.youm.rocchi.core.ui.clickgui.modern.animation.Direction;
@@ -43,10 +43,7 @@ public class CategoryComponent extends Component {
 
     @Override
     public void draw(float xPos, float yPos, int mouseX, int mouseY) {
-        this.x = xPos;
-        this.y = yPos;
-        this.mouseX = mouseX;
-        this.mouseY = mouseY;
+        super.draw(xPos,yPos,mouseX,mouseY);
         if (UIState.currentCategory == category) {
             RoundedUtil.drawRound(x, y, width, height, 2, Theme.theme);
             animation = animator.animate(7, animation, 0.08f);

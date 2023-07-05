@@ -2,7 +2,7 @@ package top.youm.rocchi.core.ui.clickgui.modern.component.settings;
 
 import net.minecraft.client.renderer.GlStateManager;
 import top.youm.rocchi.common.settings.ModeSetting;
-import top.youm.rocchi.core.ui.clickgui.modern.Component;
+import top.youm.rocchi.core.ui.Component;
 import top.youm.rocchi.core.ui.theme.Theme;
 import top.youm.rocchi.core.ui.MouseType;
 import top.youm.rocchi.core.ui.font.FontLoaders;
@@ -23,10 +23,7 @@ public class DropdownComponent extends Component {
 
     @Override
     public void draw(float xPos, float yPos, int mouseX, int mouseY) {
-        this.x = xPos;
-        this.y = yPos;
-        this.mouseX = mouseX;
-        this.mouseY = mouseY;
+        super.draw(xPos,yPos,mouseX,mouseY);
         if (open) {
             animation = animator.animate(0, animation, 0.1f);
         } else {

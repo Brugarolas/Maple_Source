@@ -9,6 +9,8 @@ import org.lwjgl.opengl.GL11;
 import java.awt.*;
 import java.util.Locale;
 
+import static top.youm.rocchi.core.ui.font.FontLoaders.getFont;
+
 public class GlyphPageFontRenderer {
     /**
      * Current X coordinate at which to draw the next character.
@@ -95,7 +97,7 @@ public class GlyphPageFontRenderer {
     }
     public static char[] chars = new char[65535];
     public static char[] ascii_chars = new char[256];
-    static {
+    static{
         for (int i = 0; i < chars.length; ++i) {
             chars[i] = (char)i;
         }
@@ -104,7 +106,6 @@ public class GlyphPageFontRenderer {
             ascii_chars[i] = (char)i;
         }
     }
-
     public static GlyphPageFontRenderer create(Font font, boolean allChars) {
         GlyphPage regularPage = new GlyphPage(font, true, true);
         regularPage.generateGlyphPage(allChars ? chars : ascii_chars, allChars);

@@ -2,7 +2,7 @@ package top.youm.rocchi.core.ui.clickgui.modern.component;
 
 import org.lwjgl.input.Keyboard;
 import top.youm.rocchi.core.module.Module;
-import top.youm.rocchi.core.ui.clickgui.modern.Component;
+import top.youm.rocchi.core.ui.Component;
 import top.youm.rocchi.core.ui.clickgui.modern.ModernClickGUI;
 import top.youm.rocchi.core.ui.clickgui.modern.state.UIState;
 import top.youm.rocchi.core.ui.theme.Theme;
@@ -25,10 +25,7 @@ public class ModuleComponent extends Component {
 
     @Override
     public void draw(float xPos, float yPos, int mouseX, int mouseY) {
-        this.x = xPos;
-        this.y = yPos;
-        this.mouseX = mouseX;
-        this.mouseY = mouseY;
+        super.draw(xPos,yPos,mouseX,mouseY);
         RoundedUtil.drawRound(x + 3, y, width, height, 11, Theme.moduleTheme);
         FontLoaders.comfortaaB18.drawStringWithShadow(module.getName(), x + 7, y + height / 2.0f - FontLoaders.comfortaaB18.getHeight() / 2.0f, Theme.font.getRGB());
         if (module.isToggle()) {

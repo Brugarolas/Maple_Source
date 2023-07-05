@@ -1,7 +1,7 @@
 package top.youm.rocchi.core.ui.clickgui.modern.component.settings;
 
 import top.youm.rocchi.common.settings.ColorSetting;
-import top.youm.rocchi.core.ui.clickgui.modern.Component;
+import top.youm.rocchi.core.ui.Component;
 import top.youm.rocchi.core.ui.MouseType;
 import top.youm.rocchi.utils.render.RenderUtil;
 
@@ -22,10 +22,7 @@ public class ColorComponent extends Component {
 
     @Override
     public void draw(float xPos, float yPos, int mouseX, int mouseY) {
-        this.x = xPos;
-        this.y = yPos;
-        this.mouseX = mouseX;
-        this.mouseY = mouseY;
+        super.draw(xPos,yPos,mouseX,mouseY);
         RenderUtil.drawGradientRect(x - 100, y - 6 + 14, 90, height, color, new Color(255, 255, 255), new Color(0, 0, 0), new Color(0, 0, 0));
         RenderUtil.drawGradientRect2(x - 100, y - 6 + 34 + height, x - 100 + 90, y - 6 + 34 + height + 8, new Color(0, 0, 0, 0).getRGB(), color.getRGB());
         RenderUtil.drawRect(x - 100 + 90 * ((float) alpha / 255), y - 6 + 34 + height, 3, 8, new Color(172, 172, 172));

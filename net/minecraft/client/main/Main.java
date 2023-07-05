@@ -17,6 +17,7 @@ import joptsimple.OptionSpec;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.Session;
 import top.youm.rocchi.Rocchi;
+import top.youm.rocchi.core.ui.font.GlyphPageFontRenderer;
 
 public class Main
 {
@@ -28,6 +29,7 @@ public class Main
         optionparser.accepts("demo");
         optionparser.accepts("fullscreen");
         optionparser.accepts("checkGlErrors");
+
         OptionSpec<String> optionspec = optionparser.accepts("server").withRequiredArg();
         OptionSpec<Integer> optionspec1 = optionparser.accepts("port").withRequiredArg().ofType(Integer.class).defaultsTo(25565);
         OptionSpec<File> optionspec2 = optionparser.accepts("gameDir").withRequiredArg().ofType(File.class).defaultsTo(new File("."));
@@ -102,7 +104,8 @@ public class Main
         String s6 = optionset.valueOf(optionspec);
         Integer integer = optionset.valueOf(optionspec1);
 
-        Session session = new Session(Rocchi.getInstance().username, Rocchi.getInstance().username, Rocchi.getInstance().username, optionspec18.value(optionset));
+        Session session = new Session((String) optionspec9.value(optionset), s4, (String) optionspec11.value(optionset),
+                (String) optionspec18.value(optionset));
         GameConfiguration gameconfiguration = new GameConfiguration(new GameConfiguration.UserInformation(session, propertymap, propertymap1, proxy), new GameConfiguration.DisplayInformation(i, j, flag, flag1), new GameConfiguration.FolderInformation(file1, file3, file2, s5), new GameConfiguration.GameInformation(flag2, s3), new GameConfiguration.ServerInformation(s6, integer));
         Runtime.getRuntime().addShutdownHook(new Thread("Client Shutdown Thread")
         {

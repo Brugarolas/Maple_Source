@@ -372,6 +372,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage
 
     public Minecraft(GameConfiguration gameConfig)
     {
+
         theMinecraft = this;
         this.mcDataDir = gameConfig.folderInfo.mcDataDir;
         this.fileAssets = gameConfig.folderInfo.assetsDir;
@@ -489,6 +490,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage
      */
     private void startGame() throws LWJGLException, IOException
     {
+
         this.gameSettings = new GameSettings(this, this.mcDataDir);
         this.defaultResourcePacks.add(this.mcDefaultResourcePack);
         this.startTimerHackThread();
@@ -539,6 +541,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage
         progressScreen.makeProgress();
         FontLoaders.chinese22 = GlyphPageFontRenderer.create(getFont("wqy_microhei",22), true);
         FontLoaders.chinese18 = GlyphPageFontRenderer.create(getFont("wqy_microhei",18), true);
+
         logger.info("loading unicode font...");
         progressScreen.makeProgress();
         AchievementList.openInventory.setStatStringFormatter(str -> {
