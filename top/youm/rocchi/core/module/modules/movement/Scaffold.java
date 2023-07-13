@@ -6,15 +6,18 @@ import net.minecraft.network.play.client.*;
 import net.minecraft.potion.Potion;
 import org.lwjgl.input.Keyboard;
 import top.youm.rocchi.common.events.MotionEvent;
-import top.youm.rocchi.common.settings.BoolSetting;
-import top.youm.rocchi.common.settings.ModeSetting;
-import top.youm.rocchi.common.settings.NumberSetting;
+import top.youm.rocchi.common.settings.impl.BoolSetting;
+import top.youm.rocchi.common.settings.impl.ModeSetting;
+import top.youm.rocchi.common.settings.impl.NumberSetting;
 import top.youm.rocchi.core.module.Module;
 import top.youm.rocchi.core.module.ModuleCategory;
 import top.youm.rocchi.utils.TimerUtil;
 import top.youm.rocchi.utils.player.RotationUtil;
 import top.youm.rocchi.utils.player.ScaffoldUtil;
 
+/**
+ * @author YouM
+ */
 @SuppressWarnings("unused")
 public class Scaffold extends Module {
 

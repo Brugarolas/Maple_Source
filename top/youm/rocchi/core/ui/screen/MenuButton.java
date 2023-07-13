@@ -1,19 +1,17 @@
 package top.youm.rocchi.core.ui.screen;
 
-import net.minecraft.client.renderer.GlStateManager;
 import top.youm.rocchi.core.ui.theme.Theme;
 import top.youm.rocchi.core.ui.font.CFontRenderer;
 import top.youm.rocchi.core.ui.font.FontLoaders;
 import top.youm.rocchi.utils.AnimationUtils;
 import top.youm.rocchi.utils.render.RenderUtil;
-import top.youm.rocchi.utils.render.RoundedUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 
 import java.awt.*;
 
 /**
- * @author You_M
+ * @author YouM
  */
 public class MenuButton extends GuiButton {
     private static final CFontRenderer font = FontLoaders.comfortaaR24;

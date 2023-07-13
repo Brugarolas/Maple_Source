@@ -6,14 +6,12 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.shader.Framebuffer;
 import top.youm.rocchi.core.ui.font.FontLoaders;
 import top.youm.rocchi.core.ui.theme.Theme;
-import top.youm.rocchi.utils.AnimationUtils;
-import top.youm.rocchi.utils.TimerUtil;
 import top.youm.rocchi.utils.math.MathUtil;
 import top.youm.rocchi.utils.render.RenderUtil;
 
-import java.awt.*;
-import java.util.Random;
-
+/**
+ * @author YouM
+ */
 public class ProgressScreen {
     private Framebuffer framebuffer;
     private int number;

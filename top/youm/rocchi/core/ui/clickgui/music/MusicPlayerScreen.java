@@ -17,6 +17,9 @@ public class MusicPlayerScreen extends GuiScreen {
     public static int x, y;
     public static int screenWidth = 450, screenHeight = 260;
     ArrayList<Button> components = new ArrayList<>();
+    public int dragX, dragY;
+    public boolean isDragging = false;
+    public boolean sizeDragging = false;
     public MusicPlayerScreen() {
         components.add(new Button());
         components.add(new Button());
@@ -43,8 +46,18 @@ public class MusicPlayerScreen extends GuiScreen {
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
         super.drawScreen(mouseX, mouseY, partialTicks);
+        if (isDragging) {
+            x = mouseX - dragX;
+            y = mouseY - dragY;
+        } else if (sizeDragging) {
+            screenWidth += mouseX - dragX;
+            screenHeight += mouseY - dragY;
+            this.dragX = mouseX;
+            this.dragY = mouseY;
+        }
+
         RoundedUtil.drawRound(x,y,screenWidth,screenHeight,2,new Color(40,40,40));
-        container.build(x+100,y,screenWidth - 100,height);
+        container.build(x,y,screenWidth - 100,height);
         List<Button> test = (List<Button>) container.getComponents();
         for (Button component : test) {
             component.draw(0,0,mouseX,mouseY);
@@ -59,11 +72,27 @@ public class MusicPlayerScreen extends GuiScreen {
     @Override
     protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
         super.mouseClicked(mouseX, mouseY, mouseButton);
+        if (Component.isHover(x, y, screenWidth, 30, mouseX, mouseY) && mouseButton == 0) {
+            dragX = mouseX - x;
+            dragY = mouseY - y;
+            isDragging = true;
+        } else if (Component.isHover(x + screenWidth - 20, y + screenHeight - 20, 20, 20, mouseX, mouseY) && mouseButton == 0) {
+            dragX = mouseX;
+            dragY = mouseY;
+            sizeDragging = true;
+        }
     }
 
     @Override
     protected void mouseReleased(int mouseX, int mouseY, int state) {
         super.mouseReleased(mouseX, mouseY, state);
+        if (Component.isHover(x, y, screenWidth, 30, mouseX, mouseY) && state == 0) {
+            dragX = mouseX - x;
+            dragY = mouseY - y;
+            isDragging = false;
+        } else if (Component.isHover(x + screenWidth - 20, y + screenHeight - 20, 20, 20, mouseX, mouseY) && state == 0) {
+            sizeDragging = false;
+        }
     }
 
 

@@ -1,6 +1,6 @@
 package top.youm.rocchi.core.ui.clickgui.modern.component.settings;
 
-import top.youm.rocchi.common.settings.ColorSetting;
+import top.youm.rocchi.common.settings.impl.ColorSetting;
 import top.youm.rocchi.core.ui.Component;
 import top.youm.rocchi.core.ui.MouseType;
 import top.youm.rocchi.utils.render.RenderUtil;

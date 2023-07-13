@@ -235,7 +235,48 @@ public class RenderUtil {
     public static void drawRect(float x,float y,float width,float height,Color color){
         drawRect((int) x, (int) y, (int) width, (int) height,color.getRGB());
     }
+    public static void quickDrawRect(final float x, final float y, final float x2, final float y2) {
+        glBegin(GL_QUADS);
 
+        glVertex2d(x2, y);
+        glVertex2d(x, y);
+        glVertex2d(x, y2);
+        glVertex2d(x2, y2);
+
+        glEnd();
+    }
+    public static void newDrawRect(float left, float top, float right, float bottom, int color) {
+        if (left < right) {
+            float i = left;
+            left = right;
+            right = i;
+        }
+
+        if (top < bottom) {
+            float j = top;
+            top = bottom;
+            bottom = j;
+        }
+
+        float f3 = (float) (color >> 24 & 255) / 255.0F;
+        float f = (float) (color >> 16 & 255) / 255.0F;
+        float f1 = (float) (color >> 8 & 255) / 255.0F;
+        float f2 = (float) (color & 255) / 255.0F;
+        Tessellator tessellator = Tessellator.getInstance();
+        WorldRenderer worldrenderer = tessellator.getWorldRenderer();
+        GlStateManager.enableBlend();
+        GlStateManager.disableTexture2D();
+        GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
+        GlStateManager.color(f, f1, f2, f3);
+        worldrenderer.begin(7, DefaultVertexFormats.POSITION);
+        worldrenderer.pos(left, bottom, 0.0D).endVertex();
+        worldrenderer.pos(right, bottom, 0.0D).endVertex();
+        worldrenderer.pos(right, top, 0.0D).endVertex();
+        worldrenderer.pos(left, top, 0.0D).endVertex();
+        tessellator.draw();
+        GlStateManager.enableTexture2D();
+        GlStateManager.disableBlend();
+    }
     public static Framebuffer createFrameBuffer(Framebuffer framebuffer) {
         if (framebuffer == null || framebuffer.framebufferWidth != mc.displayWidth || Objects.requireNonNull(framebuffer).framebufferHeight != mc.displayHeight) {
             if (framebuffer != null) {
@@ -452,5 +493,18 @@ public class RenderUtil {
 
         enableTexture2D();
         disableBlend();
+    }
+    public static void drawShadowRect(float x, float y, float width, float height, String image) {
+        glPushMatrix();
+        final boolean enableBlend = glIsEnabled(GL_BLEND);
+        final boolean disableAlpha = !glIsEnabled(GL_ALPHA_TEST);
+        if (!enableBlend) glEnable(GL_BLEND);
+        if (!disableAlpha) glDisable(GL_ALPHA_TEST);
+        mc.getTextureManager().bindTexture(new ResourceLocation("Rocchi/image/shadow/" + image + ".png"));
+        GlStateManager.color(1F, 1F, 1F, 1F);
+        RenderUtil.drawModalRectWithCustomSizedTexture(x, y, 0, 0, width, height, width, height);
+        if (!enableBlend) glDisable(GL_BLEND);
+        if (!disableAlpha) glEnable(GL_ALPHA_TEST);
+        glPopMatrix();
     }
 }

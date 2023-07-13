@@ -2,11 +2,14 @@ package top.youm.rocchi.core.module.modules.player;
 
 import com.darkmagician6.eventapi.EventTarget;
 import top.youm.rocchi.common.events.MotionEvent;
-import top.youm.rocchi.common.settings.NumberSetting;
+import top.youm.rocchi.common.settings.impl.NumberSetting;
 import top.youm.rocchi.core.module.Module;
 import top.youm.rocchi.core.module.ModuleCategory;
 import org.lwjgl.input.Keyboard;
 
+/**
+ * @author YouM
+ */
 public final class Timer extends Module {
 
     private final NumberSetting amount = new NumberSetting("Amount", 1, 10, 0.1, 0.1);

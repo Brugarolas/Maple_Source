@@ -9,6 +9,9 @@ import top.youm.rocchi.common.events.PacketSendEvent;
 import top.youm.rocchi.core.module.Module;
 import top.youm.rocchi.core.module.ModuleCategory;
 
+/**
+ * @author YouM
+ */
 @SuppressWarnings("unused")
 public final class Freecam extends Module {
 

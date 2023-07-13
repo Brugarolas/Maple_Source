@@ -2,8 +2,8 @@ package top.youm.rocchi.core.module.modules.player;
 
 import com.darkmagician6.eventapi.EventTarget;
 import top.youm.rocchi.common.events.MotionEvent;
-import top.youm.rocchi.common.settings.BoolSetting;
-import top.youm.rocchi.common.settings.NumberSetting;
+import top.youm.rocchi.common.settings.impl.BoolSetting;
+import top.youm.rocchi.common.settings.impl.NumberSetting;
 import top.youm.rocchi.core.module.Module;
 import top.youm.rocchi.core.module.ModuleCategory;
 import net.minecraft.item.Item;
@@ -12,6 +12,9 @@ import net.minecraft.item.ItemEgg;
 import net.minecraft.item.ItemSnowball;
 import org.lwjgl.input.Keyboard;
 
+/**
+ * @author YouM
+ */
 public class FastPlace extends Module {
     private final BoolSetting blocks = new BoolSetting("Blocks", true);
     private final BoolSetting projectiles = new BoolSetting("Projectiles", true);

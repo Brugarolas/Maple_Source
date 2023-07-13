@@ -2,13 +2,16 @@ package top.youm.rocchi.core.module.modules.movement;
 
 import com.darkmagician6.eventapi.EventTarget;
 import top.youm.rocchi.common.events.MotionEvent;
-import top.youm.rocchi.common.settings.BoolSetting;
-import top.youm.rocchi.common.settings.NumberSetting;
+import top.youm.rocchi.common.settings.impl.BoolSetting;
+import top.youm.rocchi.common.settings.impl.NumberSetting;
 import top.youm.rocchi.core.module.Module;
 import top.youm.rocchi.core.module.ModuleCategory;
 import net.minecraft.network.play.client.C03PacketPlayer;
 import org.lwjgl.input.Keyboard;
 
+/**
+ * @author YouM
+ */
 public class Step extends Module {
     private NumberSetting height = new NumberSetting("Height", 1.0, 10.0, 1.0, 0.5);
     private BoolSetting ncp = new BoolSetting("NCP", false);

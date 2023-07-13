@@ -1,7 +1,7 @@
 package top.youm.rocchi.core.ui.clickgui.modern.component.settings;
 
 
-import top.youm.rocchi.common.settings.NumberSetting;
+import top.youm.rocchi.common.settings.impl.NumberSetting;
 import top.youm.rocchi.core.ui.Component;
 import top.youm.rocchi.core.ui.font.FontLoaders;
 import top.youm.rocchi.core.ui.theme.Theme;
@@ -18,6 +18,11 @@ public class SliderComponent extends Component {
     public SliderComponent(NumberSetting numberSetting) {
         super(numberSetting.getName());
         this.numberSetting = numberSetting;
+    }
+
+    @Override
+    public void update() {
+        this.display = this.numberSetting.canDisplay();
     }
 
     @Override

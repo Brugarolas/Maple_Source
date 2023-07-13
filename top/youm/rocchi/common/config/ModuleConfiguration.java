@@ -2,13 +2,16 @@ package top.youm.rocchi.common.config;
 
 import java.io.Serializable;
 
+/**
+ * @author YouM
+ */
 public class ModuleConfiguration implements Serializable {
+    //module config name
     private String name;
+    //module config is enable
     private boolean enable;
+    //module config key bind
     private String key;
-    public ModuleConfiguration(){
-
-    }
     public ModuleConfiguration(String name,boolean enable,String key){
         this.name = name;
         this.enable = enable;

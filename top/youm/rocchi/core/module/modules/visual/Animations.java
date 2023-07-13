@@ -2,7 +2,7 @@ package top.youm.rocchi.core.module.modules.visual;
 
 import com.darkmagician6.eventapi.EventTarget;
 import top.youm.rocchi.common.events.MotionEvent;
-import top.youm.rocchi.common.settings.ModeSetting;
+import top.youm.rocchi.common.settings.impl.ModeSetting;
 import top.youm.rocchi.core.module.Module;
 import top.youm.rocchi.core.module.ModuleCategory;
 import org.lwjgl.input.Keyboard;

@@ -26,6 +26,7 @@ public class ModuleComponent extends Component {
     @Override
     public void draw(float xPos, float yPos, int mouseX, int mouseY) {
         super.draw(xPos,yPos,mouseX,mouseY);
+        this.width = ModernClickGUI.screenWidth - ModernClickGUI.navbarWidth - 15;
         RoundedUtil.drawRound(x + 3, y, width, height, 11, Theme.moduleTheme);
         FontLoaders.comfortaaB18.drawStringWithShadow(module.getName(), x + 7, y + height / 2.0f - FontLoaders.comfortaaB18.getHeight() / 2.0f, Theme.font.getRGB());
         if (module.isToggle()) {
@@ -53,7 +54,7 @@ public class ModuleComponent extends Component {
     public void mouse(int mouseButton, MouseType mouseType) {
         if(mouseType == MouseType.CLICK){
             if (isHover((int) (x), (int) (y), width, height, mouseX, mouseY)) {
-                if (mouseButton == 1) {
+                if (mouseButton == 1 && !this.dialog.getSubComponents().isEmpty()) {
                     UIState.settingFocused = true;
                     UIState.dialog = this.dialog;
                 }

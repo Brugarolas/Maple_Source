@@ -4,6 +4,9 @@ import top.youm.rocchi.core.module.Module;
 import top.youm.rocchi.core.module.ModuleCategory;
 import org.lwjgl.input.Keyboard;
 
+/**
+ * @author YouM
+ */
 public class FullBright extends Module {
 
     public FullBright() {

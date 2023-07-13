@@ -3,6 +3,9 @@
  */
 package top.youm.rocchi.utils;
 
+/**
+ * @author YouM
+ */
 public class TimerUtil {
 
     public long lastMS = System.currentTimeMillis();

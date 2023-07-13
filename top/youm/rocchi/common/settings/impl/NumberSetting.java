@@ -1,6 +1,12 @@
-package top.youm.rocchi.common.settings;
+package top.youm.rocchi.common.settings.impl;
 
-public class NumberSetting extends Setting<Number>{
+import top.youm.rocchi.common.settings.Setting;
+
+/**
+ * @author YouM
+ * can update number setting like slider
+ */
+public class NumberSetting extends Setting<Number> {
 
     private final Number max,min;
     private Number inc;

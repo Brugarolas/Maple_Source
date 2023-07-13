@@ -1,6 +1,6 @@
 package top.youm.rocchi.core.ui.clickgui.modern.component.settings;
 
-import top.youm.rocchi.common.settings.BoolSetting;
+import top.youm.rocchi.common.settings.impl.BoolSetting;
 import top.youm.rocchi.core.ui.Component;
 import top.youm.rocchi.core.ui.theme.Theme;
 import top.youm.rocchi.core.ui.MouseType;
@@ -15,7 +15,10 @@ public class ButtonComponent extends Component {
         super(boolSetting.getName());
         this.boolSetting = boolSetting;
     }
-
+    @Override
+    public void update() {
+        this.display = this.boolSetting.canDisplay();
+    }
     @Override
     public void draw(float xPos, float yPos, int mouseX, int mouseY) {
         super.draw(xPos,yPos,mouseX,mouseY);
@@ -43,8 +46,5 @@ public class ButtonComponent extends Component {
 
     @Override
     public void input(char typedChar, int keyCode) {
-
     }
-
-
 }

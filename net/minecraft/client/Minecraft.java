@@ -40,6 +40,7 @@ import javax.imageio.ImageIO;
 
 import top.youm.rocchi.Rocchi;
 import top.youm.rocchi.common.events.KeyEvent;
+import top.youm.rocchi.common.events.TickEvent;
 import top.youm.rocchi.core.ui.font.FontLoaders;
 import top.youm.rocchi.core.ui.font.GlyphPageFontRenderer;
 import top.youm.rocchi.core.ui.screen.MainScreen;
@@ -240,7 +241,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage
     private Entity renderViewEntity;
     public Entity pointedEntity;
     public EffectRenderer effectRenderer;
-    private final Session session;
+    public Session session;
     private boolean isGamePaused;
 
     /** The font renderer used for displaying and measuring text */
@@ -1776,6 +1777,10 @@ public class Minecraft implements IThreadListener, IPlayerUsage
      */
     public void runTick() throws IOException
     {
+
+        TickEvent tickEvent = new TickEvent();
+        EventManager.call(tickEvent);
+
         if (this.rightClickDelayTimer > 0)
         {
             --this.rightClickDelayTimer;
@@ -3394,4 +3399,5 @@ public class Minecraft implements IThreadListener, IPlayerUsage
     {
         this.connectedToRealms = isConnected;
     }
+
 }

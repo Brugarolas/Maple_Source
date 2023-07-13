@@ -1,5 +1,8 @@
 package top.youm.rocchi.core.command;
 
+/**
+ * @author YouM
+ */
 public abstract class Command {
     private String name;
     private String usage;

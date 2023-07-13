@@ -10,6 +10,9 @@ import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 import org.lwjgl.input.Keyboard;
 
+/**
+ * @author YouM
+ */
 public class NoSlow extends Module {
     public NoSlow() {
         super("NoSlow", ModuleCategory.MOVEMENT, Keyboard.KEY_NONE);

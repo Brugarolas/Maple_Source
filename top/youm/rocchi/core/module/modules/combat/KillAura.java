@@ -2,10 +2,7 @@ package top.youm.rocchi.core.module.modules.combat;
 
 import com.darkmagician6.eventapi.EventTarget;
 import com.darkmagician6.eventapi.events.Event;
-import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.monster.EntitySpider;
-import net.minecraft.entity.passive.EntityPig;
 import net.minecraft.network.play.client.C07PacketPlayerDigging;
 import net.minecraft.network.play.client.C0APacketAnimation;
 import net.minecraft.network.play.server.S18PacketEntityTeleport;
@@ -14,14 +11,14 @@ import org.lwjgl.input.Keyboard;
 import top.youm.rocchi.Rocchi;
 import top.youm.rocchi.common.events.MotionEvent;
 import top.youm.rocchi.common.events.PacketReceiveEvent;
-import top.youm.rocchi.common.settings.BoolSetting;
-import top.youm.rocchi.common.settings.ModeSetting;
-import top.youm.rocchi.common.settings.NumberSetting;
+import top.youm.rocchi.common.settings.impl.BoolSetting;
+import top.youm.rocchi.common.settings.impl.ModeSetting;
+import top.youm.rocchi.common.settings.impl.NumberSetting;
 import top.youm.rocchi.core.module.Module;
 import top.youm.rocchi.core.module.ModuleCategory;
 import top.youm.rocchi.core.module.modules.movement.Scaffold;
+import top.youm.rocchi.core.module.modules.world.AntiBot;
 import top.youm.rocchi.core.module.modules.world.Teams;
-import top.youm.rocchi.utils.AnimationUtils;
 import top.youm.rocchi.utils.TimerUtil;
 import top.youm.rocchi.utils.math.MathUtil;
 import top.youm.rocchi.utils.network.PacketUtil;
@@ -39,7 +36,9 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
-
+/**
+ * @author YouM
+ */
 public class KillAura extends Module {
     private final NumberSetting reach = new NumberSetting("Reach", 3.77, 6, 1, 0.1);
     private final NumberSetting minCps = new NumberSetting("Min CPS", 11, 20, 1, 1);
@@ -112,17 +111,14 @@ public class KillAura extends Module {
                 }
 
                 if(rotateMode.getValue() == RotateMode.Smooth || rotateMode.getValue() == RotateMode.LiquidBounce){
-//                    float[] r = RotationUtil.fixedSensitivity(Minecraft.getMinecraft().gameSettings.mouseSensitivity, smoothRotations);
                     event.setYaw(smoothRotations[0]);
                     event.setPitch(smoothRotations[1]);
                     RotationUtil.setRotations(smoothRotations);
                 }else {
-//                    float[] r = RotationUtil.fixedSensitivity(Minecraft.getMinecraft().gameSettings.mouseSensitivity, rotations);
                     event.setYaw(rotations[0]);
                     event.setPitch(rotations[1]);
                     RotationUtil.setRotations(rotations);
                 }
-
             }
 
             if (autoblock.getValue() && mc.thePlayer.getCurrentEquippedItem() != null && mc.thePlayer.getCurrentEquippedItem().getItem() instanceof ItemSword) {
@@ -244,7 +240,10 @@ public class KillAura extends Module {
     }
 
     public boolean isValid(EntityLivingBase entLiving) {
-        if (entLiving == null) return false;
+        AntiBot antiBot = Rocchi.getInstance().getModuleManager().getModuleByClass(AntiBot.class);
+        if (antiBot.isNPC(entLiving) || entLiving == null) {
+            return false;
+        }
         if (Teams.isInTeam(entLiving)) return false;
         if (entLiving instanceof EntityPlayer && players.getValue() && !entLiving.isInvisible()) {
             return true;
@@ -271,12 +270,16 @@ public class KillAura extends Module {
     }
 
     private float[] getRotationsToEnt(Entity ent) {
-        final double differenceX = ent.posX - mc.thePlayer.posX;
-        final double differenceY = (ent.posY + ent.height) - (mc.thePlayer.posY + mc.thePlayer.height) - 0.5;
-        final double differenceZ = ent.posZ - mc.thePlayer.posZ;
-        final float rotationYaw = (float) (Math.atan2(differenceZ, differenceX) * 180.0D / Math.PI) - 90.0f;
-        final float rotationPitch = (float) (Math.atan2(differenceY, mc.thePlayer.getDistanceToEntity(ent)) * 180.0D
-                / Math.PI);
+        //target and player x distance
+        final double diffX = ent.posX - mc.thePlayer.posX;
+        //target and player y distance
+        final double diffY = (ent.posY + ent.height) - (mc.thePlayer.posY + mc.thePlayer.height) - 0.5;
+        //target and player z distance
+        final double diffZ = ent.posZ - mc.thePlayer.posZ;
+        // angle
+        double angle = 180.0D / Math.PI;
+        final float rotationYaw = (float) (Math.atan2(diffZ, diffX) * angle) - 90.0f;
+        final float rotationPitch = (float) (Math.atan2(diffY, mc.thePlayer.getDistanceToEntity(ent)) * angle);
         final float finishedYaw = mc.thePlayer.rotationYaw
                 + MathHelper.wrapAngleTo180_float(rotationYaw - mc.thePlayer.rotationYaw);
         final float finishedPitch = mc.thePlayer.rotationPitch

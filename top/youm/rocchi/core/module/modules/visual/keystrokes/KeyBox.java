@@ -6,6 +6,9 @@ import top.youm.rocchi.utils.render.RenderUtil;
 
 import java.awt.*;
 
+/**
+ * @author YouM
+ */
 public class KeyBox {
     private KeyBinding keyBinding;
     public void drawKeyBox(int x, int y, int width, int height, Color color){

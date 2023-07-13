@@ -2,9 +2,16 @@ package top.youm.rocchi.common.events;
 
 import com.darkmagician6.eventapi.events.Event;
 
+/**
+ * @author YouM
+ * when player int minecraft motion invoke this event
+ */
 public class MotionEvent extends Event {
+    //player position X,position Y,position Z,
     private double posX,posY,posZ;
+    //player head pitch angle yaw angle
     private float pitch,yaw;
+    //player is on ground
     private boolean onGround;
 
     public MotionEvent(double posX, double posY, double posZ, float yaw, float pitch, boolean onGround) {

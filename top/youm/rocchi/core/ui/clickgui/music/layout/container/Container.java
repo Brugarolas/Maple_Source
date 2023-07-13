@@ -38,7 +38,7 @@ public class Container {
             判断当前的的宽度是否 >= 最大宽度
             "currentX - x + gutter" 当前的currentX位置 - (最开始的位置x + 间隔gutter)
          */
-        if(currentX - x + gutter >= maxWidth){
+        if(currentX - x - gutter >= maxWidth){
             currentX = x; // currentX 设置回最开始的位置
             currentY += component.getHeight() + gutter;// currentY 加上 组件的宽度和 间隔 gutter
         }

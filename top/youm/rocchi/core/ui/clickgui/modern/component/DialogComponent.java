@@ -5,6 +5,9 @@ import net.minecraft.client.renderer.GlStateManager;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import top.youm.rocchi.common.settings.*;
+import top.youm.rocchi.common.settings.impl.BoolSetting;
+import top.youm.rocchi.common.settings.impl.ModeSetting;
+import top.youm.rocchi.common.settings.impl.NumberSetting;
 import top.youm.rocchi.core.module.Module;
 import top.youm.rocchi.core.ui.Component;
 import top.youm.rocchi.core.ui.clickgui.modern.animation.Animation;
@@ -36,8 +39,8 @@ public class DialogComponent extends Component {
         this.module = module;
         this.maxScroll = Float.MAX_VALUE;
         this.minScroll = 0.0f;
-        this.width = 400;
-        this.height = 350;
+        this.width = 300;
+        this.height = 300;
         for (Setting<?> setting : module.getSettings()) {
             if(setting instanceof BoolSetting){
                 subComponents.add(new ButtonComponent((BoolSetting) setting));
@@ -76,7 +79,11 @@ public class DialogComponent extends Component {
             FontLoaders.robotoR34.drawCenteredStringWithShadow("No Setting",x + width / 2.0f,y + height / 2.0f- FontLoaders.robotoR34.getHeight() / 2.0f,Theme.font.getRGB());
         }
         for (Component component : subComponents) {
-            FontLoaders.comfortaaB18.drawStringWithShadow(component.getName(),x + 5,y + 25 - 3 + offsetY + getScroll(),Theme.font.getRGB());
+            component.update();
+            if(!component.isDisplay()){
+               continue;
+            }
+            FontLoaders.comfortaaB24.drawStringWithShadow(component.getName(),x + 5,y + 16 + offsetY + getScroll(),Theme.font.getRGB());
             component.draw(x + width,y + 25 - 3 + offsetY + getScroll(),mouseX,mouseY);
             offsetY += 30;
         }
@@ -120,4 +127,7 @@ public class DialogComponent extends Component {
         return this.scroll = (float) (this.rawScroll - this.scrollAnimation.getOutput());
     }
 
+    public List<Component> getSubComponents() {
+        return subComponents;
+    }
 }

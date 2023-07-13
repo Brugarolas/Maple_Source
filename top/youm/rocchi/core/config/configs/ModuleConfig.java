@@ -14,6 +14,10 @@ import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * @author YouM
+ * read 
+ */
 public class ModuleConfig extends Config {
     public ModuleConfig() {
         super("module.json");
@@ -24,8 +28,8 @@ public class ModuleConfig extends Config {
         try {
             List<ModuleConfiguration> configurations = ConfigManager.gson.fromJson(
                     FileUtils.readFileToString(this.file),
-                    new TypeToken<List<ModuleConfiguration>>() {
-            }.getType());
+                    new TypeToken<List<ModuleConfiguration>>() {}.getType()
+            );
             for (Module module : Rocchi.getInstance().getModuleManager().modules) {
                 for (ModuleConfiguration configuration : configurations) {
                     if (configuration.getName().equals(module.getName())) {

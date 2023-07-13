@@ -3,8 +3,12 @@ package top.youm.rocchi.common.events;
 import com.darkmagician6.eventapi.events.Event;
 import net.minecraft.network.Packet;
 
+/**
+ * @author YouM
+ * when server send packets to player invoke this event
+ */
 public class PacketReceiveEvent extends Event {
-
+    //server send to player packets type
     private Packet<?> packet;
 
     public PacketReceiveEvent(Packet<?> packet) {

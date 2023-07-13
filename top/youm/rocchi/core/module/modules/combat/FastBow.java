@@ -5,10 +5,13 @@ import net.minecraft.item.ItemBow;
 import net.minecraft.network.play.client.C03PacketPlayer;
 import org.lwjgl.input.Keyboard;
 import top.youm.rocchi.common.events.MotionEvent;
-import top.youm.rocchi.common.settings.ModeSetting;
+import top.youm.rocchi.common.settings.impl.ModeSetting;
 import top.youm.rocchi.core.module.Module;
 import top.youm.rocchi.core.module.ModuleCategory;
 
+/**
+ * @author YouM
+ */
 public class FastBow extends Module {
     public static ModeSetting<FastBowMode> mode = new ModeSetting("Mode",FastBowMode.values(),FastBowMode.NCP);
 

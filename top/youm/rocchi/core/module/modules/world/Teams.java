@@ -1,16 +1,17 @@
 package top.youm.rocchi.core.module.modules.world;
 
-import com.darkmagician6.eventapi.EventTarget;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import org.lwjgl.input.Keyboard;
-import top.youm.rocchi.common.settings.BoolSetting;
+import top.youm.rocchi.common.settings.impl.BoolSetting;
 import top.youm.rocchi.core.module.Module;
 import top.youm.rocchi.core.module.ModuleCategory;
 
-import java.security.Key;
 
+/**
+ * @author YouM
+ */
 @SuppressWarnings("unused")
 public class Teams extends Module {
 

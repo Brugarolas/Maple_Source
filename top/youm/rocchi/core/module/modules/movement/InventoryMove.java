@@ -3,7 +3,7 @@ package top.youm.rocchi.core.module.modules.movement;
 import com.darkmagician6.eventapi.EventTarget;
 import com.darkmagician6.eventapi.events.Event;
 import top.youm.rocchi.common.events.MotionEvent;
-import top.youm.rocchi.common.settings.ModeSetting;
+import top.youm.rocchi.common.settings.impl.ModeSetting;
 import top.youm.rocchi.core.module.Module;
 import top.youm.rocchi.core.module.ModuleCategory;
 import top.youm.rocchi.utils.TimerUtil;
@@ -15,6 +15,9 @@ import org.lwjgl.input.Keyboard;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * @author YouM
+ */
 @SuppressWarnings("unused")
 public final class InventoryMove extends Module {
     private final TimerUtil delayTimer = new TimerUtil();

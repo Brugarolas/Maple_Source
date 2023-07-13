@@ -3,13 +3,16 @@ package top.youm.rocchi.core.module.modules.player;
 import com.darkmagician6.eventapi.EventTarget;
 import com.darkmagician6.eventapi.events.Event;
 import top.youm.rocchi.common.events.MotionEvent;
-import top.youm.rocchi.common.settings.ModeSetting;
+import top.youm.rocchi.common.settings.impl.ModeSetting;
 import top.youm.rocchi.core.module.Module;
 import top.youm.rocchi.core.module.ModuleCategory;
 import top.youm.rocchi.utils.network.PacketUtil;
 import net.minecraft.network.play.client.C03PacketPlayer;
 import org.lwjgl.input.Keyboard;
 
+/**
+ * @author YouM
+ */
 @SuppressWarnings("unused")
 public final class NoFall extends Module {
 

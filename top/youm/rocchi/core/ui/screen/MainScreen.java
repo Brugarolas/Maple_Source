@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
- * @author You_M
+ * @author YouM
  */
 public class MainScreen extends GuiScreen implements GuiYesNoCallback {
     private final ShaderUtil backgroundShader = new ShaderUtil("Rocchi/shader/background.frag");

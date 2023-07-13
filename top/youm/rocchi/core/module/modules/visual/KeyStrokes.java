@@ -2,7 +2,7 @@ package top.youm.rocchi.core.module.modules.visual;
 
 import com.darkmagician6.eventapi.EventTarget;
 import top.youm.rocchi.common.events.Render2DEvent;
-import top.youm.rocchi.common.settings.BoolSetting;
+import top.youm.rocchi.common.settings.impl.BoolSetting;
 import top.youm.rocchi.core.module.Module;
 import top.youm.rocchi.core.module.ModuleCategory;
 import top.youm.rocchi.core.module.modules.visual.keystrokes.KeyBox;
@@ -13,7 +13,9 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
 import java.awt.*;
-
+/**
+ * @author YouM
+ */
 public class KeyStrokes extends Module {
 
     public KeyStrokes() {

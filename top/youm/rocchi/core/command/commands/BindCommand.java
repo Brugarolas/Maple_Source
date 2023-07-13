@@ -5,6 +5,10 @@ import top.youm.rocchi.core.command.Command;
 import top.youm.rocchi.core.module.Module;
 import org.lwjgl.input.Keyboard;
 
+/**
+ * @author YouM
+ * can bind your keyborad to toggle prescribed module
+ */
 public class BindCommand extends Command {
     public BindCommand() {
         super("bind", "*bind <module name> <key name>");

@@ -4,6 +4,9 @@ import top.youm.rocchi.utils.render.RenderUtil;
 
 import java.awt.*;
 
+/**
+ * @author YouM
+ */
 public class MouseBox {
     public void drawMouseBox(int x, int y, int width, int height, Color color,boolean down){
         if(down)RenderUtil.drawRect(x,y,width,height,new Color(color.getRed(),color.getGreen(),color.getBlue(),150));

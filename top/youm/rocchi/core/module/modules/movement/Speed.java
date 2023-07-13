@@ -6,6 +6,9 @@ import top.youm.rocchi.core.module.Module;
 import top.youm.rocchi.core.module.ModuleCategory;
 import org.lwjgl.input.Keyboard;
 
+/**
+ * @author YouM
+ */
 public class Speed extends Module {
     public Speed() {
         super("Speed", ModuleCategory.MOVEMENT, Keyboard.KEY_NONE);

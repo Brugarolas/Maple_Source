@@ -29,6 +29,7 @@ public class ModernClickGUI extends GuiScreen {
     public static int screenWidth = 450, screenHeight = 260;
     public int dragX, dragY;
     public boolean isDragging = false;
+    public boolean sizeDragging = false;
     private final List<CategoryComponent> categoryButtons = new ArrayList<>();
     private final List<ModuleComponent> moduleComponents = new ArrayList<>();
     public CategoryComponent currentComponent;
@@ -58,6 +59,19 @@ public class ModernClickGUI extends GuiScreen {
         if (isDragging) {
             x = mouseX - dragX;
             y = mouseY - dragY;
+        }else if (sizeDragging) {
+            screenWidth += mouseX - dragX;
+            if(screenWidth < 280){
+                screenWidth = 280;
+            }else {
+                this.dragX = mouseX;
+            }
+            screenHeight += mouseY - dragY;
+            if(screenHeight < 180){
+                screenHeight = 180;
+            }else {
+                this.dragY = mouseY;
+            }
         }
         RoundedUtil.drawRound(x, y, screenWidth, screenHeight, 2, Theme.background);
         /* top menu */
@@ -127,6 +141,10 @@ public class ModernClickGUI extends GuiScreen {
                 dragX = mouseX - x;
                 dragY = mouseY - y;
                 isDragging = true;
+            } else if (Component.isHover(x + screenWidth - 10, y + screenHeight - 10, 10, 10, mouseX, mouseY) && mouseButton == 0 ) {
+                dragX = mouseX;
+                dragY = mouseY;
+                sizeDragging = true;
             }
             for (CategoryComponent categoryButton : categoryButtons) {
                 categoryButton.mouse(mouseButton, MouseType.CLICK);
@@ -154,6 +172,12 @@ public class ModernClickGUI extends GuiScreen {
                 dragX = mouseX - x;
                 dragY = mouseY - y;
                 isDragging = false;
+            } else if (Component.isHover(x + screenWidth - 10, y + screenHeight - 10, 10, 10, mouseX, mouseY) && state == 0) {
+                dragX = mouseX;
+                dragY = mouseY;
+                sizeDragging = false;
+            }else if(state == 0 && sizeDragging){
+                sizeDragging = false;
             }
         } else {
             UIState.dialog.mouse(state, MouseType.RELEASED);

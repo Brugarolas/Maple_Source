@@ -2,6 +2,9 @@ package top.youm.rocchi.core.ui.theme;
 
 import java.awt.*;
 
+/**
+ * @author YouM
+ */
 public class Theme {
     public static Color theme = new Color(74, 97, 164);
     public static Color theme2 = new Color(102, 98, 220);

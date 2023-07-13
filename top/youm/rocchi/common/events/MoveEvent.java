@@ -2,7 +2,12 @@ package top.youm.rocchi.common.events;
 
 import com.darkmagician6.eventapi.events.Event;
 
+/**
+ * @author YouM
+ * when player in minecraft move invoke this event
+ */
 public class MoveEvent extends Event {
+    //player position X,position Y,position Z
     private double x, y, z;
     public MoveEvent(double x, double y, double z) {
         this.x = x;

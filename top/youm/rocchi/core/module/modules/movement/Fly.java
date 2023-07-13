@@ -8,13 +8,16 @@ import net.minecraft.network.play.server.S08PacketPlayerPosLook;
 import org.lwjgl.input.Keyboard;
 import top.youm.rocchi.common.events.MotionEvent;
 import top.youm.rocchi.common.events.PacketReceiveEvent;
-import top.youm.rocchi.common.settings.ModeSetting;
-import top.youm.rocchi.common.settings.NumberSetting;
+import top.youm.rocchi.common.settings.impl.ModeSetting;
+import top.youm.rocchi.common.settings.impl.NumberSetting;
 import top.youm.rocchi.core.module.Module;
 import top.youm.rocchi.core.module.ModuleCategory;
 
 import java.util.ArrayList;
 
+/**
+ * @author YouM
+ */
 public class Fly extends Module {
     private final ModeSetting<FlyMode> mode = new ModeSetting("Mode",FlyMode.values(),FlyMode.WatchDog);
     private final NumberSetting speed = new NumberSetting("Speed", 2, 5, 0, 0.1);

@@ -4,8 +4,8 @@ import com.darkmagician6.eventapi.EventTarget;
 import com.darkmagician6.eventapi.events.Event;
 import top.youm.rocchi.common.events.MotionEvent;
 import top.youm.rocchi.common.events.PacketSendEvent;
-import top.youm.rocchi.common.settings.BoolSetting;
-import top.youm.rocchi.common.settings.NumberSetting;
+import top.youm.rocchi.common.settings.impl.BoolSetting;
+import top.youm.rocchi.common.settings.impl.NumberSetting;
 import top.youm.rocchi.core.module.Module;
 import top.youm.rocchi.core.module.ModuleCategory;
 import top.youm.rocchi.utils.BlockUtil;
@@ -31,7 +31,9 @@ import org.lwjgl.input.Keyboard;
 
 import java.util.Arrays;
 
-// TODO: recode shit parts
+/**
+ * @author YouM
+ */
 @SuppressWarnings("unused")
 public class InvManager extends Module {
 

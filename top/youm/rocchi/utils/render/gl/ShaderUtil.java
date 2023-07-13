@@ -3,8 +3,12 @@ package top.youm.rocchi.utils.render.gl;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.util.ResourceLocation;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL20;
 
+import javax.crypto.Mac;
 import java.io.*;
+import java.nio.FloatBuffer;
 
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL20.*;
@@ -81,7 +85,10 @@ public class ShaderUtil {
                 break;
         }
     }
-
+    public void setUniformFB(String name, FloatBuffer buffer){
+        int loc = glGetUniformLocation(programID, name);
+        GL20.glUniform1(loc,buffer);
+    }
     public void setUniformi(String name, int... args) {
         int loc = glGetUniformLocation(programID, name);
         if (args.length > 1) glUniform2i(loc, args[0], args[1]);
@@ -118,7 +125,22 @@ public class ShaderUtil {
         glVertex2f(width, 0);
         glEnd();
     }
-
+    public static void drawQuad() {
+        final ScaledResolution scaledResolution = new ScaledResolution(Minecraft.getMinecraft());
+        drawQuad(0.0, 0.0, scaledResolution.getScaledWidth_double(), scaledResolution.getScaledHeight_double());
+    }
+    public static void drawQuad(final double x, final double y, final double width, final double height) {
+        GL11.glBegin(GL11.GL_QUADS);
+        GL11.glTexCoord2f(0.0F, 0.0F);
+        GL11.glVertex2d(x, y + height);
+        GL11.glTexCoord2f(1.0F, 0.0F);
+        GL11.glVertex2d(x + width, y + height);
+        GL11.glTexCoord2f(1.0F, 1.0F);
+        GL11.glVertex2d(x + width, y);
+        GL11.glTexCoord2f(0.0F, 1.0F);
+        GL11.glVertex2d(x, y);
+        GL11.glEnd();
+    }
     private int createShader(InputStream inputStream, int shaderType) {
         int shader = glCreateShader(shaderType);
         glShaderSource(shader, readInputStream(inputStream));

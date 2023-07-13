@@ -12,6 +12,9 @@ import top.youm.rocchi.utils.render.RoundedUtil;
 
 import java.awt.*;
 
+/**
+ * @author YouM
+ */
 public class IconButton extends GuiButton {
     private static final CFontRenderer font = FontLoaders.comfortaaR24;
     public int animationAlpha = 0;

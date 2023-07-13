@@ -1,7 +1,7 @@
 package top.youm.rocchi.core.ui.clickgui.modern.component.settings;
 
 import net.minecraft.client.renderer.GlStateManager;
-import top.youm.rocchi.common.settings.ModeSetting;
+import top.youm.rocchi.common.settings.impl.ModeSetting;
 import top.youm.rocchi.core.ui.Component;
 import top.youm.rocchi.core.ui.theme.Theme;
 import top.youm.rocchi.core.ui.MouseType;
@@ -20,7 +20,10 @@ public class DropdownComponent extends Component {
         super(modeSetting.getName());
         this.modeSetting = modeSetting;
     }
-
+    @Override
+    public void update() {
+        this.display = this.modeSetting.canDisplay();
+    }
     @Override
     public void draw(float xPos, float yPos, int mouseX, int mouseY) {
         super.draw(xPos,yPos,mouseX,mouseY);

@@ -7,8 +7,8 @@ import net.minecraft.network.play.client.C18PacketSpectate;
 import org.lwjgl.input.Keyboard;
 import top.youm.rocchi.Rocchi;
 import top.youm.rocchi.common.events.MotionEvent;
-import top.youm.rocchi.common.settings.ModeSetting;
-import top.youm.rocchi.common.settings.NumberSetting;
+import top.youm.rocchi.common.settings.impl.ModeSetting;
+import top.youm.rocchi.common.settings.impl.NumberSetting;
 import top.youm.rocchi.core.module.Module;
 import top.youm.rocchi.core.module.ModuleCategory;
 import top.youm.rocchi.core.module.modules.movement.Step;
@@ -17,6 +17,9 @@ import top.youm.rocchi.utils.network.PacketUtil;
 
 import java.util.UUID;
 
+/**
+ * @author YouM
+ */
 public final class Criticals extends Module {
     private final ModeSetting<MODE> mode = new ModeSetting("Mode", MODE.values(), MODE.Watchdog);
     private final NumberSetting delay = new NumberSetting("Delay", 1, 20, 0, 1);
