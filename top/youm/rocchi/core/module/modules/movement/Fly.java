@@ -19,7 +19,7 @@ import java.util.ArrayList;
  * @author YouM
  */
 public class Fly extends Module {
-    private final ModeSetting<FlyMode> mode = new ModeSetting("Mode",FlyMode.values(),FlyMode.WatchDog);
+    private final ModeSetting mode = new ModeSetting("Mode", "WatchDog","WatchDog","Vanilla","AirWalk");
     private final NumberSetting speed = new NumberSetting("Speed", 2, 5, 0, 0.1);
     private float stage;
     private int ticks;
@@ -36,7 +36,7 @@ public class Fly extends Module {
     @EventTarget
     public void onMotion(MotionEvent event) {
         switch (mode.getValue()) {
-            case WatchDog:
+            case "WatchDog":
                 mc.thePlayer.cameraYaw = mc.thePlayer.cameraPitch = 0.05f;
                 mc.thePlayer.posY = y;
                 if (mc.thePlayer.onGround && stage == 0) {
@@ -57,10 +57,10 @@ public class Fly extends Module {
                     mc.timer.timerSpeed = 5;
                 }
                 break;
-            case Vanilla:
+            case "Vanilla":
                 mc.thePlayer.motionY = mc.gameSettings.keyBindJump.isKeyDown() ? speed.getValue().floatValue() : mc.gameSettings.keyBindSneak.isKeyDown() ? -speed.getValue().floatValue() : 0;
                 break;
-            case AirWalk:
+            case "AirWalk":
                 mc.thePlayer.motionY = 0;
                 mc.thePlayer.onGround = true;
                 break;
@@ -69,7 +69,7 @@ public class Fly extends Module {
 
     @EventTarget
     public void onPacketReceive(PacketReceiveEvent event) {
-        if (mode.getValue() == FlyMode.WatchDog) {
+        if (mode.getValue().equals("WatchDog")) {
             if (event.getPacket() instanceof S08PacketPlayerPosLook) {
                 S08PacketPlayerPosLook s08 = (S08PacketPlayerPosLook) event.getPacket();
                 y = s08.getY();
@@ -118,13 +118,10 @@ public class Fly extends Module {
     @Override
     public void onDisable() {
         if(this.mc.thePlayer != null) {
-            if (mode.getValue() == FlyMode.Vanilla) {
+            if (mode.getValue().equals("Vanilla")) {
                 mc.thePlayer.motionX = mc.thePlayer.motionY = mc.thePlayer.motionZ = 0;
             }
             mc.timer.timerSpeed = 1;
         }
-    }
-    private enum FlyMode{
-        WatchDog,Vanilla,AirWalk
     }
 }

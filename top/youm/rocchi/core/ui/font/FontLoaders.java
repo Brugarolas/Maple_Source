@@ -46,6 +46,7 @@ public abstract class FontLoaders {
     public static CFontRenderer icon24 = new CFontRenderer(getFont("iconfont2",24),true,true);
     public static CFontRenderer icon28 = new CFontRenderer(getFont("iconfont2",28),true,true);
     public static CFontRenderer icon32 = new CFontRenderer(getFont("iconfont2",32),true,true);
+    public static CFontRenderer rise18= new CFontRenderer(getFont("product_sans_regular",18),true,true);
     public static GlyphPageFontRenderer chinese22;
     public static GlyphPageFontRenderer chinese18;
     public static Font getFont(String name ,int size) {

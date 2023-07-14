@@ -22,7 +22,7 @@ import top.youm.rocchi.utils.player.ScaffoldUtil;
 public class Scaffold extends Module {
 
     private ScaffoldUtil.BlockCache blockCache, lastBlockCache;
-    private ModeSetting<PlaceType> placetype = new ModeSetting<>("Place Type", PlaceType.values(), PlaceType.PRE);
+    private ModeSetting placetype = new ModeSetting("Place Type", "PRE", "PRE","POST");
     public static NumberSetting extend = new NumberSetting("Extend", 0, 6, 0, 0.01);
     public static BoolSetting sprint = new BoolSetting("Sprint", false);
     private BoolSetting tower = new BoolSetting("Tower", false);
@@ -78,7 +78,7 @@ public class Scaffold extends Module {
             mc.thePlayer.sendQueue.addToSendQueue(new C09PacketHeldItemChange(slot));
 
             // Placing Blocks (Pre)
-            if(placetype.getValue() == PlaceType.PRE){
+            if(placetype.getValue().equals("PRE")){
                 if (blockCache == null) return;
                 mc.playerController.onPlayerRightClick(mc.thePlayer, mc.theWorld, mc.thePlayer.inventory.getStackInSlot(slot), lastBlockCache.position, lastBlockCache.facing, ScaffoldUtil.getHypixelVec3(lastBlockCache));
                 if(swing.getValue()){
@@ -106,7 +106,7 @@ public class Scaffold extends Module {
             if(slot == -1) return;
 
             // Placing Blocks (Post)
-            if(placetype.getValue() == PlaceType.POST){
+            if(placetype.getValue().equals("POST")){
                 if (blockCache == null) return;
                 mc.playerController.onPlayerRightClick(mc.thePlayer, mc.theWorld, mc.thePlayer.inventory.getStackInSlot(slot), lastBlockCache.position, lastBlockCache.facing, ScaffoldUtil.getHypixelVec3(lastBlockCache));
                 if(swing.getValue()){
@@ -128,8 +128,5 @@ public class Scaffold extends Module {
     @Override
     public void onEnable() {
         lastBlockCache = null;
-    }
-    private enum PlaceType{
-        PRE,POST
     }
 }

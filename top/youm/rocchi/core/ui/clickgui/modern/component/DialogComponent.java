@@ -46,8 +46,8 @@ public class DialogComponent extends Component {
                 subComponents.add(new ButtonComponent((BoolSetting) setting));
             } else if (setting instanceof NumberSetting) {
                 subComponents.add(new SliderComponent((NumberSetting) setting));
-            }else if (setting instanceof ModeSetting<?>) {
-                subComponents.add(new DropdownComponent((ModeSetting<?>) setting));
+            }else if (setting instanceof ModeSetting) {
+                subComponents.add(new DropdownComponent((ModeSetting) setting));
             }
         }
         this.y = -350;

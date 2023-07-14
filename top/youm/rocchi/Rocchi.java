@@ -23,7 +23,7 @@ import java.util.concurrent.CountDownLatch;
 @SuppressWarnings("all")
 public class Rocchi {
     private static final Rocchi instance = new Rocchi();
-    public static Gson gson = new GsonBuilder().setPrettyPrinting().create();
+    public static Gson gson;
     public static Rocchi getInstance() {
         return instance;
     }
@@ -50,16 +50,18 @@ public class Rocchi {
     }
     public void startGame(){
         initializeToolkit();
+        gson = new GsonBuilder().setPrettyPrinting().excludeFieldsWithoutExposeAnnotation().create();
         moduleManager = new ModuleManager();
         moduleManager.initialize();
-        configManager = new ConfigManager();
-        configManager.initialize();
+
         commandManager = new CommandManager();
         commandManager.initialize();
 
         log.info("developer: " + dev.toString());
         Display.setTitle(NAME + " | " + VERSION);
 
+        configManager = new ConfigManager();
+        configManager.initialize();
         configManager.load();
     }
     public void shutDownGame(){

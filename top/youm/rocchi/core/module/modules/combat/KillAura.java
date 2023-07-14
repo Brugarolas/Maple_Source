@@ -45,7 +45,7 @@ public class KillAura extends Module {
     private final NumberSetting maxCps = new NumberSetting("Max CPS", 14, 20, 1, 1);
     private final NumberSetting minSpeed = new NumberSetting("Min Speed", 360, 360, 0, 1);
     private final NumberSetting maxSpeed = new NumberSetting("Max Speed", 360, 360, 0, 1);
-    private final ModeSetting<BlockMode> autoBlockMode = new ModeSetting<>("AutoBlock Mode", BlockMode.values(),BlockMode.WatchDog);
+    private final ModeSetting autoBlockMode = new ModeSetting("AutoBlock Mode", "WatchDog","WatchDog","Interaction","AAC" );
     private final BoolSetting autoblock = new BoolSetting("Autoblock", false);
     BoolSetting players = new BoolSetting("Players", true);
     BoolSetting mobs = new BoolSetting("Mobs", false);
@@ -58,7 +58,7 @@ public class KillAura extends Module {
     NumberSetting randomCenRangeValue = new NumberSetting("RandomRange", 0.0f, 1.2f, 0.0f,0.1f);
     BoolSetting predict = new BoolSetting("predict",false);
     BoolSetting predictPlayer = new BoolSetting("predictPlayer",false);
-    ModeSetting<RotateMode> rotateMode = new ModeSetting<>("RotateMode",RotateMode.values(),RotateMode.Smooth);
+    ModeSetting rotateMode = new ModeSetting("RotateMode","Dynamic","Dynamic","Smooth","Resolver","LiquidBounce");
     public List<EntityLivingBase> targets = new ArrayList<>();
     public static EntityLivingBase target;
     public static boolean blocking;
@@ -71,7 +71,7 @@ public class KillAura extends Module {
     @EventTarget
     public void onMotion(MotionEvent event){
         sortTargets();
-        this.setSuffixes(autoBlockMode.getValue().name());
+        this.setSuffixes(autoBlockMode.getValue());
         if (targets.get(0).isDead || targets.get(0).getHealth() <= 0|| Rocchi.getInstance().getModuleManager().getModuleByClass(Scaffold.class).isToggle() || mc.thePlayer.isDead || mc.thePlayer.isSpectator())
             return;
         if (!targets.isEmpty()) {
@@ -87,45 +87,41 @@ public class KillAura extends Module {
                         true
                 );
 
-                float[] rotations = getRotationsToEnt(target);
-                float[] smoothRotations = new float[]{0, 0};
+                float[] smoothRotations = getRotationsToEnt(target);
                 switch (rotateMode.getValue()){
-                    case Dynamic:
-                        rotations[0] += MathUtil.getRandomInRange(-5, 5);
-                        rotations[1] += MathUtil.getRandomInRange(-5, 5);
+                    case "Dynamic":
+                        smoothRotations[0] += MathUtil.getRandomInRange(-5, 5);
+                        smoothRotations[1] += MathUtil.getRandomInRange(-5, 5);
                         break;
-                    case Resolver:
+                    case "Resolver":
                         if (target.posY < 0) {
-                            rotations[1] = 1;
+                            smoothRotations[1] = 1;
                         } else if (target.posY > 255) {
-                            rotations[1] = 90;
+                            smoothRotations[1] = 90;
                         }
-                    case Smooth:
+                        break;
+                    case "Smooth":
                         smoothRotations[0] = RotationUtil.getSmoothRotations(target)[0];
                         smoothRotations[1] = RotationUtil.getSmoothRotations(target)[1];
+                        smoothRotations[0] += MathUtil.getRandomInRange(-5, 5);
+                        smoothRotations[1] += MathUtil.getRandomInRange(-5, 5);
+                        break;
                     default:
                         smoothRotations = RotationUtil.limitAngleChange(
                                 RotationUtil.serverRotation, vecRotation.getRotation(),
                                 (float) (Math.random() * (maxSpeed.getValue().floatValue() - minSpeed.getValue().floatValue()) + minSpeed.getValue().floatValue())
                         );
                 }
-
-                if(rotateMode.getValue() == RotateMode.Smooth || rotateMode.getValue() == RotateMode.LiquidBounce){
-                    event.setYaw(smoothRotations[0]);
-                    event.setPitch(smoothRotations[1]);
-                    RotationUtil.setRotations(smoothRotations);
-                }else {
-                    event.setYaw(rotations[0]);
-                    event.setPitch(rotations[1]);
-                    RotationUtil.setRotations(rotations);
-                }
+                event.setYaw(smoothRotations[0]);
+                event.setPitch(smoothRotations[1]);
+                RotationUtil.setRotations(smoothRotations);
             }
 
             if (autoblock.getValue() && mc.thePlayer.getCurrentEquippedItem() != null && mc.thePlayer.getCurrentEquippedItem().getItem() instanceof ItemSword) {
                 mc.playerController.syncCurrentPlayItem();
                 blocking = true;
                 switch (autoBlockMode.getValue()) {
-                    case WatchDog:
+                    case "WatchDog":
                         if (event.getState() == Event.State.POST) {
                             if (mc.thePlayer.swingProgressInt == -1) {
                                 PacketUtil.sendPacket(new C07PacketPlayerDigging(
@@ -138,7 +134,7 @@ public class KillAura extends Module {
                             }
                         }
                         break;
-                    case Interaction:
+                    case "Interaction":
                         if (event.getState() == Event.State.POST) {
                             if (blocking) {
                                 for (Entity current : targets) {
@@ -152,7 +148,7 @@ public class KillAura extends Module {
                             }
                         }
                         break;
-                    case AAC:
+                    case "AAC":
                         if (event.getState() == Event.State.POST) {
                             if (blocking) {
                                 mc.playerController.sendUseItem(mc.thePlayer, mc.theWorld, mc.thePlayer.getHeldItem());
@@ -179,12 +175,12 @@ public class KillAura extends Module {
             blocking = false;
         }
     }
-    private float predictAmount = 1.0f;
-    private float predictPlayerAmount = 1.0f;
+
     public AxisAlignedBB getAABB(Entity entity){
         AxisAlignedBB aabb = entity.getEntityBoundingBox();
 
         if (predict.getValue()) {
+            float predictAmount = 1.0f;
             aabb.offset(
                 (entity.posX - entity.lastTickPosX) * predictAmount,
                 (entity.posY - entity.lastTickPosY) * predictAmount,
@@ -192,6 +188,7 @@ public class KillAura extends Module {
             );
         }
         if (predictPlayer.getValue()) {
+            float predictPlayerAmount = 1.0f;
             aabb.offset(
                 mc.thePlayer.motionX * predictPlayerAmount * -1f,
                 mc.thePlayer.motionY * predictPlayerAmount * -1f,
@@ -241,7 +238,7 @@ public class KillAura extends Module {
 
     public boolean isValid(EntityLivingBase entLiving) {
         AntiBot antiBot = Rocchi.getInstance().getModuleManager().getModuleByClass(AntiBot.class);
-        if (antiBot.isNPC(entLiving) || entLiving == null) {
+        if (/*antiBot.isNPC(entLiving) ||*/ entLiving == null) {
             return false;
         }
         if (Teams.isInTeam(entLiving)) return false;
@@ -262,7 +259,6 @@ public class KillAura extends Module {
                 return false;
             }
         }
-
         if (!entLiving.canEntityBeSeen(mc.thePlayer) && invisible.getValue()) {
             return false;
         }
@@ -278,18 +274,14 @@ public class KillAura extends Module {
         final double diffZ = ent.posZ - mc.thePlayer.posZ;
         // angle
         double angle = 180.0D / Math.PI;
+
         final float rotationYaw = (float) (Math.atan2(diffZ, diffX) * angle) - 90.0f;
         final float rotationPitch = (float) (Math.atan2(diffY, mc.thePlayer.getDistanceToEntity(ent)) * angle);
+
         final float finishedYaw = mc.thePlayer.rotationYaw
                 + MathHelper.wrapAngleTo180_float(rotationYaw - mc.thePlayer.rotationYaw);
         final float finishedPitch = mc.thePlayer.rotationPitch
                 + MathHelper.wrapAngleTo180_float(rotationPitch - mc.thePlayer.rotationPitch);
         return new float[]{finishedYaw, -MathHelper.clamp_float(finishedPitch, -90, 90)};
-    }
-    public enum BlockMode{
-        WatchDog,Interaction,AAC
-    }
-    public enum RotateMode{
-        Dynamic,Smooth,Resolver,LiquidBounce
     }
 }

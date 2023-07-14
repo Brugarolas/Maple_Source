@@ -130,8 +130,8 @@ public class RotationUtil {
         double d3 = MathHelper.sqrt_double(x * x + z * z);
         float yaw = (float) (MathHelper.atan2(z, x) * 180.0 / Math.PI) - 90.0F;
         float pitch = (float) (-(MathHelper.atan2(y, d3) * 180.0 / Math.PI));
-        yaw = smoothRotation(mc.thePlayer.prevRotationYawHead, yaw, fac * MathUtil.getRandomFloat(0.9F, 1));
-        pitch = smoothRotation(mc.thePlayer.prevRotationPitchHead, pitch, fac * MathUtil.getRandomFloat(0.7F, 1));
+        yaw = smoothRotation(mc.thePlayer.prevRotationYawHead, yaw, fac * MathUtil.getRandomFloat(0.7F, 1));
+        pitch = smoothRotation(mc.thePlayer.prevRotationPitchHead, pitch, fac * MathUtil.getRandomFloat(0.6F, 1));
 
         return new float[]{yaw, pitch};
     }

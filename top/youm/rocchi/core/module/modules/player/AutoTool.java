@@ -19,7 +19,7 @@ public class AutoTool extends Module {
     private final BoolSetting autoSword = new BoolSetting("AutoSword", true);
 
     public AutoTool() {
-        super("AutoTool", ModuleCategory.PLAYER, Keyboard.KEY_NONE);
+        super("Auto Tool", ModuleCategory.PLAYER, Keyboard.KEY_NONE);
         this.addSetting(autoSword);
     }
 

@@ -1,5 +1,8 @@
 package top.youm.rocchi.common.settings;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
 import java.util.function.Predicate;
 
 /**
@@ -7,9 +10,14 @@ import java.util.function.Predicate;
  * abstract setting entity
  */
 public class Setting<T> {
+    @Expose
+    @SerializedName("name")
     private String name;
+    @Expose
+    @SerializedName("value")
     protected T value;
-    private ParentAttribute<? extends Setting<?>> attribute;
+
+    public ParentAttribute<? extends Setting<?>> attribute;
 
     public Setting(String name, T value) {
         this.name = name;

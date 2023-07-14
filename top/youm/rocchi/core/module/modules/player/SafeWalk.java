@@ -11,7 +11,7 @@ import org.lwjgl.input.Keyboard;
  */
 public class SafeWalk extends Module {
     public SafeWalk() {
-        super("SafeWalk", ModuleCategory.PLAYER, Keyboard.KEY_NONE);
+        super("Safe Walk", ModuleCategory.PLAYER, Keyboard.KEY_NONE);
     }
     private final BoolSetting blocksOnly = new BoolSetting("Blocks only", false);
     private boolean canSafeWalk() {

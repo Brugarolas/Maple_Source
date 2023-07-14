@@ -21,16 +21,13 @@ import java.util.List;
  *
  */
 public class AntiBot extends Module {
-    ModeSetting<AntiBotMode> mode = new ModeSetting<>("Mode",AntiBotMode.values(),AntiBotMode.BMC);
+    ModeSetting mode = new ModeSetting("Mode","Advanced","Classic","Advanced","BMC");
     BoolSetting pingCheck = new BoolSetting("Ping Check",true);
     public AntiBot() {
         super("AntiBot", ModuleCategory.WORLD, Keyboard.KEY_NONE);
     }
     @EventTarget
     public void onUpdate(TickEvent event){
-    }
-    public enum AntiBotMode{
-        Classic,Advanced,BMC
     }
 
     public boolean isNPC(EntityLivingBase entity) {
@@ -51,7 +48,7 @@ public class AntiBot extends Module {
                 return true;
             }
         }
-        return (mode.getValue() == AntiBotMode.Classic || mode.getValue() == AntiBotMode.Advanced) && (entity).ticksExisted <= 80;
+        return (mode.getValue().equals("Classic") || mode.getValue().equals("Advanced")) && (entity).ticksExisted <= 80;
     }
     public boolean isServerBot(Entity entity) {
         if (Helper.onServer("hypixel")) {

@@ -1,5 +1,7 @@
 package top.youm.rocchi.common.config;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 import top.youm.rocchi.common.settings.Setting;
 
 import java.util.List;
@@ -9,8 +11,12 @@ import java.util.List;
  */
 public class SettingConfiguration {
     //module setting config name
+    @Expose
+    @SerializedName("moduleName")
     private String moduleName;
     //module settings list
+    @Expose
+    @SerializedName("settings")
     private List<Setting<?>> settings;
 
     public SettingConfiguration(String moduleName, List<Setting<?>> settings) {

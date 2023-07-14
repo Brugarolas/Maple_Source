@@ -21,9 +21,8 @@ import java.util.UUID;
  * @author YouM
  */
 public final class Criticals extends Module {
-    private final ModeSetting<MODE> mode = new ModeSetting("Mode", MODE.values(), MODE.Watchdog);
+    private final ModeSetting mode = new ModeSetting("Mode","Watchdog","Watchdog", "Packet", "Dev");
     private final NumberSetting delay = new NumberSetting("Delay", 1, 20, 0, 1);
-    private final TimerUtil timer = new TimerUtil();
 
     public Criticals() {
         super("Criticals", ModuleCategory.COMBAT, Keyboard.KEY_NONE);
@@ -32,9 +31,9 @@ public final class Criticals extends Module {
 
     @EventTarget
     public void onMotionEvent(MotionEvent e) {
-        this.setSuffixes(mode.getValue().toString());
+        this.setSuffixes(mode.getValue());
         switch (mode.getValue()) {
-            case Watchdog:
+            case "Watchdog":
                 if (KillAura.attacking && e.isOnGround() && !Rocchi.getInstance().getModuleManager().getModuleByClass(Step.class).isToggle()) {
                     if (KillAura.target != null && KillAura.target.hurtTime >= delay.getValue().intValue()) {
                         for (double offset : new double[]{0.06f, 0.01f}) {
@@ -43,7 +42,7 @@ public final class Criticals extends Module {
                     }
                 }
                 break;
-            case Packet:
+            case "Packet":
                 if (mc.objectMouseOver.entityHit != null && mc.thePlayer.onGround) {
                     if (mc.objectMouseOver.entityHit.hurtResistantTime > delay.getValue().intValue()) {
                         for (double offset : new double[]{0.006253453, 0.002253453, 0.001253453}) {
@@ -62,8 +61,5 @@ public final class Criticals extends Module {
                     }
                 }
         }
-    }
-    public enum MODE{
-        Watchdog, Packet, Dev
     }
 }

@@ -1,5 +1,8 @@
 package top.youm.rocchi.common.config;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
 import java.io.Serializable;
 
 /**
@@ -7,10 +10,16 @@ import java.io.Serializable;
  */
 public class ModuleConfiguration implements Serializable {
     //module config name
+    @Expose
+    @SerializedName("name")
     private String name;
     //module config is enable
+    @Expose
+    @SerializedName("enable")
     private boolean enable;
     //module config key bind
+    @Expose
+    @SerializedName("key")
     private String key;
     public ModuleConfiguration(String name,boolean enable,String key){
         this.name = name;

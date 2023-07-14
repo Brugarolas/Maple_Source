@@ -17,6 +17,7 @@ import java.util.stream.Collectors;
 public class Module {
     public Minecraft mc = Minecraft.getMinecraft();
     private boolean toggle;
+
     private String name;
     private String suffixes = "";
     private ModuleCategory category;

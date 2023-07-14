@@ -25,7 +25,7 @@ public class AutoArmor extends Module {
     private final TimerUtil timer = new TimerUtil();
 
     public AutoArmor() {
-        super("AutoArmor", ModuleCategory.PLAYER, Keyboard.KEY_NONE);
+        super("Auto Armor", ModuleCategory.PLAYER, Keyboard.KEY_NONE);
         this.addSetting(delay, onlyWhileNotMoving, invOnly);
     }
 

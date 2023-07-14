@@ -16,31 +16,26 @@ import org.lwjgl.input.Keyboard;
 @SuppressWarnings("unused")
 public final class NoFall extends Module {
 
-    private final ModeSetting<Mode> mode = new ModeSetting<>("Mode",Mode.values(),Mode.Vanilla);
+    private final ModeSetting mode = new ModeSetting("Mode","Vanilla","Vanilla","Packet","Edit");
     @EventTarget
     public void onMotion(MotionEvent event) {
         if (event.getState() == Event.State.PRE) {
             if (mc.thePlayer.fallDistance > 3.0) {
                 switch (mode.getValue()) {
-                    case Vanilla:
+                    case "Vanilla":
                         event.setOnGround(true);
                         break;
-                    case Packet:
+                    case "Packet":
                         PacketUtil.sendPacket(new C03PacketPlayer(true));
                         break;
                 }
                 mc.thePlayer.fallDistance = 0;
             }
         }
-    };
-
-
+    }
     public NoFall() {
         super("NoFall", ModuleCategory.PLAYER, Keyboard.KEY_NONE);
         this.addSetting(mode);
     }
 
-    public enum Mode{
-        Vanilla,Packet,Edit
-    }
 }

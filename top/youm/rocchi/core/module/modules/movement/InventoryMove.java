@@ -21,7 +21,7 @@ import java.util.List;
 @SuppressWarnings("unused")
 public final class InventoryMove extends Module {
     private final TimerUtil delayTimer = new TimerUtil();
-    private final ModeSetting<Mode> mode = new ModeSetting<>("Mode",Mode.values(),Mode.Vanilla);
+    private final ModeSetting mode = new ModeSetting("Mode","Vanilla","Vanilla","Delay");
     private final List<KeyBinding> keys = Arrays.asList(
             mc.gameSettings.keyBindForward,
             mc.gameSettings.keyBindBack,
@@ -38,12 +38,12 @@ public final class InventoryMove extends Module {
     @EventTarget
     public void onMotion(MotionEvent event) {
         switch (mode.getValue()) {
-            case Vanilla:
+            case "Vanilla":
                 if (event.getState() == Event.State.PRE && mc.currentScreen instanceof GuiContainer) {
                     updateStates();
                 }
                 break;
-            case Delay:
+            case "Delay":
                 if (event.getState() == Event.State.PRE && mc.currentScreen instanceof GuiContainer) {
                     if (delayTimer.hasTimeElapsed(100)) {
                         updateStates();
@@ -56,10 +56,7 @@ public final class InventoryMove extends Module {
 
 
     public InventoryMove() {
-        super("InventoryMove", ModuleCategory.MOVEMENT, Keyboard.KEY_NONE);
+        super("Inventory Move", ModuleCategory.MOVEMENT, Keyboard.KEY_NONE);
         this.addSetting(mode);
-    }
-    public enum Mode{
-        Vanilla,Delay
     }
 }

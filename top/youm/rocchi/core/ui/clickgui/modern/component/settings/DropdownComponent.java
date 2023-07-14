@@ -12,11 +12,11 @@ import top.youm.rocchi.utils.render.RoundedUtil;
 import java.awt.*;
 
 public class DropdownComponent extends Component {
-    private final ModeSetting<?> modeSetting;
+    private final ModeSetting modeSetting;
     private boolean open;
     private float animation;
 
-    public DropdownComponent(ModeSetting<?> modeSetting) {
+    public DropdownComponent(ModeSetting modeSetting) {
         super(modeSetting.getName());
         this.modeSetting = modeSetting;
     }
@@ -37,7 +37,7 @@ public class DropdownComponent extends Component {
         } else {
             RoundedUtil.drawRound(x - 160, y - 6, 150, 14, 1, Theme.theme);
         }
-        FontLoaders.comfortaaB18.drawStringWithShadow(modeSetting.getValue().name(), x - 85 - FontLoaders.comfortaaB18.getStringWidth(modeSetting.getValue().name()) / 2.0f, y + 14 / 2.0f - FontLoaders.comfortaaB18.getHeight() / 2.0f - 6, Theme.font.getRGB());
+        FontLoaders.comfortaaB18.drawStringWithShadow(modeSetting.getValue(), x - 85 - FontLoaders.comfortaaB18.getStringWidth(modeSetting.getValue()) / 2.0f, y + 14 / 2.0f - FontLoaders.comfortaaB18.getHeight() / 2.0f - 6, Theme.font.getRGB());
         GlStateManager.pushMatrix();
         if (open) {
             GlStateManager.translate(0.0f,0.0f,2.0f);
@@ -48,17 +48,17 @@ public class DropdownComponent extends Component {
     }
 
     public void render() {
-        int height = 14 * (this.modeSetting.getEnums().length - 1);
+        int height = 14 * (this.modeSetting.getModes().length - 1);
         RoundedUtil.drawRound(x - 160, y - 6 + animation + 14, 150, height, 1, Theme.theme);
         RenderUtil.drawRect((int) (x - 140), (int) (y - 5 + animation) + 14, 110, 1, new Color(183, 183, 183).getRGB());
         int offsetY = 0;
-        for (Enum<?> e : this.modeSetting.getEnums()) {
-            if (!e.name().equals(modeSetting.getValue().name())) {
+        for (String e : this.modeSetting.getModes()) {
+            if (!e.equals(modeSetting.getValue())) {
                 if (isHover((int) (x - 160), (int) y + 6 + offsetY, 150, 14, mouseX, mouseY)) {
                     RenderUtil.drawRect((int) (x - 160), (int) (y - 5 + animation) + 14 + offsetY, 1, 14, Theme.moduleTheme);
                     RenderUtil.drawRect((int) (x - 12), (int) (y - 5 + animation) + 14 + offsetY, 1, 14, Theme.moduleTheme);
                 }
-                FontLoaders.comfortaaB18.drawStringWithShadow(e.name(), x - 85 - (FontLoaders.comfortaaB18.getStringWidth(e.name()) / 2.0f), y + 14 / 2.0f - FontLoaders.comfortaaB18.getHeight() / 2.0f - 6 + offsetY + 14 + animation, Theme.font.getRGB());
+                FontLoaders.comfortaaB18.drawStringWithShadow(e, x - 85 - (FontLoaders.comfortaaB18.getStringWidth(e) / 2.0f), y + 14 / 2.0f - FontLoaders.comfortaaB18.getHeight() / 2.0f - 6 + offsetY + 14 + animation, Theme.font.getRGB());
                 offsetY += 14;
             }
         }
@@ -72,12 +72,12 @@ public class DropdownComponent extends Component {
             }
             int offsetY = 0;
             if (open) {
-                for (Enum<?> e : this.modeSetting.getEnums()) {
-                    if (e.name().equals(modeSetting.getValue().name())) {
+                for (String e : this.modeSetting.getModes()) {
+                    if (e.equals(modeSetting.getValue())) {
                         continue;
                     }
                     if (isHover((int) (x - 160), (int) (y + 6) + offsetY, 150, 14, mouseX, mouseY)) {
-                        this.modeSetting.setValueEnum(e);
+                        this.modeSetting.setValue(e);
                     }
                     offsetY += 14;
                 }
