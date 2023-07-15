@@ -9,6 +9,7 @@ import top.youm.rocchi.core.config.ConfigManager;
 import top.youm.rocchi.core.module.Module;
 import org.apache.commons.io.FileUtils;
 import org.lwjgl.input.Keyboard;
+import top.youm.rocchi.core.module.modules.visual.ClickGui;
 
 import java.io.IOException;
 import java.util.List;
@@ -50,7 +51,13 @@ public class ModuleConfig extends Config {
     public void saveConfig() {
         List<ModuleConfiguration> configurations = Rocchi.getInstance().getModuleManager().
                 modules.stream().
-                map(module -> new ModuleConfiguration(module.getName(), module.isToggle(), Keyboard.getKeyName(module.getKey()))).
+                map(module -> {
+                    if(module != Rocchi.getInstance().getModuleManager().getModuleByClass(ClickGui.class)){
+                        return new ModuleConfiguration(module.getName(), module.isToggle(), Keyboard.getKeyName(module.getKey()));
+                    }
+                    if(module.isToggle())module.toggled();
+                    return new ModuleConfiguration(module.getName(), module.isToggle(), Keyboard.getKeyName(module.getKey()));
+                }).
                 collect(Collectors.toList());
 
         this.context = ConfigManager.gson.toJson(configurations);
