@@ -97,19 +97,22 @@ public class ModuleListUI implements HUDComponent {
 
             //render rect
             if (UIModule.rect.getValue()) {
-                drawRect((int) (module.animX - 7), (int) (2 + module.animY), font ? fontRenderer.getStringWidth(text) + 5 : Minecraft.getMinecraft().fontRendererObj.getStringWidth(text) + 5, font ? fontRenderer.getHeight() + 3 : Minecraft.getMinecraft().fontRendererObj.FONT_HEIGHT + 3, new Color(0, 0, 0, UIModule.rectAlpha.getValue().intValue()));
+                drawRect((int) (module.animX - 7), (int) (2 + module.animY), font ? fontRenderer.getStringWidth(text) + 5 : Minecraft.getMinecraft().fontRendererObj.getStringWidth(text) + 5, font ? fontRenderer.getHeight() + 3 : Minecraft.getMinecraft().fontRendererObj.FONT_HEIGHT + 4, new Color(0, 0, 0, UIModule.rectAlpha.getValue().intValue()));
             }
 
             //update color
             switch (UIModule.mode.getValue()) {
-                case "FADE":
-                    color = ColorUtil.fade(UIModule.speed.getValue().intValue(), 30 * index, Theme.theme, 1f);
+                case "Fade":
+                    color = ColorUtil.fade(UIModule.speed.getValue().intValue(), 30 * index, new Color(UIModule.red.getValue().intValue(),UIModule.green.getValue().intValue(),UIModule.blue.getValue().intValue()), 1f);
                     break;
-                case "RAINBOW":
+                case "Rainbow":
                     color = ColorUtil.rainbow(UIModule.speed.getValue().intValue(), 10 * index, 1f, 0.8f, 1f);
                     break;
+                case "Static":
+                    color = new Color(UIModule.red.getValue().intValue(),UIModule.green.getValue().intValue(),UIModule.blue.getValue().intValue());
+                    break;
                 default:
-                    color = ColorUtil.interpolateColorsBackAndForth(UIModule.speed.getValue().intValue(), 50 * index, new Color(12, 232, 199), new Color(12, 163, 232), true);
+                    color = ColorUtil.interpolateColorsBackAndForth(UIModule.speed.getValue().intValue(), 50 * index, new Color(UIModule.red.getValue().intValue(),UIModule.green.getValue().intValue(),UIModule.blue.getValue().intValue()), new Color(UIModule.red2.getValue().intValue(),UIModule.green2.getValue().intValue(),UIModule.blue2.getValue().intValue()), true);
             }
 
             //render border
@@ -206,14 +209,17 @@ public class ModuleListUI implements HUDComponent {
         for (Module module : modules) {
             Color sidebar;
             switch (UIModule.mode.getValue()) {
-                case "FADE":
-                    sidebar = ColorUtil.fade(UIModule.speed.getValue().intValue(), 30 * indexSide, Theme.theme, 1f);
+                case "Fade":
+                    sidebar = ColorUtil.fade(UIModule.speed.getValue().intValue(), 30 * indexSide, new Color(UIModule.red.getValue().intValue(),UIModule.green.getValue().intValue(),UIModule.blue.getValue().intValue()), 1f);
                     break;
-                case "RAINBOW":
+                case "Rainbow":
                     sidebar = ColorUtil.rainbow(UIModule.speed.getValue().intValue(), 10 * indexSide, 1f, 0.8f, 1f);
                     break;
+                case "Static":
+                    sidebar = new Color(UIModule.red.getValue().intValue(),UIModule.green.getValue().intValue(),UIModule.blue.getValue().intValue());
+                    break;
                 default:
-                    sidebar = ColorUtil.interpolateColorsBackAndForth(UIModule.speed.getValue().intValue(), 50 * indexSide, new Color(12, 232, 199), new Color(12, 163, 232), true);
+                    sidebar = ColorUtil.interpolateColorsBackAndForth(UIModule.speed.getValue().intValue(), 50 * indexSide, new Color(UIModule.red.getValue().intValue(),UIModule.green.getValue().intValue(),UIModule.blue.getValue().intValue()), new Color(UIModule.red2.getValue().intValue(),UIModule.green2.getValue().intValue(),UIModule.blue2.getValue().intValue()), true);
             }
             if(UIModule.sidebar.getValue()){
                 String context =

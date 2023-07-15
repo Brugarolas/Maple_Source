@@ -93,11 +93,7 @@ public class ModernClickGUI extends GuiScreen {
         RoundedUtil.drawRound(x, y, screenWidth, 20, 2, Theme.theme);
         RenderUtil.drawRect(x - 1, y + 19, screenWidth + 2, 10, Theme.theme);
         FontLoaders.comfortaaB40.drawStringWithShadow(Rocchi.getInstance().NAME, x + 10, y + 6, -1);
-//        FontLoaders.icon32.drawStringWithShadow(Icon.HOME.icon, x + 120, y + 8, -1);
-//        FontLoaders.icon32.drawStringWithShadow(Icon.CHAT.icon, x + 160, y + 8, -1);
-//        if(Component.isHover(x+160, y + 8,32,32,mouseX,mouseY) && Mouse.isButtonDown(0) ){
-//            mc.displayGuiScreen(new MusicPlayerScreen());
-//        }
+        FontLoaders.comfortaaB22.drawStringWithShadow(Rocchi.getInstance().VERSION, x + 10 + FontLoaders.comfortaaB40.getStringWidth(Rocchi.getInstance().NAME) + 2, y + FontLoaders.comfortaaB40.getHeight() , -1);
     }
 
 

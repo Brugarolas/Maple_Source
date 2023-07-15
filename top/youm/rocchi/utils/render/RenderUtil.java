@@ -173,7 +173,7 @@ public class RenderUtil {
         float f1 = (float) (color >> 16 & 255) / 255.0f;
         float f2 = (float) (color >> 8 & 255) / 255.0f;
         float f3 = (float) (color & 255) / 255.0f;
-        GL11.glColor4f((float) f1, (float) f2, (float) f3, (float) f);
+        GL11.glColor4f( f1,  f2,  f3,  f);
     }
     public static void arcEllipse(float x, float y, float start, float end, float w, float h, int color) {
         float ldy;

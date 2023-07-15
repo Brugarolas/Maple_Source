@@ -6,6 +6,7 @@ import top.youm.rocchi.Rocchi;
 import top.youm.rocchi.common.events.Render2DEvent;
 import top.youm.rocchi.common.settings.impl.BoolSetting;
 import top.youm.rocchi.common.settings.impl.ColorSetting;
+import top.youm.rocchi.common.settings.impl.NumberSetting;
 import top.youm.rocchi.core.module.Module;
 import top.youm.rocchi.core.module.ModuleCategory;
 import top.youm.rocchi.core.ui.theme.Theme;
@@ -20,12 +21,13 @@ import java.awt.*;
 public class HUD extends Module {
     public BoolSetting ttf_font = new BoolSetting("ttf-font",false);
     public BoolSetting notification = new BoolSetting("notification",true);
-    public ColorSetting colorSetting = new ColorSetting("theme color",new Color(188, 81, 188));
-
+    public NumberSetting red = new NumberSetting("red",Theme.theme.getRed(),255,0,1);
+    public NumberSetting green = new NumberSetting("green",Theme.theme.getGreen(),255,0,1);
+    public NumberSetting blue = new NumberSetting("blue",Theme.theme.getBlue(),255,0,1);
     public HUD() {
         super("HUD", ModuleCategory.VISUAL, Keyboard.KEY_NONE);
         this.setToggle(true);
-        this.addSetting(ttf_font,notification,colorSetting);
+        this.addSetting(ttf_font,notification,red,green,blue);
     }
     @EventTarget
     public void onRender(Render2DEvent event){

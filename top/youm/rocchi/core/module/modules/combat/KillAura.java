@@ -2,15 +2,16 @@ package top.youm.rocchi.core.module.modules.combat;
 
 import com.darkmagician6.eventapi.EventTarget;
 import com.darkmagician6.eventapi.events.Event;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.network.play.client.C07PacketPlayerDigging;
 import net.minecraft.network.play.client.C0APacketAnimation;
 import net.minecraft.network.play.server.S18PacketEntityTeleport;
 import net.minecraft.util.*;
 import org.lwjgl.input.Keyboard;
+import org.lwjgl.opengl.GL11;
 import top.youm.rocchi.Rocchi;
-import top.youm.rocchi.common.events.MotionEvent;
-import top.youm.rocchi.common.events.PacketReceiveEvent;
+import top.youm.rocchi.common.events.*;
 import top.youm.rocchi.common.settings.impl.BoolSetting;
 import top.youm.rocchi.common.settings.impl.ModeSetting;
 import top.youm.rocchi.common.settings.impl.NumberSetting;
@@ -19,6 +20,8 @@ import top.youm.rocchi.core.module.ModuleCategory;
 import top.youm.rocchi.core.module.modules.movement.Scaffold;
 import top.youm.rocchi.core.module.modules.world.AntiBot;
 import top.youm.rocchi.core.module.modules.world.Teams;
+import top.youm.rocchi.core.ui.theme.Theme;
+import top.youm.rocchi.utils.Animation;
 import top.youm.rocchi.utils.TimerUtil;
 import top.youm.rocchi.utils.math.MathUtil;
 import top.youm.rocchi.utils.network.PacketUtil;
@@ -31,10 +34,15 @@ import net.minecraft.network.play.client.C02PacketUseEntity;
 import net.minecraft.network.play.client.C08PacketPlayerBlockPlacement;
 import top.youm.rocchi.utils.player.RotationUtil;
 import top.youm.rocchi.utils.player.rotations.VecRotation;
+import top.youm.rocchi.utils.render.RenderUtil;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+
+import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL11.GL_DEPTH_TEST;
 
 /**
  * @author YouM
@@ -47,6 +55,12 @@ public class KillAura extends Module {
     private final NumberSetting maxSpeed = new NumberSetting("Max Speed", 360, 360, 0, 1);
     private final ModeSetting autoBlockMode = new ModeSetting("AutoBlock Mode", "WatchDog","WatchDog","Interaction","AAC" );
     private final BoolSetting autoblock = new BoolSetting("Autoblock", false);
+
+    private final BoolSetting footCircle = new BoolSetting("foot circle",true);
+    private final NumberSetting footWidth = new NumberSetting("foot width", 2, 5, 1, 1);
+
+    private final BoolSetting scanCircle = new BoolSetting("scan circle",true);
+    private final NumberSetting scanWidth = new NumberSetting("scan width", 2, 5, 1, 1);
     BoolSetting players = new BoolSetting("Players", true);
     BoolSetting mobs = new BoolSetting("Mobs", false);
     BoolSetting animals = new BoolSetting("Animals", false);
@@ -57,16 +71,133 @@ public class KillAura extends Module {
     BoolSetting packet = new BoolSetting("Packet", false);
     NumberSetting randomCenRangeValue = new NumberSetting("RandomRange", 0.0f, 1.2f, 0.0f,0.1f);
     BoolSetting predict = new BoolSetting("predict",false);
-    BoolSetting predictPlayer = new BoolSetting("predictPlayer",false);
+    BoolSetting predictPlayer = new BoolSetting("predictPlayer",true);
     ModeSetting rotateMode = new ModeSetting("RotateMode","Dynamic","Dynamic","Smooth","Resolver","LiquidBounce");
     public List<EntityLivingBase> targets = new ArrayList<>();
     public static EntityLivingBase target;
     public static boolean blocking;
     public static boolean attacking;
     private final TimerUtil timer = new TimerUtil();
+
     public KillAura() {
         super("KillAura", ModuleCategory.COMBAT, Keyboard.KEY_NONE);
-        this.addSetting(reach, minCps, maxCps, autoBlockMode,randomCenRangeValue,predict,autoblock,players,invisibles,mobs,animals,rotateMode,maxSpeed,minSpeed,ticks,packet,nameTags,invisible);
+        footWidth.addParent(footCircle,BoolSetting::getValue);
+        scanWidth.addParent(scanCircle,BoolSetting::getValue);
+        predict.addParent(rotateMode,r->r.getValue().equals("LiquidBounce"));
+        predictPlayer.addParent(rotateMode,r->r.getValue().equals("LiquidBounce"));
+        minSpeed.addParent(rotateMode,r->r.getValue().equals("LiquidBounce"));
+        maxSpeed.addParent(rotateMode,r->r.getValue().equals("LiquidBounce"));
+        randomCenRangeValue.addParent(rotateMode,r->r.getValue().equals("LiquidBounce"));
+        this.addSetting(reach, minCps, maxCps, autoBlockMode,footCircle,footWidth,scanCircle,scanWidth,randomCenRangeValue,predict,predictPlayer,autoblock,players,invisibles,mobs,animals,rotateMode,maxSpeed,minSpeed,ticks,packet,nameTags,invisible);
+    }
+    boolean direction;
+    float offsetY = 0;
+    @EventTarget
+    public void onTick(TickEvent event){
+        if(direction){
+            offsetY += 0.04;
+            if (2 - offsetY < 0.02) {
+                direction = false;
+            }
+        }else {
+            offsetY -= 0.04;
+            if (offsetY < 0.02) {
+                direction = true;
+            }
+        }
+    }
+
+    @EventTarget
+    public void onRender3D(Render3DEvent event){
+
+        if(footCircle.getValue()){
+            GL11.glPushMatrix();
+            GL11.glTranslated(
+                    mc.thePlayer.lastTickPosX + (mc.thePlayer.posX - mc.thePlayer.lastTickPosX) * mc.timer.renderPartialTicks - mc.getRenderManager().renderPosX,
+                    mc.thePlayer.lastTickPosY + (mc.thePlayer.posY - mc.thePlayer.lastTickPosY) * mc.timer.renderPartialTicks - mc.getRenderManager().renderPosY,
+                    mc.thePlayer.lastTickPosZ + (mc.thePlayer.posZ - mc.thePlayer.lastTickPosZ) * mc.timer.renderPartialTicks - mc.getRenderManager().renderPosZ
+            );
+            GL11.glEnable(GL11.GL_BLEND);
+            GL11.glEnable(GL11.GL_LINE_SMOOTH);
+            GL11.glDisable(GL11.GL_TEXTURE_2D);
+            GL11.glDisable(GL11.GL_DEPTH_TEST);
+            GL11.glBlendFunc(GL11.GL_SRC_ALPHA,GL11.GL_ONE_MINUS_SRC_ALPHA);
+            GL11.glLineWidth(footWidth.getValue().floatValue());
+            GL11.glRotatef(90F, 1F, 0F, 0F);
+            RenderUtil.color(Theme.theme.getRGB());
+            GL11.glBegin(GL11.GL_LINE_STRIP);
+
+            for(int i = 0; i <= 360; i += 2 ){
+                GL11.glVertex2f(
+                        (float) Math.cos(i * Math.PI / 180.0) * reach.getValue().floatValue(),
+                        (float) Math.sin(i * Math.PI / 180.0) * reach.getValue().floatValue()
+                );
+            }
+            GL11.glEnd();
+            GL11.glEnable(GL11.GL_DEPTH_TEST);
+            GL11.glEnable(GL11.GL_TEXTURE_2D);
+            GL11.glDisable(GL11.GL_LINE_SMOOTH);
+            GL11.glDisable(GL11.GL_BLEND);
+            GL11.glPopMatrix();
+        }
+        if (targets.get(0).isDead || targets.get(0).getHealth() <= 0|| Rocchi.getInstance().getModuleManager().getModuleByClass(Scaffold.class).isToggle() || mc.thePlayer.isDead || mc.thePlayer.isSpectator())
+            return;
+        if(target != null && this.scanCircle.getValue()){
+            drawCircle(event);
+            drawShadow(event);
+        }
+    }
+    public void drawCircle(Render3DEvent event){
+
+        GL11.glPushMatrix();
+        GL11.glEnable(GL11.GL_BLEND);
+        GL11.glDisable(GL11.GL_DEPTH_TEST);
+        GL11.glDisable(GL11.GL_TEXTURE_2D);
+        GL11.glShadeModel(7425);
+        GL11.glLineWidth(scanWidth.getValue().floatValue());
+        double x = target.lastTickPosX + (target.posX - target.lastTickPosX) * (double) event.getTicks() - mc.getRenderManager().viewerPosX;
+        double y = target.lastTickPosY + (target.posY - target.lastTickPosY) * (double) event.getTicks() - mc.getRenderManager().viewerPosY + offsetY;
+        double z = target.lastTickPosZ + (target.posZ - target.lastTickPosZ) * (double) event.getTicks() - mc.getRenderManager().viewerPosZ;
+        GL11.glBegin(GL11.GL_LINE_STRIP);
+        for (int i = 0; i <= 360; i++) {
+            double c1 = i * Math.PI * 2 / 360;
+            GL11.glColor4f(Theme.theme.getRed() / 255f, (float) Theme.theme.getGreen() / 255f, (float) Theme.theme.getBlue() / 255f, 1);
+            GL11.glVertex3d(x + 0.5 * Math.cos(c1) * 1.2, y, z + 0.5 * Math.sin(c1) * 1.2);
+        }
+
+        GL11.glEnd();
+        GL11.glEnable(GL11.GL_TEXTURE_2D);
+        GL11.glShadeModel( 7424);
+        GL11.glEnable(GL11.GL_DEPTH_TEST);
+        GL11.glDisable(GL11.GL_BLEND);
+        GL11.glPopMatrix();
+    }
+    public void drawShadow(Render3DEvent event){
+        GL11.glPushMatrix();
+        GL11.glEnable(GL11.GL_BLEND);
+        GL11.glDisable(GL11.GL_DEPTH_TEST);
+        GL11.glDisable(GL11.GL_TEXTURE_2D);
+        GL11.glShadeModel((int) 7425);
+        double x = target.lastTickPosX + (target.posX - target.lastTickPosX) * (double) event.getTicks() - mc.getRenderManager().viewerPosX;
+        double y = target.lastTickPosY + (target.posY - target.lastTickPosY) * (double) event.getTicks() - mc.getRenderManager().viewerPosY + offsetY;
+        double z = target.lastTickPosZ + (target.posZ - target.lastTickPosZ) * (double) event.getTicks() - mc.getRenderManager().viewerPosZ;
+        GL11.glBegin(GL11.GL_QUAD_STRIP);
+        for (int i = 0; i <= 360; i++) {
+            double c1 = i * Math.PI * 2 / 360;
+            double c2 = (i + 1) * Math.PI * 2 / 360;
+            GL11.glColor4f(Theme.theme.getRed() / 255f, (float) Theme.theme.getGreen() / 255f, (float) Theme.theme.getBlue() / 255f, 0.4f);
+            GL11.glVertex3d(x + 0.5 * Math.cos(c1) * 1.2, y, z + 0.5 * Math.sin(c1) * 1.2);
+            GL11.glVertex3d(x + 0.5 * Math.cos(c2) * 1.2, y, z + 0.5 * Math.sin(c2) * 1.2);
+            GL11.glColor4f(Theme.theme.getRed() / 255f, (float) Theme.theme.getGreen() / 255f, (float) Theme.theme.getBlue() / 255f, 0f);
+            GL11.glVertex3d(x + 0.5 * Math.cos(c1) * 1.2, y + (direction ? -0.3 : 0.3), z + 0.5 * Math.sin(c1) * 1.2);
+            GL11.glVertex3d(x + 0.5 * Math.cos(c2) * 1.2, y + (direction ? -0.3 : 0.3), z + 0.5 * Math.sin(c2) * 1.2);
+        }
+        GL11.glEnd();
+        GL11.glEnable(GL11.GL_TEXTURE_2D);
+        GL11.glShadeModel((int) 7424);
+        GL11.glEnable(GL11.GL_DEPTH_TEST);
+        GL11.glDisable(GL11.GL_BLEND);
+        GL11.glPopMatrix();
     }
     @EventTarget
     public void onMotion(MotionEvent event){
@@ -272,16 +403,22 @@ public class KillAura extends Module {
         final double diffY = (ent.posY + ent.height) - (mc.thePlayer.posY + mc.thePlayer.height) - 0.5;
         //target and player z distance
         final double diffZ = ent.posZ - mc.thePlayer.posZ;
-        // angle
-        double angle = 180.0D / Math.PI;
-
-        final float rotationYaw = (float) (Math.atan2(diffZ, diffX) * angle) - 90.0f;
-        final float rotationPitch = (float) (Math.atan2(diffY, mc.thePlayer.getDistanceToEntity(ent)) * angle);
+        // radian unit
+        double radianUnit = 180.0D / Math.PI;
+        /*
+         * atan2(x,y) need two parameters to compute angle
+         * radian * radianUnit
+         */
+        // player head yaw rotation
+        final float rotationYaw = (float) (Math.atan2(diffZ, diffX) * radianUnit) - 90.0f;
+        // player head pitch rotation
+        final float rotationPitch = (float) (Math.atan2(diffY, mc.thePlayer.getDistanceToEntity(ent)) * radianUnit);
 
         final float finishedYaw = mc.thePlayer.rotationYaw
                 + MathHelper.wrapAngleTo180_float(rotationYaw - mc.thePlayer.rotationYaw);
         final float finishedPitch = mc.thePlayer.rotationPitch
                 + MathHelper.wrapAngleTo180_float(rotationPitch - mc.thePlayer.rotationPitch);
+
         return new float[]{finishedYaw, -MathHelper.clamp_float(finishedPitch, -90, 90)};
     }
 }

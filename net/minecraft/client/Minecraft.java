@@ -189,6 +189,7 @@ import org.lwjgl.opengl.OpenGLException;
 import org.lwjgl.opengl.PixelFormat;
 import org.lwjgl.util.glu.GLU;
 import top.youm.rocchi.core.ui.screen.ProgressScreen;
+import top.youm.rocchi.utils.Animation;
 import top.youm.rocchi.utils.AnimationUtils;
 
 import static top.youm.rocchi.core.ui.font.FontLoaders.getFont;
@@ -1121,7 +1122,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage
         final double deltaTime = (int) (currentTime - lastFrame);
         lastFrame = currentTime;
         AnimationUtils.delta = deltaTime;
-
+        Animation.delta = deltaTime;
         this.mcProfiler.startSection("root");
 
         if (Display.isCreated() && Display.isCloseRequested())
