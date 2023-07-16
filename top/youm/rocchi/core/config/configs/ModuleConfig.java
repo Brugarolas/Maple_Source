@@ -4,6 +4,10 @@ import com.google.gson.reflect.TypeToken;
 import net.minecraft.client.Minecraft;
 import top.youm.rocchi.Rocchi;
 import top.youm.rocchi.common.config.ModuleConfiguration;
+import top.youm.rocchi.common.settings.Setting;
+import top.youm.rocchi.common.settings.impl.BoolSetting;
+import top.youm.rocchi.common.settings.impl.ModeSetting;
+import top.youm.rocchi.common.settings.impl.NumberSetting;
 import top.youm.rocchi.core.config.Config;
 import top.youm.rocchi.core.config.ConfigManager;
 import top.youm.rocchi.core.module.Module;
@@ -33,13 +37,14 @@ public class ModuleConfig extends Config {
             );
             for (Module module : Rocchi.getInstance().getModuleManager().modules) {
                 for (ModuleConfiguration configuration : configurations) {
-                    if (configuration.getName().equals(module.getName())) {
-                        if (module.isToggle() != configuration.isEnable()) {
-                            module.toggled();
-                        }else if (!configuration.isEnable() && module.isToggle())
-                            module.setToggle(false);
-                        module.setKey(Keyboard.getKeyIndex(configuration.getKey()));
+                    if (!configuration.getName().equals(module.getName())) {
+                        continue;
                     }
+                    if (module.isToggle() != configuration.isEnable()) {
+                        module.toggled();
+                    }else if (!configuration.isEnable() && module.isToggle())
+                        module.setToggle(false);
+                    module.setKey(Keyboard.getKeyIndex(configuration.getKey()));
                 }
             }
         } catch (IOException e) {
@@ -53,10 +58,10 @@ public class ModuleConfig extends Config {
                 modules.stream().
                 map(module -> {
                     if(module != Rocchi.getInstance().getModuleManager().getModuleByClass(ClickGui.class)){
-                        return new ModuleConfiguration(module.getName(), module.isToggle(), Keyboard.getKeyName(module.getKey()));
+                        return new ModuleConfiguration(module.getName(), module.isToggle(), Keyboard.getKeyName(module.getKey()),module.getSettings());
                     }
                     if(module.isToggle())module.toggled();
-                    return new ModuleConfiguration(module.getName(), module.isToggle(), Keyboard.getKeyName(module.getKey()));
+                    return new ModuleConfiguration(module.getName(), module.isToggle(), Keyboard.getKeyName(module.getKey()),module.getSettings());
                 }).
                 collect(Collectors.toList());
 

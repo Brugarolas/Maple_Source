@@ -2,8 +2,10 @@ package top.youm.rocchi.common.config;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import top.youm.rocchi.common.settings.Setting;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * @author YouM
@@ -21,10 +23,15 @@ public class ModuleConfiguration implements Serializable {
     @Expose
     @SerializedName("key")
     private String key;
-    public ModuleConfiguration(String name,boolean enable,String key){
+    //module config settings
+    @Expose
+    @SerializedName("settings")
+    private List<Setting<?>> settings;
+    public ModuleConfiguration(String name,boolean enable,String key,List<Setting<?>> settings){
         this.name = name;
         this.enable = enable;
         this.key = key;
+        this.settings = settings;
     }
 
     public String getKey() {
@@ -46,5 +53,13 @@ public class ModuleConfiguration implements Serializable {
     }
     public void setEnable(boolean enable){
         this.enable = enable;
+    }
+
+    public List<Setting<?>> getSettings() {
+        return settings;
+    }
+
+    public void setSettings(List<Setting<?>> settings) {
+        this.settings = settings;
     }
 }

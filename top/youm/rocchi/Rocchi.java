@@ -14,6 +14,8 @@ import top.youm.rocchi.utils.math.MathUtil;
 import javax.swing.*;
 import java.util.concurrent.CountDownLatch;
 
+import static top.youm.rocchi.utils.tools.Catcher.runCatching;
+
 /**
  * @author YouM
  * This mod's main class <br/>
@@ -61,8 +63,17 @@ public class Rocchi {
         Display.setTitle(NAME + " | " + VERSION);
 
         configManager = new ConfigManager();
-        configManager.initialize();
-        configManager.load();
+
+        runCatching(() -> {
+            configManager.initialize();
+            return configManager;
+        }).onSuccess(configManager -> {
+            configManager.load();
+        }).onFailed(throwable -> {
+            throwable.printStackTrace();
+        });
+
+
     }
     public void shutDownGame(){
         log.info("Thank you to play Rocchi client. Goodbye");

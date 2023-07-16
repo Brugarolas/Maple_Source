@@ -40,7 +40,7 @@ public class ModuleListUI implements HUDComponent {
 
         List<Module> modules = new ArrayList<>();
 
-        CFontRenderer fontRenderer = FontLoaders.rise18;
+        CFontRenderer fontRenderer = FontLoaders.rise20;
 
         for (Module m : Rocchi.getInstance().getModuleManager().modules) {
             if (!m.isToggle() && m.wasRemoved)
@@ -228,7 +228,7 @@ public class ModuleListUI implements HUDComponent {
                                         "" :
                                         ChatFormatting.BLUE + " " + ChatFormatting.WHITE + module.getSuffixes()
                         );
-                drawRoundedRect((int) (module.animX + (font ? fontRenderer.getStringWidth(context) : Minecraft.getMinecraft().fontRendererObj.getStringWidth(context)) - 3) + 1.5f, (int) (2 + module.animY) + 1, 1.5f, (font ? fontRenderer.getHeight() + 3 : Minecraft.getMinecraft().fontRendererObj.FONT_HEIGHT + 3) - 1,1f, sidebar);
+                drawRoundedRect((int) (module.animX + (font ? fontRenderer.getStringWidth(context) : Minecraft.getMinecraft().fontRendererObj.getStringWidth(context)) - 3) + 1.5f, (int) (2 + module.animY) + 1.5f, 1.5f, (font ? fontRenderer.getHeight() + 3 : Minecraft.getMinecraft().fontRendererObj.FONT_HEIGHT + 3) - 2f,1f, sidebar);
                 indexSide++;
             }
         }

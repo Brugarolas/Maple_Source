@@ -5,7 +5,6 @@ import top.youm.rocchi.Rocchi;
 import top.youm.rocchi.core.config.configs.ModuleConfig;
 import net.minecraft.client.Minecraft;
 import org.apache.commons.io.FileUtils;
-import top.youm.rocchi.core.config.configs.SettingConfig;
 //import top.youm.rocchi.core.config.configs.SettingConfig;
 
 import java.io.File;
@@ -21,9 +20,8 @@ public class ConfigManager {
     public List<Config> configs = new ArrayList<>();
     public File mainDir = new File(Minecraft.getMinecraft().mcDataDir,"/"+Rocchi.getInstance().NAME+"/configs/");
     public static Gson gson = Rocchi.gson;
-    public void initialize(){
+    public void initialize() throws Exception{
         configs.add(new ModuleConfig());
-        configs.add(new SettingConfig());
         boolean mkdirs = mainDir.mkdirs();
         for (Config config : configs){
             config.setFile(new File(this.mainDir,config.getName()));

@@ -29,4 +29,5 @@ public class NumberSetting extends Setting<Number> {
     public void setInc(Number inc) {
         this.inc = inc;
     }
+
 }
