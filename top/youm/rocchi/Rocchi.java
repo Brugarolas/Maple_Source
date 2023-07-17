@@ -66,11 +66,6 @@ public class Rocchi {
 
         runCatching(() -> {
             configManager.initialize();
-            return configManager;
-        }).onSuccess(configManager -> {
-            configManager.load();
-        }).onFailed(throwable -> {
-            throwable.printStackTrace();
         });
 
 

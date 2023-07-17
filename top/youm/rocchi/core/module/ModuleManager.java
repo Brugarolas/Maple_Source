@@ -45,6 +45,7 @@ public class ModuleManager {
         this.modules.add(new AutoArmor());
         this.modules.add(new AutoTool());
         this.modules.add(new Freecam());
+        this.modules.add(new AutoL());
         /* visual */
         this.modules.add(new Animations());
         this.modules.add(new KeyStrokes());
