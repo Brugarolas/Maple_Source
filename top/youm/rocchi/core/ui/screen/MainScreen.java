@@ -17,7 +17,6 @@ public class MainScreen extends GuiScreen implements GuiYesNoCallback {
     private static final Logger logger = LogManager.getLogger();
     private long initTime = System.currentTimeMillis();
 
-    AtomicBoolean atomic = new AtomicBoolean(false);
 
     @Override
     public void initGui() {

@@ -20,9 +20,14 @@ public class ConfigManager {
     public List<Config> configs = new ArrayList<>();
     public File mainDir = new File(Minecraft.getMinecraft().mcDataDir,"/"+Rocchi.getInstance().NAME+"/configs/");
     public static Gson gson = Rocchi.gson;
-    public void initialize() throws Exception{
+    public void initialize(){
         configs.add(new ModuleConfig());
         boolean mkdirs = mainDir.mkdirs();
+        if(mkdirs){
+            Rocchi.log.info("create success");
+        }else {
+            Rocchi.log.warn("create warn");
+        }
         for (Config config : configs){
             config.setFile(new File(this.mainDir,config.getName()));
         }

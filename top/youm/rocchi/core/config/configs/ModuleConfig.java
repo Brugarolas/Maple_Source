@@ -1,13 +1,8 @@
 package top.youm.rocchi.core.config.configs;
 
 import com.google.gson.reflect.TypeToken;
-import net.minecraft.client.Minecraft;
 import top.youm.rocchi.Rocchi;
 import top.youm.rocchi.common.config.ModuleConfiguration;
-import top.youm.rocchi.common.settings.Setting;
-import top.youm.rocchi.common.settings.impl.BoolSetting;
-import top.youm.rocchi.common.settings.impl.ModeSetting;
-import top.youm.rocchi.common.settings.impl.NumberSetting;
 import top.youm.rocchi.core.config.Config;
 import top.youm.rocchi.core.config.ConfigManager;
 import top.youm.rocchi.core.module.Module;

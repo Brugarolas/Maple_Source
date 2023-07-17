@@ -52,7 +52,7 @@ public class CategoryComponent extends Component {
         }
         if (UIState.currentCategory != category) {
             if (componentHover()) {
-                animation = animator.animate(7, animation, 0.08f);
+                animation = animator.animate(3, animation, 0.08f);
             } else {
                 animation = animator.animate(0, animation, 0.08f);
             }

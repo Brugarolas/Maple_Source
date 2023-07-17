@@ -1,5 +1,6 @@
 package top.youm.rocchi.core.module.modules.world;
 
+import org.lwjgl.input.Keyboard;
 import top.youm.rocchi.core.module.Module;
 import top.youm.rocchi.core.module.ModuleCategory;
 
@@ -8,7 +9,7 @@ import top.youm.rocchi.core.module.ModuleCategory;
  * Created on 2023/7/14
  */
 public class God extends Module {
-    public God(String name, ModuleCategory category, int key) {
-        super(name, category, key);
+    public God() {
+        super("God", ModuleCategory.WORLD, Keyboard.KEY_NONE);
     }
 }
