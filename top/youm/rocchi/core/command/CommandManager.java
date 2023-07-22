@@ -34,7 +34,7 @@ public class CommandManager {
         if (!message.startsWith(prefix)) {
             return false;
         }
-        String[] context =  message.substring(1).split(" ");
+        String[] context = message.substring(1).split(" ");
         System.out.println(Arrays.toString(context));
         for (Command command : commands) {
             if(context[0].equals("help")){

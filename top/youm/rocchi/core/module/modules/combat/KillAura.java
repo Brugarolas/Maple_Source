@@ -2,7 +2,6 @@ package top.youm.rocchi.core.module.modules.combat;
 
 import com.darkmagician6.eventapi.EventTarget;
 import com.darkmagician6.eventapi.events.Event;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.network.play.client.C07PacketPlayerDigging;
 import net.minecraft.network.play.client.C0APacketAnimation;
@@ -18,10 +17,9 @@ import top.youm.rocchi.common.settings.impl.NumberSetting;
 import top.youm.rocchi.core.module.Module;
 import top.youm.rocchi.core.module.ModuleCategory;
 import top.youm.rocchi.core.module.modules.movement.Scaffold;
-import top.youm.rocchi.core.module.modules.world.AntiBot;
 import top.youm.rocchi.core.module.modules.world.Teams;
 import top.youm.rocchi.core.ui.theme.Theme;
-import top.youm.rocchi.utils.Animation;
+import top.youm.rocchi.utils.AnimationUtils;
 import top.youm.rocchi.utils.TimerUtil;
 import top.youm.rocchi.utils.math.MathUtil;
 import top.youm.rocchi.utils.network.PacketUtil;
@@ -30,19 +28,14 @@ import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemSword;
-import net.minecraft.network.play.client.C02PacketUseEntity;
 import net.minecraft.network.play.client.C08PacketPlayerBlockPlacement;
+import top.youm.rocchi.utils.player.MovementUtil;
 import top.youm.rocchi.utils.player.RotationUtil;
-import top.youm.rocchi.utils.player.rotations.VecRotation;
 import top.youm.rocchi.utils.render.RenderUtil;
 
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-
-import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL11.GL_DEPTH_TEST;
 
 /**
  * @author YouM
@@ -51,8 +44,8 @@ public class KillAura extends Module {
     private final NumberSetting reach = new NumberSetting("Reach", 3.77, 6, 1, 0.1);
     private final NumberSetting minCps = new NumberSetting("Min CPS", 11, 20, 1, 1);
     private final NumberSetting maxCps = new NumberSetting("Max CPS", 14, 20, 1, 1);
-    private final NumberSetting minSpeed = new NumberSetting("Min Speed", 360, 360, 0, 1);
-    private final NumberSetting maxSpeed = new NumberSetting("Max Speed", 360, 360, 0, 1);
+    private final NumberSetting minSpeed = new NumberSetting("Min Speed", 0.5, 1.0, 0, 0.1);
+    private final NumberSetting maxSpeed = new NumberSetting("Max Speed", 0.6, 1.0, 0, 0.1);
     private final ModeSetting autoBlockMode = new ModeSetting("AutoBlock Mode", "WatchDog","WatchDog","Interaction","AAC" );
     private final BoolSetting autoblock = new BoolSetting("Autoblock", false);
 
@@ -61,18 +54,18 @@ public class KillAura extends Module {
 
     private final BoolSetting scanCircle = new BoolSetting("scan circle",true);
     private final NumberSetting scanWidth = new NumberSetting("scan width", 2, 5, 1, 1);
+
     BoolSetting players = new BoolSetting("Players", true);
     BoolSetting mobs = new BoolSetting("Mobs", false);
     BoolSetting animals = new BoolSetting("Animals", false);
     BoolSetting invisibles = new BoolSetting("Invisibles",false);
     BoolSetting ticks = new BoolSetting("Ticks", true);
     BoolSetting invisible = new BoolSetting("Invisible", false);
-    BoolSetting nameTags = new BoolSetting("NameTags", false);
-    BoolSetting packet = new BoolSetting("Packet", false);
-    NumberSetting randomCenRangeValue = new NumberSetting("RandomRange", 0.0f, 1.2f, 0.0f,0.1f);
-    BoolSetting predict = new BoolSetting("predict",false);
-    BoolSetting predictPlayer = new BoolSetting("predictPlayer",true);
-    ModeSetting rotateMode = new ModeSetting("RotateMode","Dynamic","Dynamic","Smooth","Resolver","LiquidBounce");
+    BoolSetting nameTags = new BoolSetting("NameTags", true);
+    BoolSetting packet = new BoolSetting("Packet", true);
+    ModeSetting rotateMode = new ModeSetting("RotateMode","Dynamic","Dynamic","Smooth","Resolver");
+    BoolSetting safeRotation = new BoolSetting("Safe Rotation",false);
+    BoolSetting followRotation = new BoolSetting("Follow",false);
     public List<EntityLivingBase> targets = new ArrayList<>();
     public static EntityLivingBase target;
     public static boolean blocking;
@@ -83,12 +76,7 @@ public class KillAura extends Module {
         super("KillAura", ModuleCategory.COMBAT, Keyboard.KEY_NONE);
         footWidth.addParent(footCircle,BoolSetting::getValue);
         scanWidth.addParent(scanCircle,BoolSetting::getValue);
-        predict.addParent(rotateMode,r->r.getValue().equals("LiquidBounce"));
-        predictPlayer.addParent(rotateMode,r->r.getValue().equals("LiquidBounce"));
-        minSpeed.addParent(rotateMode,r->r.getValue().equals("LiquidBounce"));
-        maxSpeed.addParent(rotateMode,r->r.getValue().equals("LiquidBounce"));
-        randomCenRangeValue.addParent(rotateMode,r->r.getValue().equals("LiquidBounce"));
-        this.addSetting(reach, minCps, maxCps, autoBlockMode,footCircle,footWidth,scanCircle,scanWidth,randomCenRangeValue,predict,predictPlayer,autoblock,players,invisibles,mobs,animals,rotateMode,maxSpeed,minSpeed,ticks,packet,nameTags,invisible);
+        this.addSetting(reach, minCps, maxCps, autoBlockMode,footCircle,footWidth,scanCircle,scanWidth,autoblock,players,invisibles,mobs,animals,rotateMode,safeRotation,followRotation,maxSpeed,minSpeed,ticks,packet,nameTags,invisible);
     }
     boolean direction;
     float offsetY = 0;
@@ -199,24 +187,24 @@ public class KillAura extends Module {
         GL11.glDisable(GL11.GL_BLEND);
         GL11.glPopMatrix();
     }
+    private float partialTicks;
+    @EventTarget
+    public void onRender(Render2DEvent event){
+        this.partialTicks = event.getPartialTicks();
+    }
+    AnimationUtils animator= new AnimationUtils();
     @EventTarget
     public void onMotion(MotionEvent event){
         sortTargets();
         this.setSuffixes(autoBlockMode.getValue());
-        if (targets.get(0).isDead || targets.get(0).getHealth() <= 0|| Rocchi.getInstance().getModuleManager().getModuleByClass(Scaffold.class).isToggle() || mc.thePlayer.isDead || mc.thePlayer.isSpectator())
+        if(targets.get(0).getHealth() <= 0){
+            targets.remove(0);
+        }
+        if (targets.get(0).isDead || Rocchi.getInstance().getModuleManager().getModuleByClass(Scaffold.class).isToggle() || mc.thePlayer.isDead || mc.thePlayer.isSpectator())
             return;
         if (!targets.isEmpty()) {
             target = targets.get(0);
-            AxisAlignedBB aabb = getAABB(target);
             if (event.getState() == Event.State.PRE) {
-                VecRotation vecRotation = RotationUtil.calculateCenter(
-                        "LiquidBounce",
-                        "Off",
-                        randomCenRangeValue.getValue().floatValue(),
-                        aabb,
-                        predict.getValue(),
-                        true
-                );
 
                 float[] smoothRotations = getRotationsToEnt(target);
                 switch (rotateMode.getValue()){
@@ -231,20 +219,25 @@ public class KillAura extends Module {
                             smoothRotations[1] = 90;
                         }
                         break;
-                    case "Smooth":
-                        smoothRotations[0] = RotationUtil.getSmoothRotations(target)[0];
-                        smoothRotations[1] = RotationUtil.getSmoothRotations(target)[1];
-                        smoothRotations[0] += MathUtil.getRandomInRange(-5, 5);
-                        smoothRotations[1] += MathUtil.getRandomInRange(-5, 5);
-                        break;
                     default:
-                        smoothRotations = RotationUtil.limitAngleChange(
-                                RotationUtil.serverRotation, vecRotation.getRotation(),
-                                (float) (Math.random() * (maxSpeed.getValue().floatValue() - minSpeed.getValue().floatValue()) + minSpeed.getValue().floatValue())
-                        );
+                        smoothRotations = RotationUtil.getSmoothRotations(target,maxSpeed.getValue().floatValue(),minSpeed.getValue().floatValue());
+                        if(MovementUtil.isMoving()){
+                            if (this.mc.thePlayer.movementInput.moveStrafe == -1.0) {
+                                smoothRotations[0] -= 5;
+                            }else if (this.mc.thePlayer.movementInput.moveStrafe == 1.0f) {
+                                smoothRotations[0] += 3;
+                            }
+                        }
+                        if(target.posY >= mc.thePlayer.posY + 2f){
+                            smoothRotations[1] += 5;
+                        }
                 }
                 event.setYaw(smoothRotations[0]);
                 event.setPitch(smoothRotations[1]);
+                if(followRotation.getValue()){
+                    mc.thePlayer.rotationYaw = smoothRotations[0];
+                    mc.thePlayer.rotationPitch = smoothRotations[1];
+                }
                 RotationUtil.setRotations(smoothRotations);
             }
 
@@ -293,11 +286,19 @@ public class KillAura extends Module {
                 }
                 PacketUtil.sendPacket(new C0APacketAnimation());
             }
+
             if (event.getState() == Event.State.PRE) {
                 attacking = true;
                 if (timer.hasTimeElapsed((1000 / MathUtil.getRandomInRange(minCps.getValue().intValue(), maxCps.getValue().intValue())), true)) {
-                    mc.thePlayer.swingItem();
-                    mc.thePlayer.sendQueue.addToSendQueue(new C02PacketUseEntity(target, C02PacketUseEntity.Action.ATTACK));
+                    if(safeRotation.getValue()){
+                        if(event.getYaw() + 4.0f >= getRotationsToEnt(target)[0] && event.getYaw() - 4.0f <= getRotationsToEnt(target)[0] && event.getPitch() + 8.0f >= getRotationsToEnt(target)[1] && event.getPitch() - 8.0f <= getRotationsToEnt(target)[1]){
+                            mc.thePlayer.swingItem();
+                            mc.playerController.attackEntity(mc.thePlayer,target);
+                        }
+                    }else {
+                        mc.thePlayer.swingItem();
+                        mc.playerController.attackEntity(mc.thePlayer,target);
+                    }
                 }
             }
         }
@@ -306,32 +307,9 @@ public class KillAura extends Module {
             blocking = false;
         }
     }
+    public boolean isInAABB(AxisAlignedBB aabb,EntityPlayer player){
 
-    public AxisAlignedBB getAABB(Entity entity){
-        AxisAlignedBB aabb = entity.getEntityBoundingBox();
-
-        if (predict.getValue()) {
-            float predictAmount = 1.0f;
-            aabb.offset(
-                (entity.posX - entity.lastTickPosX) * predictAmount,
-                (entity.posY - entity.lastTickPosY) * predictAmount,
-                (entity.posZ - entity.lastTickPosZ) * predictAmount
-            );
-        }
-        if (predictPlayer.getValue()) {
-            float predictPlayerAmount = 1.0f;
-            aabb.offset(
-                mc.thePlayer.motionX * predictPlayerAmount * -1f,
-                mc.thePlayer.motionY * predictPlayerAmount * -1f,
-                mc.thePlayer.motionZ * predictPlayerAmount * -1f
-            );
-        }
-        aabb.expand(
-                entity.getCollisionBorderSize(),
-                entity.getCollisionBorderSize(),
-                entity.getCollisionBorderSize()
-        );
-        return aabb;
+        return false;
     }
     @EventTarget
     public void onPacketReceive(PacketReceiveEvent event) {
@@ -369,14 +347,15 @@ public class KillAura extends Module {
 
     public boolean isValid(EntityLivingBase entLiving) {
         AntiBot antiBot = Rocchi.getInstance().getModuleManager().getModuleByClass(AntiBot.class);
-        if (/*antiBot.isNPC(entLiving) ||*/ entLiving == null) {
+        if (entLiving == null) {
             return false;
         }
         if (Teams.isInTeam(entLiving)) return false;
         if (entLiving instanceof EntityPlayer && players.getValue() && !entLiving.isInvisible()) {
             return true;
         }
-        if (entLiving instanceof EntityPlayer && invisibles.getValue() && entLiving.isInvisible()) {
+
+        if (entLiving instanceof EntityPlayer && invisibles.getValue() && entLiving.isInvisible() && !antiBot.isServerBot(target)) {
             return true;
         }
         if (entLiving instanceof EntityMob && mobs.getValue()) {

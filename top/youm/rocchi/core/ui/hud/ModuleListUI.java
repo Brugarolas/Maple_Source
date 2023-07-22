@@ -87,7 +87,7 @@ public class ModuleListUI implements HUDComponent {
             //animation
             if (module.isToggle()) {
                 module.animY = animator.animate(offsetY + 10, module.animY, 0.2f);
-                module.animX = animator.animate(width - (font ? fontRenderer.getStringWidth(text) : Minecraft.getMinecraft().fontRendererObj.getStringWidth(text)) - 10, module.animX, 0.08f);
+                module.animX = animator.animate(width - (font ? fontRenderer.getStringWidth(text) : Minecraft.getMinecraft().fontRendererObj.getStringWidth(text)) - 12, module.animX, 0.08f);
                 module.wasRemoved = false;
                 offsetY += font ? fontRenderer.getHeight() + 3 : 12;
             } else {
@@ -97,7 +97,11 @@ public class ModuleListUI implements HUDComponent {
 
             //render rect
             if (UIModule.rect.getValue()) {
-                drawRect((int) (module.animX - 7), (int) (2 + module.animY), font ? fontRenderer.getStringWidth(text) + 5 : Minecraft.getMinecraft().fontRendererObj.getStringWidth(text) + 5, font ? fontRenderer.getHeight() + 3 : Minecraft.getMinecraft().fontRendererObj.FONT_HEIGHT + 4, new Color(0, 0, 0, UIModule.rectAlpha.getValue().intValue()));
+                if(UIModule.border.getValue() && UIModule.borderMode.getValue().equals("Shadow")){
+                    drawRect((int) (module.animX - 8), (int) (2 + module.animY), font ? fontRenderer.getStringWidth(text) + 9 : Minecraft.getMinecraft().fontRendererObj.getStringWidth(text) + 11, font ? fontRenderer.getHeight() + 3 : Minecraft.getMinecraft().fontRendererObj.FONT_HEIGHT + 3, new Color(0, 0, 0, UIModule.rectAlpha.getValue().intValue()));
+                }else{
+                    drawRect((int) (module.animX - 7), (int) (2 + module.animY), font ? fontRenderer.getStringWidth(text) + 6 : Minecraft.getMinecraft().fontRendererObj.getStringWidth(text) + 8, font ? fontRenderer.getHeight() + 3 : Minecraft.getMinecraft().fontRendererObj.FONT_HEIGHT + 3, new Color(0, 0, 0, UIModule.rectAlpha.getValue().intValue()));
+                }
             }
 
             //update color
@@ -119,7 +123,7 @@ public class ModuleListUI implements HUDComponent {
             if (UIModule.border.getValue() && module.isToggle()) {
                 if (UIModule.borderMode.getValue().equals("Border")) {
                     drawRect((int) (module.animX - 5) - 3, (int) (2 + module.animY), 1, (font ? fontRenderer.getHeight() + 3 : Minecraft.getMinecraft().fontRendererObj.FONT_HEIGHT + 3), color.getRGB());
-                    drawRect((int) (module.animX + (font ? fontRenderer.getStringWidth(text) : Minecraft.getMinecraft().fontRendererObj.getStringWidth(text)) - 3), (int) (2 + module.animY), 1, (font ? fontRenderer.getHeight() + 3 : Minecraft.getMinecraft().fontRendererObj.FONT_HEIGHT + 3), color.getRGB());
+                    drawRect((int) (module.animX + (font ? fontRenderer.getStringWidth(text) : Minecraft.getMinecraft().fontRendererObj.getStringWidth(text)) - 1), (int) (2 + module.animY), 1, (font ? fontRenderer.getHeight() + 3 : Minecraft.getMinecraft().fontRendererObj.FONT_HEIGHT + 3), color.getRGB());
                     if (module != modules.get(0)) {
                         int differ = font ?
                                 fontRenderer.getStringWidth(
@@ -146,19 +150,19 @@ public class ModuleListUI implements HUDComponent {
                                 );
                         drawRect((int) (module.animX - 8) - differ, (int) (2 + module.animY), differ, 1, color.getRGB());
                         if (index == modules.size() - 1) {
-                            drawRect((int) (module.animX - 8), (int) (2 + module.animY + (font ? fontRenderer.getHeight() + 3 : Minecraft.getMinecraft().fontRendererObj.FONT_HEIGHT + 3)), (font ? fontRenderer.getStringWidth(text) : Minecraft.getMinecraft().fontRendererObj.getStringWidth(text)) + 6, 1, color.getRGB());
+                            drawRect((int) (module.animX - 8), (int) (2 + module.animY + (font ? fontRenderer.getHeight() + 3 : Minecraft.getMinecraft().fontRendererObj.FONT_HEIGHT + 3)), (font ? fontRenderer.getStringWidth(text) : Minecraft.getMinecraft().fontRendererObj.getStringWidth(text)) + 8, 1, color.getRGB());
                         }
                     } else {
-                        drawRect((int) (module.animX - 8), (int) (2 + module.animY), (font ? fontRenderer.getStringWidth(text) : Minecraft.getMinecraft().fontRendererObj.getStringWidth(text)) + 6, 1, color.getRGB());
+                        drawRect((int) (module.animX - 8), (int) (2 + module.animY), (font ? fontRenderer.getStringWidth(text) : Minecraft.getMinecraft().fontRendererObj.getStringWidth(text)) + 8, 1, color.getRGB());
                     }
                 }
             }
 
             //render font
             if (font) {
-                fontRenderer.drawStringWithShadow(text, module.animX - 5 , (4 + module.animY), color.getRGB());
+                fontRenderer.drawStringWithShadow(text, module.animX - 4 , (5 + module.animY), color.getRGB());
             } else {
-                Minecraft.getMinecraft().fontRendererObj.drawStringWithShadow(text, module.animX - 5, (4 + module.animY), color.getRGB());
+                Minecraft.getMinecraft().fontRendererObj.drawStringWithShadow(text, module.animX - 4, (5 + module.animY), color.getRGB());
             }
             //increments
             index++;
@@ -175,10 +179,10 @@ public class ModuleListUI implements HUDComponent {
                             );
                     GlStateManager.pushMatrix();
                     newDrawRect(
-                            (module.animX - 7),
-                            (2 + module.animY),
-                            (module.animX - 7) + (font ? fontRenderer.getStringWidth(context) + 5 : Minecraft.getMinecraft().fontRendererObj.getStringWidth(context) + 5),
-                            (2 + module.animY) + (font ? fontRenderer.getHeight() + 3 : Minecraft.getMinecraft().fontRendererObj.FONT_HEIGHT + 3),
+                            (module.animX - 8),
+                            (3 + module.animY),
+                            (module.animX - 8) + (font ? fontRenderer.getStringWidth(context) + 5 : Minecraft.getMinecraft().fontRendererObj.getStringWidth(context) + 5) + 4,
+                            (2 + module.animY) + (font ? fontRenderer.getHeight() + 3 : Minecraft.getMinecraft().fontRendererObj.FONT_HEIGHT + 3) - 1,
                             new Color(0,0,0).getRGB()
                     );
 
@@ -194,11 +198,11 @@ public class ModuleListUI implements HUDComponent {
                             );
                     GlStateManager.pushMatrix();
                     newDrawRect(
-                            (module.animX - 7),
+                            (module.animX - 8),
                             (2 + module.animY),
-                            (int) (module.animX - 7) + (font ? fontRenderer.getStringWidth(context) + 5 : Minecraft.getMinecraft().fontRendererObj.getStringWidth(context) + 5),
-                            (int) (2 + module.animY) + (font ? fontRenderer.getHeight() + 3 : Minecraft.getMinecraft().fontRendererObj.FONT_HEIGHT + 3) + 1,
-                            new Color(0, 0, 0, 0).getRGB()
+                            (module.animX - 8) + (font ? fontRenderer.getStringWidth(context) + 5 : Minecraft.getMinecraft().fontRendererObj.getStringWidth(context) + 5) + 4,
+                            (2 + module.animY) + (font ? fontRenderer.getHeight() + 3 : Minecraft.getMinecraft().fontRendererObj.FONT_HEIGHT + 3),
+                            new Color(0,0,0).getRGB()
                     );
                     GlStateManager.popMatrix();
                 }
@@ -228,7 +232,7 @@ public class ModuleListUI implements HUDComponent {
                                         "" :
                                         ChatFormatting.BLUE + " " + ChatFormatting.WHITE + module.getSuffixes()
                         );
-                drawRoundedRect((int) (module.animX + (font ? fontRenderer.getStringWidth(context) : Minecraft.getMinecraft().fontRendererObj.getStringWidth(context)) - 3) + 1.5f, (int) (2 + module.animY) + 1.5f, 1.5f, (font ? fontRenderer.getHeight() + 3 : Minecraft.getMinecraft().fontRendererObj.FONT_HEIGHT + 3) - 2f,1f, sidebar);
+                drawRoundedRect((int) (module.animX + (font ? fontRenderer.getStringWidth(context) : Minecraft.getMinecraft().fontRendererObj.getStringWidth(context)) - 3) + 5.5f, (int) (2 + module.animY) + 1.5f, 1.5f, (font ? fontRenderer.getHeight() + 3 : Minecraft.getMinecraft().fontRendererObj.FONT_HEIGHT + 3) - 2f,1f, sidebar);
                 indexSide++;
             }
         }

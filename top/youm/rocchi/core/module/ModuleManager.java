@@ -4,6 +4,7 @@ import com.darkmagician6.eventapi.EventManager;
 import com.darkmagician6.eventapi.EventTarget;
 
 import top.youm.rocchi.common.events.KeyEvent;
+import top.youm.rocchi.core.module.modules.combat.AntiBot;
 import top.youm.rocchi.core.module.modules.combat.Criticals;
 import top.youm.rocchi.core.module.modules.combat.FastBow;
 import top.youm.rocchi.core.module.modules.movement.*;
@@ -25,6 +26,7 @@ public class ModuleManager {
         /* combat */
         this.modules.add(new KillAura());
         this.modules.add(new FastBow());
+        this.modules.add(new AntiBot());
         this.modules.add(new Criticals());
         /* movement */
         this.modules.add(new Sprint());

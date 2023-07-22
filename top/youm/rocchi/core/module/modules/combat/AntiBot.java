@@ -1,4 +1,4 @@
-package top.youm.rocchi.core.module.modules.world;
+package top.youm.rocchi.core.module.modules.combat;
 
 import com.darkmagician6.eventapi.EventTarget;
 import net.minecraft.client.gui.GuiPlayerTabOverlay;
@@ -51,8 +51,22 @@ public class AntiBot extends Module {
         return (mode.getValue().equals("Classic") || mode.getValue().equals("Advanced")) && (entity).ticksExisted <= 80;
     }
     public boolean isServerBot(Entity entity) {
+        if(!this.isToggle()){
+            return true;
+        }
         if (Helper.onServer("hypixel")) {
-            if (entity.getDisplayName().getFormattedText().startsWith("§") && !entity.isInvisible() && !entity.getDisplayName().getFormattedText().toLowerCase().contains("npc")) {
+            return !entity.getDisplayName().getFormattedText().startsWith("§") || entity.isInvisible() || entity.getDisplayName().getFormattedText().toLowerCase().contains("npc");
+        } else if (Helper.onServer("mooncookie")) {
+            List<EntityPlayer> newList = new ArrayList<>(getTabPlayerList().size());
+            getTabPlayerList().forEach(player -> {
+                if (!newList.contains(player)) {
+                    newList.add(player);
+                }
+            });
+            for (EntityPlayer player : newList) {
+                if(!entity.equals(player)){
+                    continue;
+                }
                 return false;
             }
             return true;

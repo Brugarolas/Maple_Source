@@ -62,12 +62,12 @@ public abstract class Component {
         this.x = x;
     }
 
-    public float getY() {
+    public float getContainerY() {
         return y;
     }
 
-    public void setY(float y) {
-        this.y = y;
+    public void setContainerY(float containerY) {
+        this.y = containerY;
     }
 
     public boolean isDisplay() {

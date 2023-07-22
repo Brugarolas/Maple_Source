@@ -1,14 +1,20 @@
 package top.youm.rocchi.utils.player;
 
+import net.minecraft.block.BlockAir;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.projectile.EntitySnowball;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.BlockPos;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.Vec3;
+import net.minecraft.world.WorldType;
+import org.apache.commons.lang3.RandomUtils;
 import top.youm.rocchi.utils.math.MathUtil;
+import top.youm.rocchi.utils.math.RandomUtil;
 import top.youm.rocchi.utils.player.rotations.VecRotation;
 
 import java.util.Random;
@@ -61,7 +67,7 @@ public class RotationUtil {
             f = -speed;
         }
 
-        return from + f;
+        return from + MathUtil.getRandomFloat(f,f+5);
     }
 
     /*
@@ -116,10 +122,9 @@ public class RotationUtil {
         float pitch = (float) (-(MathHelper.atan2(y, d3) * 180.0D / Math.PI));
         return new float[]{yaw, pitch};
     }
-    public static float[] getSmoothRotations(EntityLivingBase entity) {
+    public static float[] getSmoothRotations(EntityLivingBase entity,float maxSpeed,float minSpeed) {
         float f1 = mc.gameSettings.mouseSensitivity * 0.6F + 0.2F;
         float fac = f1 * f1 * f1 * 256.0F;
-
         double x = entity.posX - mc.thePlayer.posX;
         double z = entity.posZ - mc.thePlayer.posZ;
         double y = entity.posY + entity.getEyeHeight()
@@ -130,8 +135,8 @@ public class RotationUtil {
         double d3 = MathHelper.sqrt_double(x * x + z * z);
         float yaw = (float) (MathHelper.atan2(z, x) * 180.0 / Math.PI) - 90.0F;
         float pitch = (float) (-(MathHelper.atan2(y, d3) * 180.0 / Math.PI));
-        yaw = smoothRotation(mc.thePlayer.prevRotationYawHead, yaw, fac * MathUtil.getRandomFloat(0.7F, 1));
-        pitch = smoothRotation(mc.thePlayer.prevRotationPitchHead, pitch, fac * MathUtil.getRandomFloat(0.6F, 1));
+        yaw = smoothRotation(mc.thePlayer.prevRotationYawHead, yaw, fac * MathUtil.getRandomFloat(maxSpeed, minSpeed));
+        pitch = smoothRotation(mc.thePlayer.prevRotationPitchHead, pitch, fac * MathUtil.getRandomFloat(maxSpeed, minSpeed));
 
         return new float[]{yaw, pitch};
     }

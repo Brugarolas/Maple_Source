@@ -9,9 +9,13 @@ import top.youm.rocchi.core.module.ModuleManager;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.lwjgl.opengl.Display;
+import top.youm.rocchi.core.music.QQMusic;
+import top.youm.rocchi.core.music.QQMusicUser;
+import top.youm.rocchi.core.ui.clickgui.music.MusicPlayerScreen;
 import top.youm.rocchi.utils.math.MathUtil;
 
 import javax.swing.*;
+import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
 import static top.youm.rocchi.utils.tools.Catcher.runCatching;
@@ -37,6 +41,9 @@ public class Rocchi {
     private ModuleManager moduleManager;
     private ConfigManager configManager;
     private CommandManager commandManager;
+    private QQMusic music;
+    public List<String> songList;
+    public MusicPlayerScreen musicPlayerScreen;
     public void initializeToolkit()
     {
         final CountDownLatch latch = new CountDownLatch(1);
@@ -52,6 +59,7 @@ public class Rocchi {
     }
     public void startGame(){
         initializeToolkit();
+        musicPlayerScreen = new MusicPlayerScreen();
         gson = new GsonBuilder().setPrettyPrinting().excludeFieldsWithoutExposeAnnotation().create();
         moduleManager = new ModuleManager();
         moduleManager.initialize();
@@ -80,5 +88,9 @@ public class Rocchi {
 
     public ConfigManager getConfigManager() {
         return configManager;
+    }
+
+    public List<String> getSongList() {
+        return songList;
     }
 }

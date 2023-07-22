@@ -41,6 +41,8 @@ import javax.imageio.ImageIO;
 import top.youm.rocchi.Rocchi;
 import top.youm.rocchi.common.events.KeyEvent;
 import top.youm.rocchi.common.events.TickEvent;
+import top.youm.rocchi.core.music.QQMusic;
+import top.youm.rocchi.core.music.QQMusicUser;
 import top.youm.rocchi.core.ui.font.FontLoaders;
 import top.youm.rocchi.core.ui.font.GlyphPageFontRenderer;
 import top.youm.rocchi.core.ui.screen.MainScreen;
