@@ -1,9 +1,18 @@
 package top.youm.rocchi.core.music;
 
 import com.google.gson.*;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.IImageBuffer;
+import net.minecraft.client.renderer.ImageBufferDownload;
+import net.minecraft.client.renderer.ThreadDownloadImageData;
+import net.minecraft.util.ResourceLocation;
 import top.youm.rocchi.utils.network.HttpUtils;
 
-import java.io.IOException;
+import java.awt.image.BufferedImage;
+import java.io.*;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 /**
@@ -92,7 +101,7 @@ public class QQMusicApi {
             JsonArray songlist = cd.get("songlist").getAsJsonArray();
             ArrayList<Music> arrayList = new ArrayList<>();
             for (JsonElement songid : songlist) {
-                arrayList.add(new Music(songid.getAsJsonObject().get("title").toString(),songid.getAsJsonObject().get("mid").toString(),""));
+                arrayList.add(new Music(songid.getAsJsonObject().get("title").toString(),songid.getAsJsonObject().get("mid").toString(),""/*getPictureByID(Integer.parseInt(songid.getAsJsonObject().get("id").getAsString())*/));
             }
             return (Result<List<Music>>) Result.success(arrayList);
         } catch (IOException e) {
@@ -111,14 +120,60 @@ public class QQMusicApi {
             return Result.failed("failed to get music file");
         }
     }
-    public Result<?> getPictureByID(int id){
+    private static void downloadPicture(String urlList) {
+
         try {
-            String s = HttpUtils.getRedirectUrl(GET_PICTURE + String.valueOf(id % 100) + "/300_albumpic_" + String.valueOf(id) + "_0.jpg");
-            return Result.success(s);
+            URL url = new URL(urlList);
+            DataInputStream dataInputStream = new DataInputStream(url.openStream());
+            FileOutputStream fileOutputStream = new FileOutputStream(new File(Minecraft.getMinecraft().mcDataDir,  urlList + ".jpg"));
+            ByteArrayOutputStream output = new ByteArrayOutputStream();
+
+            byte[] buffer = new byte[1024];
+            int length;
+
+            while ((length = dataInputStream.read(buffer)) > 0) {
+                output.write(buffer, 0, length);
+            }
+            fileOutputStream.write(output.toByteArray());
+            dataInputStream.close();
+            fileOutputStream.close();
         } catch (IOException e) {
             e.printStackTrace();
-            return Result.failed("failed to get music picture");
         }
+    }
+    private final HashMap<String, ResourceLocation> artsLocations = new HashMap<>();
+    public String getPictureByID(int id){
+        try {
+            String s = HttpUtils.getRedirectUrl(GET_PICTURE + String.valueOf(id % 100) + "/300_albumpic_" + String.valueOf(id) + "_0.jpg");
+            downloadPicture(s.replaceAll("\"",""));
+            s.replaceAll("\"","");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return "ERROR";
+    }
+    public void loadTexture(String id){
+        String idName = id.replaceAll("\"", "") + ".jpg";
+        File path = new File(Minecraft.getMinecraft().getFileAssets(),idName);
+        new Thread(() -> {
+            artsLocations.put(idName, null);
+            ResourceLocation rl = new ResourceLocation("musicCache/" + idName);
+            IImageBuffer iib = new IImageBuffer() {
+                final ImageBufferDownload ibd = new ImageBufferDownload();
+
+                public BufferedImage parseUserSkin(BufferedImage image) {
+                    return image;
+                }
+
+                @Override
+                public void skinAvailable() {
+                    artsLocations.put(idName, rl);
+                }
+            };
+
+            ThreadDownloadImageData textureArt = new ThreadDownloadImageData(path, null, null, iib);
+            Minecraft.getMinecraft().getTextureManager().loadTexture(rl, textureArt);
+        }).start();
     }
 
 }

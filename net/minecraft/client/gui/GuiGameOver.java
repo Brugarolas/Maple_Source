@@ -91,13 +91,14 @@ public class GuiGameOver extends GuiScreen implements GuiYesNoCallback
         if (result)
         {
             this.mc.theWorld.sendQuittingDisconnectingPacket();
-            this.mc.loadWorld((WorldClient)null);
+            this.mc.loadWorld(null);
             this.mc.displayGuiScreen(new MainScreen());
         }
         else
         {
+
             this.mc.thePlayer.respawnPlayer();
-            this.mc.displayGuiScreen((GuiScreen)null);
+            this.mc.displayGuiScreen(null);
         }
     }
 

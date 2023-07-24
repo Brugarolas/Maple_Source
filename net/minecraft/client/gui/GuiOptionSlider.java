@@ -4,13 +4,10 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.settings.GameSettings;
 import net.minecraft.util.MathHelper;
-import top.youm.rocchi.utils.render.RenderUtil;
-
-import java.awt.*;
 
 public class GuiOptionSlider extends GuiButton
 {
-    private float sliderValue = 1.0F;
+    private float sliderValue;
     public boolean dragging;
     private GameSettings.Options options;
     private final float field_146132_r;
@@ -24,6 +21,7 @@ public class GuiOptionSlider extends GuiButton
     public GuiOptionSlider(int p_i45017_1_, int p_i45017_2_, int p_i45017_3_, GameSettings.Options p_i45017_4_, float p_i45017_5_, float p_i45017_6_)
     {
         super(p_i45017_1_, p_i45017_2_, p_i45017_3_, 150, 20, "");
+        this.sliderValue = 1.0F;
         this.options = p_i45017_4_;
         this.field_146132_r = p_i45017_5_;
         this.field_146131_s = p_i45017_6_;
@@ -58,7 +56,10 @@ public class GuiOptionSlider extends GuiButton
                 this.displayString = mc.gameSettings.getKeyBinding(this.options);
             }
 
-            RenderUtil.drawRect(this.xPosition + (int)(this.sliderValue * (float)(this.width - 8)), this.yPosition, 8, 20,new Color(232, 232, 232, 232));
+            mc.getTextureManager().bindTexture(buttonTextures);
+            GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+            this.drawTexturedModalRect(this.xPosition + (int)(this.sliderValue * (float)(this.width - 8)), this.yPosition, 0, 66, 4, 20);
+            this.drawTexturedModalRect(this.xPosition + (int)(this.sliderValue * (float)(this.width - 8)) + 4, this.yPosition, 196, 66, 4, 20);
         }
     }
 

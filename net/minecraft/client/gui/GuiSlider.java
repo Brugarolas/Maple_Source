@@ -3,9 +3,6 @@ package net.minecraft.client.gui;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
-import top.youm.rocchi.utils.render.RenderUtil;
-
-import java.awt.*;
 
 public class GuiSlider extends GuiButton
 {
@@ -52,7 +49,7 @@ public class GuiSlider extends GuiButton
 
     private String getDisplayString()
     {
-        return this.formatHelper == null ? I18n.format(this.name) + ": " + this.func_175220_c() : this.formatHelper.getText(this.id, I18n.format(this.name), this.func_175220_c());
+        return this.formatHelper == null ? I18n.format(this.name, new Object[0]) + ": " + this.func_175220_c() : this.formatHelper.getText(this.id, I18n.format(this.name, new Object[0]), this.func_175220_c());
     }
 
     /**
@@ -90,7 +87,8 @@ public class GuiSlider extends GuiButton
             }
 
             GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-            RenderUtil.drawRect(this.xPosition + (int)(this.sliderPosition * (float)(this.width - 8)), this.yPosition, 10, 66,new Color(250, 243, 101, 186));
+            this.drawTexturedModalRect(this.xPosition + (int)(this.sliderPosition * (float)(this.width - 8)), this.yPosition, 0, 66, 4, 20);
+            this.drawTexturedModalRect(this.xPosition + (int)(this.sliderPosition * (float)(this.width - 8)) + 4, this.yPosition, 196, 66, 4, 20);
         }
     }
 

@@ -59,7 +59,7 @@ public class Rocchi {
     }
     public void startGame(){
         initializeToolkit();
-        musicPlayerScreen = new MusicPlayerScreen();
+/*        musicPlayerScreen = new MusicPlayerScreen();*/
         gson = new GsonBuilder().setPrettyPrinting().excludeFieldsWithoutExposeAnnotation().create();
         moduleManager = new ModuleManager();
         moduleManager.initialize();

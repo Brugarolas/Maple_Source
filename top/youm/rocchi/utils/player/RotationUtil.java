@@ -7,16 +7,14 @@ import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.projectile.EntitySnowball;
-import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.BlockPos;
-import net.minecraft.util.MathHelper;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.*;
 import net.minecraft.world.WorldType;
 import org.apache.commons.lang3.RandomUtils;
 import top.youm.rocchi.utils.math.MathUtil;
 import top.youm.rocchi.utils.math.RandomUtil;
 import top.youm.rocchi.utils.player.rotations.VecRotation;
 
+import javax.vecmath.Vector2f;
 import java.util.Random;
 
 
@@ -151,128 +149,7 @@ public class RotationUtil {
     public static float getAngleDifference(final float a, final float b) {
         return ((((a - b) % 360F) + 540F) % 360F) - 180F;
     }
-    public static VecRotation calculateCenter(final String calMode, final String randMode, final double randomRange, final AxisAlignedBB bb, final boolean predict, final boolean throughWalls) {
 
-        //final Rotation randomRotation = toRotation(randomVec, predict);
-
-        VecRotation vecRotation = null;
-
-        double xMin;
-        double yMin;
-        double zMin;
-        double xMax;
-        double yMax;
-        double zMax;
-        double xDist;
-        double yDist;
-        double zDist;
-
-        xMin = 0.15D; xMax = 0.85D; xDist = 0.1D;
-        yMin = 0.15D; yMax = 1.00D; yDist = 0.1D;
-        zMin = 0.15D; zMax = 0.85D; zDist = 0.1D;
-
-        Vec3 curVec3 = null;
-
-        switch(calMode) {
-            case "LiquidBounce":
-                break;
-            case "Full":
-                xMin = 0.00D; xMax = 1.00D;
-                yMin = 0.00D;
-                zMin = 0.00D; zMax = 1.00D;
-                break;
-            case "HalfUp":
-                xMin = 0.10D; xMax = 0.90D;
-                yMin = 0.50D; yMax = 0.90D;
-                zMin = 0.10D; zMax = 0.90D;
-                break;
-            case "HalfDown":
-                xMin = 0.10D; xMax = 0.90D;
-                yMin = 0.10D; yMax = 0.50D;
-                zMin = 0.10D; zMax = 0.90D;
-                break;
-            case "CenterSimple":
-                xMin = 0.45D; xMax = 0.55D; xDist = 0.0125D;
-                yMin = 0.65D; yMax = 0.75D; yDist = 0.0125D;
-                zMin = 0.45D; zMax = 0.55D; zDist = 0.0125D;
-                break;
-            case "CenterLine":
-                xMin = 0.45D; xMax = 0.55D; xDist = 0.0125D;
-                yMin = 0.10D; yMax = 0.90D;
-                zMin = 0.45D; zMax = 0.55D; zDist = 0.0125D;
-                break;
-        }
-
-        for(double xSearch = xMin; xSearch < xMax; xSearch += xDist) {
-            for (double ySearch = yMin; ySearch < yMax; ySearch += yDist) {
-                for (double zSearch = zMin; zSearch < zMax; zSearch += zDist) {
-                    final Vec3 vec3 = new Vec3(bb.minX + (bb.maxX - bb.minX) * xSearch, bb.minY + (bb.maxY - bb.minY) * ySearch, bb.minZ + (bb.maxZ - bb.minZ) * zSearch);
-                    final float[] rotation = toRotation(vec3, predict);
-
-                    if(throughWalls || isVisible(vec3)) {
-                        final VecRotation currentVec = new VecRotation(vec3, rotation);
-
-                        if (vecRotation == null || (getRotationDifference(currentVec.getRotation()) < getRotationDifference(vecRotation.getRotation()))) {
-                            vecRotation = currentVec;
-                            curVec3 = vec3;
-                        }
-                    }
-                }
-            }
-        }
-
-        if(vecRotation == null || randMode.equals("Off"))
-            return vecRotation;
-
-        double rand1 = random.nextDouble();
-        double rand2 = random.nextDouble();
-        double rand3 = random.nextDouble();
-
-        final double xRange = bb.maxX - bb.minX;
-        final double yRange = bb.maxY - bb.minY;
-        final double zRange = bb.maxZ - bb.minZ;
-        double minRange = 999999.0D;
-
-        if(xRange<=minRange) minRange = xRange;
-        if(yRange<=minRange) minRange = yRange;
-        if(zRange<=minRange) minRange = zRange;
-
-        rand1 = rand1 * minRange * randomRange;
-        rand2 = rand2 * minRange * randomRange;
-        rand3 = rand3 * minRange * randomRange;
-
-        final double xPrecent = minRange * randomRange / xRange;
-        final double yPrecent = minRange * randomRange / yRange;
-        final double zPrecent = minRange * randomRange / zRange;
-
-        Vec3 randomVec3 = new Vec3(
-                curVec3.xCoord - xPrecent * (curVec3.xCoord - bb.minX) + rand1,
-                curVec3.yCoord - yPrecent * (curVec3.yCoord - bb.minY) + rand2,
-                curVec3.zCoord - zPrecent * (curVec3.zCoord - bb.minZ) + rand3
-        );
-        switch(randMode) {
-            case "Horizonal":
-                randomVec3 = new Vec3(
-                        curVec3.xCoord - xPrecent * (curVec3.xCoord - bb.minX) + rand1,
-                        curVec3.yCoord,
-                        curVec3.zCoord - zPrecent * (curVec3.zCoord - bb.minZ) + rand3
-                );
-                break;
-            case "Vertical":
-                randomVec3 = new Vec3(
-                        curVec3.xCoord,
-                        curVec3.yCoord - yPrecent * (curVec3.yCoord - bb.minY) + rand2,
-                        curVec3.zCoord
-                );
-                break;
-        }
-
-        final float[] randomRotation = toRotation(randomVec3, predict);
-
-        vecRotation =  new VecRotation(randomVec3, randomRotation);
-
-        return vecRotation;
-    }
     public static float[] toRotation(final Vec3 vec, final boolean predict) {
         final Vec3 eyesPos = new Vec3(mc.thePlayer.posX, mc.thePlayer.getEntityBoundingBox().minY +
                 mc.thePlayer.getEyeHeight(), mc.thePlayer.posZ);
@@ -298,49 +175,6 @@ public class RotationUtil {
 
         return mc.theWorld.rayTraceBlocks(eyesPos, vec3) == null;
     }
-    public static double getRotationDifference(final float[] a, final float[] b) {
-        return Math.hypot(getAngleDifference(a[0], b[0]), a[1] - b[1]);
-    }
-    public static double getRotationDifference(final float[] rotation) {
-        return serverRotation == null ? 0D : getRotationDifference(rotation, serverRotation);
-    }
-    public static Vec3 getCenter(final AxisAlignedBB bb) {
-        return new Vec3(bb.minX + (bb.maxX - bb.minX) * 0.5, bb.minY + (bb.maxY - bb.minY) * 0.5, bb.minZ + (bb.maxZ - bb.minZ) * 0.5);
-    }
-    public static float[] toPlayer(EntityPlayerSP player, float[] rotation) {
-        if ((rotation[0] == 0 || rotation[1] == 0)) {
-            return null;
-        }
 
-        float[] floats = fixedSensitivity(Minecraft.getMinecraft().gameSettings.mouseSensitivity, rotation);
 
-        player.rotationYaw = floats[0];
-        player.rotationPitch = floats[1];
-        return floats;
-    }
-    public static float[] fixedSensitivity(float sensitivity, float[] rotation) {
-        float f = sensitivity * 0.6F + 0.2F;
-        float gcd = f * f * f * 1.2F;
-
-        // get previous rotation
-        float[] rotations = RotationUtil.serverRotation;
-
-        // fix rotation[0]
-        float deltaYaw = rotation[0] - rotations[0];
-        deltaYaw -= deltaYaw % gcd;
-        rotation[0] = rotations[0] + deltaYaw;
-
-        // fix rotation[1]
-        float deltaPitch = rotation[1] - rotations[1];
-        deltaPitch -= deltaPitch % gcd;
-        rotation[1] = rotations[1] + deltaPitch;
-        return rotation;
-    }
-    public static float[] setTargetRotationReverse(final float[] rotation, int kl, int rt) {
-        if(Double.isNaN(rotation[0]) || Double.isNaN(rotation[1])
-                || rotation[1] > 90 || rotation[1] < -90)
-            return null;
-
-        return fixedSensitivity(mc.gameSettings.mouseSensitivity, rotation);
-    }
 }

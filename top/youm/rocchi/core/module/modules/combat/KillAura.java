@@ -2,6 +2,7 @@ package top.youm.rocchi.core.module.modules.combat;
 
 import com.darkmagician6.eventapi.EventTarget;
 import com.darkmagician6.eventapi.events.Event;
+import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.network.play.client.C07PacketPlayerDigging;
 import net.minecraft.network.play.client.C0APacketAnimation;
@@ -17,6 +18,7 @@ import top.youm.rocchi.common.settings.impl.NumberSetting;
 import top.youm.rocchi.core.module.Module;
 import top.youm.rocchi.core.module.ModuleCategory;
 import top.youm.rocchi.core.module.modules.movement.Scaffold;
+import top.youm.rocchi.core.module.modules.world.Disabler;
 import top.youm.rocchi.core.module.modules.world.Teams;
 import top.youm.rocchi.core.ui.theme.Theme;
 import top.youm.rocchi.utils.AnimationUtils;
@@ -41,12 +43,12 @@ import java.util.List;
  * @author YouM
  */
 public class KillAura extends Module {
-    private final NumberSetting reach = new NumberSetting("Reach", 3.77, 6, 1, 0.1);
-    private final NumberSetting minCps = new NumberSetting("Min CPS", 11, 20, 1, 1);
-    private final NumberSetting maxCps = new NumberSetting("Max CPS", 14, 20, 1, 1);
+    private final NumberSetting reach = new NumberSetting("Reach", 3.3, 10, 1, 0.1);
+    private final NumberSetting minCps = new NumberSetting("Min CPS", 6, 20, 1, 1);
+    private final NumberSetting maxCps = new NumberSetting("Max CPS", 11, 20, 1, 1);
     private final NumberSetting minSpeed = new NumberSetting("Min Speed", 0.5, 1.0, 0, 0.1);
     private final NumberSetting maxSpeed = new NumberSetting("Max Speed", 0.6, 1.0, 0, 0.1);
-    private final ModeSetting autoBlockMode = new ModeSetting("AutoBlock Mode", "WatchDog","WatchDog","Interaction","AAC" );
+    private final ModeSetting autoBlockMode = new ModeSetting("AutoBlock Mode", "Legit","Legit","Interaction","AAC" );
     private final BoolSetting autoblock = new BoolSetting("Autoblock", false);
 
     private final BoolSetting footCircle = new BoolSetting("foot circle",true);
@@ -72,6 +74,7 @@ public class KillAura extends Module {
     public static boolean attacking;
     private final TimerUtil timer = new TimerUtil();
 
+    private int hitTicks = 0;
     public KillAura() {
         super("KillAura", ModuleCategory.COMBAT, Keyboard.KEY_NONE);
         footWidth.addParent(footCircle,BoolSetting::getValue);
@@ -187,25 +190,38 @@ public class KillAura extends Module {
         GL11.glDisable(GL11.GL_BLEND);
         GL11.glPopMatrix();
     }
-    private float partialTicks;
-    @EventTarget
-    public void onRender(Render2DEvent event){
-        this.partialTicks = event.getPartialTicks();
-    }
     AnimationUtils animator= new AnimationUtils();
+
+    public void legitUnBlock(){
+        KeyBinding.setKeyBindState(mc.gameSettings.keyBindUseItem.getKeyCode(), false);
+    }
+    public void legitBlock(){
+        KeyBinding.setKeyBindState(mc.gameSettings.keyBindUseItem.getKeyCode(),true);
+    }
+
+    @EventTarget
+    public void respawn(RespawnPlayerEvent event){
+        if(Disabler.INSTANCE.isToggle() && Disabler.INSTANCE.killaura.getValue()){
+            this.setToggle(false);
+        }
+    }
     @EventTarget
     public void onMotion(MotionEvent event){
         sortTargets();
         this.setSuffixes(autoBlockMode.getValue());
+        if(autoBlockMode.getValue().equals("Legit")){
+            legitUnBlock();
+        }
         if(targets.get(0).getHealth() <= 0){
             targets.remove(0);
         }
-        if (targets.get(0).isDead || Rocchi.getInstance().getModuleManager().getModuleByClass(Scaffold.class).isToggle() || mc.thePlayer.isDead || mc.thePlayer.isSpectator())
+        if (targets.get(0).isDead || Rocchi.getInstance().getModuleManager().getModuleByClass(Scaffold.class).isToggle() || mc.thePlayer.isDead || mc.thePlayer.isSpectator()) {
             return;
+        }
         if (!targets.isEmpty()) {
             target = targets.get(0);
             if (event.getState() == Event.State.PRE) {
-
+                KeyBinding.setKeyBindState(mc.gameSettings.keyBindUseItem.getKeyCode(),false);
                 float[] smoothRotations = getRotationsToEnt(target);
                 switch (rotateMode.getValue()){
                     case "Dynamic":
@@ -243,18 +259,14 @@ public class KillAura extends Module {
 
             if (autoblock.getValue() && mc.thePlayer.getCurrentEquippedItem() != null && mc.thePlayer.getCurrentEquippedItem().getItem() instanceof ItemSword) {
                 mc.playerController.syncCurrentPlayItem();
+                hitTicks++;
                 blocking = true;
                 switch (autoBlockMode.getValue()) {
-                    case "WatchDog":
+                    case "Legit":
                         if (event.getState() == Event.State.POST) {
-                            if (mc.thePlayer.swingProgressInt == -1) {
-                                PacketUtil.sendPacket(new C07PacketPlayerDigging(
-                                        C07PacketPlayerDigging.Action.RELEASE_USE_ITEM, new BlockPos(-1, -1, -1), EnumFacing.DOWN));
-
-                            } else if (mc.thePlayer.swingProgressInt == 0) {
-                                PacketUtil.sendPacket(new C08PacketPlayerBlockPlacement(
-                                        new BlockPos(-1, -1, -1), 255, mc.thePlayer.getHeldItem(), 0, 0, 0));
-                                mc.playerController.sendUseItem(mc.thePlayer, mc.theWorld, mc.thePlayer.getHeldItem());
+                            if (this.hitTicks == 1) {
+                                legitBlock();
+                                blocking = true;
                             }
                         }
                         break;
@@ -299,12 +311,19 @@ public class KillAura extends Module {
                         mc.thePlayer.swingItem();
                         mc.playerController.attackEntity(mc.thePlayer,target);
                     }
+                    this.hitTicks = 0;
+
                 }
             }
         }
         if (targets.isEmpty()) {
             attacking = false;
             blocking = false;
+            this.hitTicks = 0;
+            if(autoBlockMode.getValue().equals("Legit")){
+                legitUnBlock();
+            }
+
         }
     }
     public boolean isInAABB(AxisAlignedBB aabb,EntityPlayer player){

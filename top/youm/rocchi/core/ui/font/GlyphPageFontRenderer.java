@@ -108,7 +108,9 @@ public class GlyphPageFontRenderer {
     }
     public static GlyphPageFontRenderer create(Font font, boolean allChars) {
         GlyphPage regularPage = new GlyphPage(font, true, true);
+
         regularPage.generateGlyphPage(allChars ? chars : ascii_chars, allChars);
+
         return new GlyphPageFontRenderer(regularPage, regularPage, regularPage, regularPage);
     }
 

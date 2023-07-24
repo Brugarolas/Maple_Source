@@ -4,7 +4,13 @@
 package top.youm.rocchi.core.ui.font;
 
 import java.awt.Font;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.InputStream;
+import java.net.URL;
+import java.util.Objects;
+
+import me.youm.test.Main;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.ResourceLocation;
 
@@ -65,10 +71,28 @@ public abstract class FontLoaders {
         }
         return font;
     }
+    public static Font getFontByJava(String name ,int size) {
+        Font font;
+        try {
+            InputStream is = Objects.requireNonNull(Main.class.getClassLoader().getResource("assets/minecraft/Rocchi/font/"+name+".ttf")).openStream();
+            font = Font.createFont(0, is);
+            font = font.deriveFont(Font.PLAIN, size);
+        }
+        catch (Exception ex) {
+            ex.printStackTrace();
+            System.out.println("Error loading font");
+            font = new Font("default", Font.PLAIN, size);
+        }
+        return font;
+    }
+
+
     private static Font getComfortaa(int size,Roughness roughness) {
         Font font;
         try {
+
             InputStream is = Minecraft.getMinecraft().getResourceManager().getResource(new ResourceLocation("Rocchi/font/comfortaa/comfortaa_"+roughness.text+".ttf")).getInputStream();
+
             font = Font.createFont(0, is);
             font = font.deriveFont(Font.PLAIN, size);
         }

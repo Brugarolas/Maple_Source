@@ -74,6 +74,7 @@ import net.minecraft.world.IInteractionObject;
 import net.minecraft.world.LockCode;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldSettings;
+import top.youm.rocchi.Rocchi;
 
 public abstract class EntityPlayer extends EntityLivingBase
 {
@@ -1465,7 +1466,9 @@ public abstract class EntityPlayer extends EntityLivingBase
      */
     public void setDead()
     {
+
         super.setDead();
+
         this.inventoryContainer.onContainerClosed(this);
 
         if (this.openContainer != null)

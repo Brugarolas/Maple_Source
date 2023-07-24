@@ -1,4 +1,4 @@
-package top.youm.rocchi.core.ui.clickgui.modern.animation;
+package top.youm.rocchi.utils.animation;
 
 import top.youm.rocchi.utils.TimerUtil;
 
@@ -54,11 +54,12 @@ public abstract class Animation  {
         return this.direction;
     }
     
-    public void setDirection(final Direction direction) {
+    public Animation setDirection(final Direction direction) {
         if (this.direction != direction) {
             this.direction = direction;
             this.timerUtil.setTime(System.currentTimeMillis() - (this.duration - Math.min(this.duration, this.timerUtil.getTime())));
         }
+        return this;
     }
     
     public void setDuration(final int duration) {
@@ -69,7 +70,7 @@ public abstract class Animation  {
         return false;
     }
     
-    public double getOutput() {
+    public Double getOutput() {
         if (this.direction == Direction.FORWARDS) {
             if (this.isDone()) {
                 return this.endPoint;

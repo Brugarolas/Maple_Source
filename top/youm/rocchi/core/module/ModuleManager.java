@@ -11,6 +11,7 @@ import top.youm.rocchi.core.module.modules.movement.*;
 import top.youm.rocchi.core.module.modules.player.*;
 import top.youm.rocchi.core.module.modules.visual.*;
 import top.youm.rocchi.core.module.modules.combat.KillAura;
+import top.youm.rocchi.core.module.modules.world.Disabler;
 import top.youm.rocchi.core.module.modules.world.Teams;
 
 import java.util.ArrayList;
@@ -54,8 +55,10 @@ public class ModuleManager {
         this.modules.add(new HUD());
         this.modules.add(new ModuleList());
         this.modules.add(new ClickGui());
+        this.modules.add(new ESP());
         /* world*/
         this.modules.add(new Teams());
+        this.modules.add(new Disabler());
         EventManager.register(this);
     }
     public <T extends Module> T getModuleByClass(Class<T> moduleClass){

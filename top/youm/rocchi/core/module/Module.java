@@ -4,6 +4,9 @@ import com.darkmagician6.eventapi.EventManager;
 import net.minecraft.client.Minecraft;
 import top.youm.rocchi.Rocchi;
 import top.youm.rocchi.common.settings.Setting;
+import top.youm.rocchi.utils.animation.Animation;
+import top.youm.rocchi.utils.animation.Direction;
+import top.youm.rocchi.utils.animation.SmoothStepAnimation;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -17,7 +20,7 @@ import java.util.stream.Collectors;
 public class Module {
     public Minecraft mc = Minecraft.getMinecraft();
     private boolean toggle;
-
+    public Animation animation = new SmoothStepAnimation(200,1).setDirection(Direction.BACKWARDS);
     private String name;
     private String suffixes = "";
     private ModuleCategory category;

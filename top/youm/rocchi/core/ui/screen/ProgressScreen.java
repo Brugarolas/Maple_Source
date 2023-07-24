@@ -4,57 +4,77 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.shader.Framebuffer;
+import org.lwjgl.opengl.GL11;
 import top.youm.rocchi.core.ui.font.FontLoaders;
-import top.youm.rocchi.core.ui.theme.Theme;
-import top.youm.rocchi.utils.math.MathUtil;
+import top.youm.rocchi.utils.animation.Animation;
+import top.youm.rocchi.utils.animation.SmoothStepAnimation;
 import top.youm.rocchi.utils.render.RenderUtil;
+import top.youm.rocchi.utils.render.RoundedUtil;
+
+import java.awt.*;
 
 /**
  * @author YouM
  */
 public class ProgressScreen {
     private Framebuffer framebuffer;
-    private int number;
-    public void makeProgress(){
-        drawScreen();
-    }
 
-    public ProgressScreen() {
-        number = MathUtil.getRandomInRange(1, 4);
-    }
-
-    public void drawScreen(){
-
+    public void drawScreen(float prograss){
         ScaledResolution sr = new ScaledResolution(Minecraft.getMinecraft());
-        framebuffer = new Framebuffer(Minecraft.getMinecraft().displayWidth, Minecraft.getMinecraft().displayHeight,false);
-        framebuffer.framebufferClear();
-        framebuffer.bindFramebuffer(true);
-        int i = sr.getScaleFactor();
-        GlStateManager.matrixMode(5889);
-        GlStateManager.loadIdentity();
-        GlStateManager.ortho(0.0D, sr.getScaledWidth(), sr.getScaledHeight(), 0.0D, 1000.0D, 3000.0D);
-        GlStateManager.matrixMode(5888);
-        GlStateManager.loadIdentity();
-        GlStateManager.translate(0.0F, 0.0F, -2000.0F);
-        GlStateManager.disableLighting();
-        GlStateManager.disableFog();
-        GlStateManager.disableDepth();
-        GlStateManager.enableTexture2D();
+        // Create the scale factor
+        int scaleFactor = sr.getScaleFactor();
+        // Bind the width and height to the framebuffer
+        framebuffer = RenderUtil.createFrameBuffer(framebuffer);
 
-        this.draw(sr);
+        while (!end) {
+            framebuffer.framebufferClear();
+            framebuffer.bindFramebuffer(true);
+            // Create the projected image to be rendered
+            GlStateManager.matrixMode(GL11.GL_PROJECTION);
+            GlStateManager.loadIdentity();
+            GlStateManager.ortho(0.0D, sr.getScaledWidth(), sr.getScaledHeight(), 0.0D, 1000.0D, 3000.0D);
+            GlStateManager.matrixMode(GL11.GL_MODELVIEW);
+            GlStateManager.loadIdentity();
+            GlStateManager.translate(0.0F, 0.0F, -2000.0F);
+            GlStateManager.disableLighting();
+            GlStateManager.disableFog();
+            GlStateManager.disableDepth();
+            GlStateManager.enableTexture2D();
 
-        GlStateManager.disableLighting();
-        GlStateManager.disableFog();
-        framebuffer.unbindFramebuffer();
-        framebuffer.framebufferRender(sr.getScaledWidth() * i, sr.getScaledHeight() * i);
-        GlStateManager.enableAlpha();
-        GlStateManager.alphaFunc(516, 0.1F);
 
-        Minecraft.getMinecraft().updateDisplay();
+            GlStateManager.color(0, 0, 0, 0);
+            GlStateManager.enableBlend();
+            GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+
+            draw(sr,prograss);
+
+            // Unbind the width and height as it's no longer needed
+            framebuffer.unbindFramebuffer();
+
+            // Render the previously used frame buffer
+            framebuffer.framebufferRender(sr.getScaledWidth() * scaleFactor, sr.getScaledHeight() * scaleFactor);
+            // Update the users screen
+            Minecraft.getMinecraft().updateDisplay();
+        }
+        end = false;
     }
-    public void draw(ScaledResolution sr){
-        RenderUtil.drawTexturedRect(0,0,sr.getScaledWidth(),sr.getScaledHeight(),"background"+number+".png");
-        FontLoaders.robotoB40.drawStringWithShadow("Loading",sr.getScaledWidth() / 2.0 - FontLoaders.robotoB40.getStringWidth("Loading") / 2.0f, sr.getScaledHeight() - 150, Theme.font.getRGB());
+    private Animation progressAnim;
+    private double progress = 0;
+    private boolean end = false;
+    public void draw(ScaledResolution sr,float progressF){
+        float width = sr.getScaledWidth() - 100;
+        if (progressAnim == null) {
+            progressAnim = new SmoothStepAnimation(500, (progressF * width) - (progress * width));
+        }
+        RenderUtil.drawTexturedRect(0,0,sr.getScaledWidth(),sr.getScaledHeight(),"background.png");
+        FontLoaders.robotoB40.drawCenteredStringWithShadow("Loading Client...",sr.getScaledWidth() / 2.0f,sr.getScaledHeight() - (sr.getScaledHeight() / 10.0f) - 50,-1);
+        RoundedUtil.drawRound((sr.getScaledWidth() / 2.0f) - (width / 2.0f),sr.getScaledHeight() - (sr.getScaledHeight() / 10.0f), width, 10,5,new Color(91, 91, 91));
+        RoundedUtil.drawRound(sr.getScaledWidth() / 2.0f - width / 2.0f,sr.getScaledHeight() - (sr.getScaledHeight() / 10.0f) , (float)( (progress * width) + (progressAnim.getOutput())), 10,5,new Color(255,255,255));
+        if(progressAnim.isDone()) {
+            progress = progressF;
+            end = true;
+            progressAnim = null;
+        }
     }
 
 }

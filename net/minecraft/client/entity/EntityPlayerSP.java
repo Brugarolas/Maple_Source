@@ -50,7 +50,6 @@ import net.minecraft.stats.StatFileWriter;
 import net.minecraft.tileentity.TileEntitySign;
 import net.minecraft.world.IInteractionObject;
 import net.minecraft.world.World;
-
 public class EntityPlayerSP extends AbstractClientPlayer
 {
     public final NetHandlerPlayClient sendQueue;
@@ -330,6 +329,7 @@ public class EntityPlayerSP extends AbstractClientPlayer
     public void respawnPlayer()
     {
         this.sendQueue.addToSendQueue(new C16PacketClientStatus(C16PacketClientStatus.EnumState.PERFORM_RESPAWN));
+
     }
 
     /**

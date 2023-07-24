@@ -9,6 +9,8 @@ import top.youm.rocchi.core.ui.font.CFontRenderer;
 import top.youm.rocchi.core.ui.font.FontLoaders;
 import top.youm.rocchi.core.ui.theme.Theme;
 import top.youm.rocchi.utils.AnimationUtils;
+import top.youm.rocchi.utils.animation.Animation;
+import top.youm.rocchi.utils.animation.SmoothStepAnimation;
 import top.youm.rocchi.utils.render.ColorUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
@@ -17,7 +19,6 @@ import top.youm.rocchi.utils.render.ShadowUtils;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 import static top.youm.rocchi.utils.render.RenderUtil.*;
 
@@ -28,6 +29,8 @@ public class ModuleListUI implements HUDComponent {
     private final AnimationUtils animator = new AnimationUtils();
     //default color
     private Color color = Theme.theme;
+
+    private final Animation animationY = new SmoothStepAnimation(200,1);
 
     //render modules list
     @Override
@@ -86,6 +89,7 @@ public class ModuleListUI implements HUDComponent {
                     );
             //animation
             if (module.isToggle()) {
+
                 module.animY = animator.animate(offsetY + 10, module.animY, 0.2f);
                 module.animX = animator.animate(width - (font ? fontRenderer.getStringWidth(text) : Minecraft.getMinecraft().fontRendererObj.getStringWidth(text)) - 12, module.animX, 0.08f);
                 module.wasRemoved = false;

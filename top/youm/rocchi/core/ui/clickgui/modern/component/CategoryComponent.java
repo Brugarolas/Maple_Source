@@ -4,9 +4,9 @@ import org.lwjgl.input.Mouse;
 import top.youm.rocchi.core.module.ModuleCategory;
 import top.youm.rocchi.core.ui.Component;
 import top.youm.rocchi.core.ui.clickgui.modern.ModernClickGUI;
-import top.youm.rocchi.core.ui.clickgui.modern.animation.Animation;
-import top.youm.rocchi.core.ui.clickgui.modern.animation.Direction;
-import top.youm.rocchi.core.ui.clickgui.modern.animation.SmoothStepAnimation;
+import top.youm.rocchi.utils.animation.Animation;
+import top.youm.rocchi.utils.animation.Direction;
+import top.youm.rocchi.utils.animation.SmoothStepAnimation;
 import top.youm.rocchi.core.ui.clickgui.modern.state.UIState;
 import top.youm.rocchi.core.ui.theme.Icon;
 import top.youm.rocchi.core.ui.theme.Theme;
@@ -30,6 +30,8 @@ public class CategoryComponent extends Component {
     private Animation scrollAnimation;
     private List<ModuleComponent> moduleComponents = new ArrayList<>();
     private float animation;
+    private Animation animationForward = new SmoothStepAnimation(200,1);
+    private Animation animationHover = new SmoothStepAnimation(200,1);
 
     public CategoryComponent(ModuleCategory category) {
         super(category.name().substring(0, 1).toUpperCase() + category.name().substring(1).toLowerCase());

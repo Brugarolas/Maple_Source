@@ -1,5 +1,6 @@
 package net.minecraft.client.network;
 
+import com.darkmagician6.eventapi.EventManager;
 import com.google.common.collect.Maps;
 import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.Futures;
@@ -14,6 +15,7 @@ import java.util.Random;
 import java.util.UUID;
 import java.util.Map.Entry;
 
+import top.youm.rocchi.common.events.RespawnPlayerEvent;
 import top.youm.rocchi.core.ui.screen.MainScreen;
 import net.minecraft.block.Block;
 import net.minecraft.client.ClientBrandRetriever;
@@ -289,6 +291,7 @@ public class NetHandlerPlayClient implements INetHandlerPlayClient
         this.gameController.playerController.setGameType(packetIn.getGameType());
         this.gameController.gameSettings.sendSettingsToServer();
         this.netManager.sendPacket(new C17PacketCustomPayload("MC|Brand", (new PacketBuffer(Unpooled.buffer())).writeString(ClientBrandRetriever.getClientModName())));
+        EventManager.call(new RespawnPlayerEvent());
     }
 
     /**
@@ -1070,6 +1073,7 @@ public class NetHandlerPlayClient implements INetHandlerPlayClient
 
         this.gameController.setDimensionAndSpawnPlayer(packetIn.getDimensionID());
         this.gameController.playerController.setGameType(packetIn.getGameType());
+
     }
 
     /**

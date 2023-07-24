@@ -1,4 +1,4 @@
-package top.youm.rocchi.core.ui.clickgui.modern.animation;
+package top.youm.rocchi.utils.animation;
 
 public enum Direction
 {

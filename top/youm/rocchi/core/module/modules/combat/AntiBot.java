@@ -24,7 +24,7 @@ public class AntiBot extends Module {
     ModeSetting mode = new ModeSetting("Mode","Advanced","Classic","Advanced","BMC");
     BoolSetting pingCheck = new BoolSetting("Ping Check",true);
     public AntiBot() {
-        super("AntiBot", ModuleCategory.WORLD, Keyboard.KEY_NONE);
+        super("AntiBot", ModuleCategory.COMBAT, Keyboard.KEY_NONE);
     }
     @EventTarget
     public void onUpdate(TickEvent event){
@@ -47,6 +47,10 @@ public class AntiBot extends Module {
             if (mc.getNetHandler().getPlayerInfo(entity.getUniqueID()).getResponseTime() == 0) {
                 return true;
             }
+        }
+        if(mode.getValue().equals("BMC")){
+            String formattedText = entity.getDisplayName().getFormattedText();
+            return formattedText.contains("SHOP");
         }
         return (mode.getValue().equals("Classic") || mode.getValue().equals("Advanced")) && (entity).ticksExisted <= 80;
     }

@@ -30,7 +30,12 @@ public class Teams extends Module {
     public static boolean isInTeam(Entity entity) {
         if (INSTANCE == null || !INSTANCE.isToggle() || entity == null) return false;
         if (!(entity instanceof EntityPlayer)) return false;
-        boolean flag = scoreboard.getValue() && mc.thePlayer.getTeam() != null && ((EntityPlayer) entity).getTeam() != null && mc.thePlayer.getTeam().isSameTeam(((EntityPlayer) entity).getTeam());
+
+        boolean flag = scoreboard.getValue()
+                && mc.thePlayer.getTeam() != null
+                && ((EntityPlayer) entity).getTeam() != null
+                && mc.thePlayer.getTeam().isSameTeam(((EntityPlayer) entity).getTeam());
+
         if (!flag && color.getValue() && mc.thePlayer.getDisplayName() != null && entity.getDisplayName() != null) {
             String targetName = entity.getDisplayName().getFormattedText().replace("§r", "");
             String clientName = mc.thePlayer.getDisplayName().getFormattedText().replace("§r", "");

@@ -31,29 +31,31 @@ public class GlyphPage {
 
     public void generateGlyphPage(char[] chars, boolean allChars) {
         // Calculate glyphPageSize
-        double maxWidth = -1;
-        double maxHeight = -1;
+        final double[] maxWidth = {-1};
+        final double[] maxHeight = {-1};
 
         AffineTransform affineTransform = new AffineTransform();
         FontRenderContext fontRenderContext = new FontRenderContext(affineTransform, antiAliasing, fractionalMetrics);
         if (allChars) {
             this.imgSize = 8192;
         } else {
+
             for (char ch : chars) {
                 Rectangle2D bounds = font.getStringBounds(Character.toString(ch), fontRenderContext);
 
-                if (maxWidth < bounds.getWidth()) maxWidth = bounds.getWidth();
-                if (maxHeight < bounds.getHeight()) maxHeight = bounds.getHeight();
+                if (maxWidth[0] < bounds.getWidth()) maxWidth[0] = bounds.getWidth();
+                if (maxHeight[0] < bounds.getHeight()) maxHeight[0] = bounds.getHeight();
             }
-
             // Leave some additional space
-            maxWidth += 2;
-            maxHeight += 2;
+            maxWidth[0] += 2;
+            maxHeight[0] += 2;
 
             imgSize = (int) Math.ceil(Math.max(
-                    Math.ceil(Math.sqrt(maxWidth * maxWidth * chars.length) / maxWidth),
-                    Math.ceil(Math.sqrt(maxHeight * maxHeight * chars.length) / maxHeight))
-                    * Math.max(maxWidth, maxHeight)) + 1;
+                    Math.ceil(Math.sqrt(maxWidth[0] * maxWidth[0] * chars.length) / maxWidth[0]),
+                    Math.ceil(Math.sqrt(maxHeight[0] * maxHeight[0] * chars.length) / maxHeight[0]))
+                    * Math.max(maxWidth[0], maxHeight[0])) + 1;
+
+
         }
 
 

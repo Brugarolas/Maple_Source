@@ -1,4 +1,4 @@
-package top.youm.rocchi.core.ui.clickgui.modern.animation;
+package top.youm.rocchi.utils.animation;
 
 public class SmoothStepAnimation extends Animation  {
     public SmoothStepAnimation(final int ms, final double endPoint) {
