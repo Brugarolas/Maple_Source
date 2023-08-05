@@ -11,9 +11,6 @@ import net.minecraft.util.IChatComponent;
 import net.minecraft.util.MathHelper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import top.youm.rocchi.Rocchi;
-import top.youm.rocchi.core.module.modules.visual.HUD;
-import top.youm.rocchi.core.ui.font.FontLoaders;
 
 public class GuiNewChat extends Gui
 {

@@ -1,5 +1,5 @@
-# Rocchi-Client
-a minecraft hacked client Rocchi
+# Maple-Client
+a minecraft hacked client Maple
 
 ## Developers: 
 YouM

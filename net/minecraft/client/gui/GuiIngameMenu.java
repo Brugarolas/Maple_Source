@@ -2,7 +2,7 @@ package net.minecraft.client.gui;
 
 import java.io.IOException;
 
-import top.youm.rocchi.core.ui.screen.MainScreen;
+import net.minecraft.client.gui.GuiMainMenu;
 import net.minecraft.client.gui.achievement.GuiAchievements;
 import net.minecraft.client.gui.achievement.GuiStats;
 import net.minecraft.client.multiplayer.WorldClient;
@@ -60,16 +60,16 @@ public class GuiIngameMenu extends GuiScreen
 
                 if (flag)
                 {
-                    this.mc.displayGuiScreen(new MainScreen());
+                    this.mc.displayGuiScreen(new GuiMainMenu());
                 }
                 else if (flag1)
                 {
                     RealmsBridge realmsbridge = new RealmsBridge();
-                    realmsbridge.switchToRealms(new MainScreen());
+                    realmsbridge.switchToRealms(new GuiMainMenu());
                 }
                 else
                 {
-                    this.mc.displayGuiScreen(new GuiMultiplayer(new MainScreen()));
+                    this.mc.displayGuiScreen(new GuiMultiplayer(new GuiMainMenu()));
                 }
 
             case 2:

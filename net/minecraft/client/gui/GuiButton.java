@@ -5,11 +5,6 @@ import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.audio.SoundHandler;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
-import top.youm.rocchi.core.ui.font.FontLoaders;
-import top.youm.rocchi.core.ui.theme.Theme;
-import top.youm.rocchi.utils.render.RenderUtil;
-
-import java.awt.*;
 
 public class GuiButton extends Gui
 {

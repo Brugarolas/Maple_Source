@@ -16,10 +16,6 @@ import joptsimple.OptionSet;
 import joptsimple.OptionSpec;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.Session;
-import top.youm.rocchi.core.ui.font.FontLoaders;
-import top.youm.rocchi.core.ui.font.GlyphPageFontRenderer;
-
-import static top.youm.rocchi.core.ui.font.FontLoaders.getFontByJava;
 
 
 public class Main

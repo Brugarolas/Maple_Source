@@ -5,10 +5,10 @@ import java.util.Random;
 import java.util.UUID;
 import java.util.concurrent.Callable;
 
-import top.youm.rocchi.Rocchi;
-import top.youm.rocchi.core.module.modules.player.SafeWalk;
-import top.youm.rocchi.utils.math.Vec2f;
-import top.youm.rocchi.utils.math.Vec3f;
+import top.youm.maple.Maple;
+import top.youm.maple.core.module.modules.player.SafeWalk;
+import top.youm.maple.utils.math.Vec2f;
+import top.youm.maple.utils.math.Vec3f;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockFence;
 import net.minecraft.block.BlockFenceGate;
@@ -646,7 +646,7 @@ public abstract class Entity implements ICommandSender
             double d4 = y;
             double d5 = z;
 
-            SafeWalk safeWalk = Rocchi.getInstance().getModuleManager().getModuleByClass(SafeWalk.class);
+            SafeWalk safeWalk = Maple.getInstance().getModuleManager().getModuleByClass(SafeWalk.class);
             boolean isSafe = safeWalk.isToggle() && safeWalk.start();
 
             boolean flag = this.onGround && (this.isSneaking() || isSafe) && this instanceof EntityPlayer;

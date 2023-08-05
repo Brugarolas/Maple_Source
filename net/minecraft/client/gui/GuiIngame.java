@@ -8,7 +8,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Random;
 
-import top.youm.rocchi.common.events.Render2DEvent;
+import top.youm.maple.common.events.Render2DEvent;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
@@ -173,7 +173,7 @@ public class GuiIngame extends Gui
         {
             this.renderTooltip(scaledresolution, partialTicks);
         }
-        /* Rocchi: 2D render event */
+        /* Maple: 2D render event */
         EventManager.call(new Render2DEvent(partialTicks));
 
 

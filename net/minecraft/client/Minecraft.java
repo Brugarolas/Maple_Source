@@ -38,26 +38,15 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.FutureTask;
 import javax.imageio.ImageIO;
 
-import top.youm.rocchi.Rocchi;
-import top.youm.rocchi.common.events.KeyEvent;
-import top.youm.rocchi.common.events.TickEvent;
-import top.youm.rocchi.core.ui.font.FontLoaders;
-import top.youm.rocchi.core.ui.font.GlyphPageFontRenderer;
-import top.youm.rocchi.core.ui.screen.MainScreen;
+import net.minecraft.client.gui.*;
+import top.youm.maple.Maple;
+import top.youm.maple.common.events.KeyEvent;
+import top.youm.maple.common.events.TickEvent;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.audio.MusicTicker;
 import net.minecraft.client.audio.SoundHandler;
 import net.minecraft.client.entity.EntityPlayerSP;
-import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.GuiChat;
-import net.minecraft.client.gui.GuiControls;
-import net.minecraft.client.gui.GuiGameOver;
-import net.minecraft.client.gui.GuiIngame;
-import net.minecraft.client.gui.GuiIngameMenu;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.gui.GuiSleepMP;
-import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.gui.achievement.GuiAchievement;
 import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.client.main.GameConfiguration;
@@ -188,10 +177,8 @@ import org.lwjgl.opengl.GLContext;
 import org.lwjgl.opengl.OpenGLException;
 import org.lwjgl.opengl.PixelFormat;
 import org.lwjgl.util.glu.GLU;
-import top.youm.rocchi.core.ui.screen.ProgressScreen;
-import top.youm.rocchi.utils.AnimationUtils;
-
-import static top.youm.rocchi.core.ui.font.FontLoaders.getFont;
+import top.youm.maple.core.ui.screen.ProgressScreen;
+import top.youm.maple.utils.AnimationUtils;
 
 public class Minecraft implements IThreadListener, IPlayerUsage
 {
@@ -591,15 +578,15 @@ public class Minecraft implements IThreadListener, IPlayerUsage
         this.effectRenderer = new EffectRenderer(this.theWorld, this.renderEngine);
         this.checkGLError("Post startup");
         this.ingameGUI = new GuiIngame(this);
-        Rocchi.getInstance().startGame();
+        Maple.getInstance().startGame();
         progressScreen.drawScreen(1);
         if (this.serverName != null)
         {
-            this.displayGuiScreen(new GuiConnecting(new MainScreen(), this, this.serverName, this.serverPort));
+            this.displayGuiScreen(new GuiConnecting(new GuiMainMenu(), this, this.serverName, this.serverPort));
         }
         else
         {
-            this.displayGuiScreen(new MainScreen());
+            this.displayGuiScreen(new GuiMainMenu());
         }
 
         this.renderEngine.deleteTexture(this.mojangLogo);
@@ -1017,14 +1004,14 @@ public class Minecraft implements IThreadListener, IPlayerUsage
 
         if (guiScreenIn == null && this.theWorld == null)
         {
-            guiScreenIn = new MainScreen();
+            guiScreenIn = new GuiMainMenu();
         }
         else if (guiScreenIn == null && this.thePlayer.getHealth() <= 0.0F)
         {
             guiScreenIn = new GuiGameOver();
         }
 
-        if (guiScreenIn instanceof MainScreen)
+        if (guiScreenIn instanceof GuiMainMenu)
         {
             this.gameSettings.showDebugInfo = false;
             this.ingameGUI.getChatGUI().clearChatMessages();
@@ -1075,7 +1062,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage
     {
 //    	Thread.dumpStack();
 
-        Rocchi.getInstance().shutDownGame();
+        Maple.getInstance().shutDownGame();
         try
         {
             this.stream.shutdownStream();

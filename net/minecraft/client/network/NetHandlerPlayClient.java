@@ -15,8 +15,8 @@ import java.util.Random;
 import java.util.UUID;
 import java.util.Map.Entry;
 
-import top.youm.rocchi.common.events.RespawnPlayerEvent;
-import top.youm.rocchi.core.ui.screen.MainScreen;
+import top.youm.maple.common.events.RespawnPlayerEvent;
+import net.minecraft.client.gui.GuiMainMenu;
 import net.minecraft.block.Block;
 import net.minecraft.client.ClientBrandRetriever;
 import net.minecraft.client.Minecraft;
@@ -810,7 +810,7 @@ public class NetHandlerPlayClient implements INetHandlerPlayClient
         }
         else
         {
-            this.gameController.displayGuiScreen(new GuiDisconnected(new GuiMultiplayer(new MainScreen()), "disconnect.lost", reason));
+            this.gameController.displayGuiScreen(new GuiDisconnected(new GuiMultiplayer(new GuiMainMenu()), "disconnect.lost", reason));
         }
     }
 

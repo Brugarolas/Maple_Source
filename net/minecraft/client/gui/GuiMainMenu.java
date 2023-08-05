@@ -85,9 +85,6 @@ public class GuiMainMenu extends GuiScreen implements GuiYesNoCallback
     private int field_92020_v;
     private int field_92019_w;
     private ResourceLocation backgroundTexture;
-
-    /** Minecraft Realms button. */
-    private GuiButton realmsButton;
     private boolean field_183502_L;
     private GuiScreen field_183503_M;
     private GuiButton modButton;
@@ -159,10 +156,6 @@ public class GuiMainMenu extends GuiScreen implements GuiYesNoCallback
         }
     }
 
-    private boolean func_183501_a()
-    {
-        return Minecraft.getMinecraft().gameSettings.getOptionOrdinalValue(GameSettings.Options.REALMS_NOTIFICATIONS) && this.field_183503_M != null;
-    }
 
     /**
      * Called from the main game loop to update the screen.
@@ -170,11 +163,6 @@ public class GuiMainMenu extends GuiScreen implements GuiYesNoCallback
     public void updateScreen()
     {
         ++this.panoramaTimer;
-
-        if (this.func_183501_a())
-        {
-            this.field_183503_M.updateScreen();
-        }
     }
 
     /**
@@ -243,21 +231,6 @@ public class GuiMainMenu extends GuiScreen implements GuiYesNoCallback
             this.field_92020_v = this.field_92022_t + k;
             this.field_92019_w = this.field_92021_u + 24;
         }
-
-        this.mc.setConnectedToRealms(false);
-
-        if (Minecraft.getMinecraft().gameSettings.getOptionOrdinalValue(GameSettings.Options.REALMS_NOTIFICATIONS) && !this.field_183502_L)
-        {
-            RealmsBridge realmsbridge = new RealmsBridge();
-            this.field_183503_M = realmsbridge.getNotificationScreen(this);
-            this.field_183502_L = true;
-        }
-
-        if (this.func_183501_a())
-        {
-            this.field_183503_M.setGuiSize(this.width, this.height);
-            this.field_183503_M.initGui();
-        }
     }
 
     /**
@@ -267,16 +240,6 @@ public class GuiMainMenu extends GuiScreen implements GuiYesNoCallback
     {
         this.buttonList.add(new GuiButton(1, this.width / 2 - 100, p_73969_1_, I18n.format("menu.singleplayer")));
         this.buttonList.add(new GuiButton(2, this.width / 2 - 100, p_73969_1_ + p_73969_2_ * 1, I18n.format("menu.multiplayer")));
-
-        if (Reflector.GuiModList_Constructor.exists())
-        {
-            this.buttonList.add(this.realmsButton = new GuiButton(14, this.width / 2 + 2, p_73969_1_ + p_73969_2_ * 2, 98, 20, I18n.format("menu.online").replace("Minecraft", "").trim()));
-            this.buttonList.add(this.modButton = new GuiButton(6, this.width / 2 - 100, p_73969_1_ + p_73969_2_ * 2, 98, 20, I18n.format("fml.menu.mods")));
-        }
-        else
-        {
-            this.buttonList.add(this.realmsButton = new GuiButton(14, this.width / 2 - 100, p_73969_1_ + p_73969_2_ * 2, I18n.format("menu.online")));
-        }
     }
 
     /**
@@ -320,11 +283,6 @@ public class GuiMainMenu extends GuiScreen implements GuiYesNoCallback
             this.mc.displayGuiScreen(new GuiMultiplayer(this));
         }
 
-        if (button.id == 14 && this.realmsButton.visible)
-        {
-            this.switchToRealms();
-        }
-
         if (button.id == 4)
         {
             this.mc.shutdown();
@@ -351,12 +309,6 @@ public class GuiMainMenu extends GuiScreen implements GuiYesNoCallback
                 this.mc.displayGuiScreen(guiyesno);
             }
         }
-    }
-
-    private void switchToRealms()
-    {
-        RealmsBridge realmsbridge = new RealmsBridge();
-        realmsbridge.switchToRealms(this);
     }
 
     public void confirmClicked(boolean result, int id)
@@ -680,11 +632,6 @@ public class GuiMainMenu extends GuiScreen implements GuiYesNoCallback
 
         super.drawScreen(mouseX, mouseY, partialTicks);
 
-        if (this.func_183501_a())
-        {
-            this.field_183503_M.drawScreen(mouseX, mouseY, partialTicks);
-        }
-
         if (this.modUpdateNotification != null)
         {
             this.modUpdateNotification.drawScreen(mouseX, mouseY, partialTicks);
@@ -708,10 +655,6 @@ public class GuiMainMenu extends GuiScreen implements GuiYesNoCallback
             }
         }
 
-        if (this.func_183501_a())
-        {
-            this.field_183503_M.mouseClicked(mouseX, mouseY, mouseButton);
-        }
     }
 
     /**

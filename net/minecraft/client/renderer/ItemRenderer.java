@@ -1,7 +1,7 @@
 package net.minecraft.client.renderer;
 
-import top.youm.rocchi.Rocchi;
-import top.youm.rocchi.core.module.modules.visual.Animations;
+import top.youm.maple.Maple;
+import top.youm.maple.core.module.modules.visual.Animations;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
@@ -404,7 +404,7 @@ public class ItemRenderer
 
                         case BLOCK:
                             float rotateAngle = MathHelper.sin(MathHelper.sqrt_float(f1) * (float)Math.PI);
-                            Animations animations = Rocchi.getInstance().getModuleManager().getModuleByClass(Animations.class);
+                            Animations animations = Maple.getInstance().getModuleManager().getModuleByClass(Animations.class);
                             if(animations.isToggle()){
                                 switch (animations.mode.getValue()){
                                     case "OLD":

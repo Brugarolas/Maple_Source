@@ -8,7 +8,7 @@ import java.lang.reflect.Method;
 import java.util.Map;
 import javax.vecmath.Matrix4f;
 
-import top.youm.rocchi.core.ui.screen.MainScreen;
+import net.minecraft.client.gui.GuiMainMenu;
 import net.minecraft.block.Block;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.IBlockState;
@@ -311,7 +311,7 @@ public class Reflector
     public static ReflectorField GuiFurnace_tileFurnace = new ReflectorField(GuiFurnace, IInventory.class);
     public static ReflectorClass GuiHopper = new ReflectorClass(GuiHopper.class);
     public static ReflectorField GuiHopper_hopperInventory = new ReflectorField(GuiHopper, IInventory.class, 1);
-    public static ReflectorClass GuiMainMenu = new ReflectorClass(MainScreen.class);
+    public static ReflectorClass GuiMainMenu = new ReflectorClass(GuiMainMenu.class);
     public static ReflectorField GuiMainMenu_splashText = new ReflectorField(GuiMainMenu, String.class);
     public static ReflectorClass Minecraft = new ReflectorClass(Minecraft.class);
     public static ReflectorField Minecraft_defaultResourcePack = new ReflectorField(Minecraft, DefaultResourcePack.class);
