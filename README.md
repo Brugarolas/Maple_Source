@@ -2,9 +2,7 @@
 a minecraft hacked client Maple
 
 ## Developers: 
-YouM
+UnKnown
 
 ## About
 code by MCP
-
-thank IntelliJ IDEA
