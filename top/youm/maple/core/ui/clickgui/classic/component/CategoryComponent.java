@@ -2,15 +2,14 @@ package top.youm.maple.core.ui.clickgui.classic.component;
 
 import org.lwjgl.input.Mouse;
 import top.youm.maple.core.module.ModuleCategory;
-import top.youm.maple.core.ui.Component;
 import top.youm.maple.core.ui.clickgui.classic.ClassicClickGUI;
 import top.youm.maple.utils.animation.Animation;
 import top.youm.maple.utils.animation.Direction;
 import top.youm.maple.utils.animation.SmoothStepAnimation;
 import top.youm.maple.core.ui.clickgui.classic.state.UIState;
-import top.youm.maple.core.ui.theme.Icon;
-import top.youm.maple.core.ui.theme.Theme;
-import top.youm.maple.core.ui.MouseType;
+import top.youm.maple.core.ui.clickgui.classic.theme.Icon;
+import top.youm.maple.core.ui.clickgui.classic.theme.Theme;
+import top.youm.maple.core.ui.clickgui.classic.MouseType;
 import top.youm.maple.core.ui.font.FontLoaders;
 import top.youm.maple.utils.math.MathUtil;
 import top.youm.maple.utils.render.RoundedUtil;

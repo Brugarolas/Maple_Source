@@ -1,4 +1,4 @@
-package top.youm.maple.core.ui.theme;
+package top.youm.maple.core.ui.clickgui.classic.theme;
 
 import java.awt.*;
 

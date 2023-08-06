@@ -56,4 +56,5 @@ public class Setting<T> {
                 ", value=" + value +
                 '}';
     }
+
 }

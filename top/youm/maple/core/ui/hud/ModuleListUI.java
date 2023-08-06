@@ -8,7 +8,7 @@ import top.youm.maple.core.module.modules.visual.HUD;
 import top.youm.maple.core.module.modules.visual.ModuleList;
 import top.youm.maple.core.ui.font.CFontRenderer;
 import top.youm.maple.core.ui.font.FontLoaders;
-import top.youm.maple.core.ui.theme.Theme;
+import top.youm.maple.core.ui.clickgui.classic.theme.Theme;
 import top.youm.maple.utils.AnimationUtils;
 import top.youm.maple.utils.render.ColorUtil;
 import net.minecraft.client.Minecraft;

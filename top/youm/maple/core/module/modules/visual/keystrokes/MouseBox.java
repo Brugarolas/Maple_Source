@@ -24,7 +24,7 @@ public class MouseBox {
             fontColor = new Color(255,255,255);
         }
         float center = KeyStrokes.y + (KeyStrokes.size + KeyStrokes.margin) * 2 + (KeyStrokes.size - 4) / 2.0f;
-        RenderUtil.drawRect(x,y,width,height,new Color(animBackgroundColor,animBackgroundColor,animBackgroundColor,150));
+        RenderUtil.drawRect(x,y,width,height,new Color(animBackgroundColor,animBackgroundColor,animBackgroundColor,200));
         KeyStrokes.drawCenteredStringWithShadow(text,x + 20, center,fontColor);
     }
 

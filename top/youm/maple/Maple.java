@@ -65,6 +65,7 @@ public class Maple {
         configManager = new ConfigManager();
         runCatching(() -> {
             configManager.initialize();
+            configManager.load();
         });
     }
     public void shutDownGame(){

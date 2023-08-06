@@ -1,6 +1,7 @@
-package top.youm.maple.core.ui;
+package top.youm.maple.core.ui.clickgui.classic.component;
 
 import net.minecraft.client.Minecraft;
+import top.youm.maple.core.ui.clickgui.classic.MouseType;
 import top.youm.maple.utils.AnimationUtils;
 
 /**

@@ -1,9 +1,9 @@
 package top.youm.maple.core.ui.clickgui.classic.component.sub;
 
 import top.youm.maple.common.settings.impl.BoolSetting;
-import top.youm.maple.core.ui.Component;
-import top.youm.maple.core.ui.theme.Theme;
-import top.youm.maple.core.ui.MouseType;
+import top.youm.maple.core.ui.clickgui.classic.component.Component;
+import top.youm.maple.core.ui.clickgui.classic.theme.Theme;
+import top.youm.maple.core.ui.clickgui.classic.MouseType;
 import top.youm.maple.utils.render.RenderUtil;
 import top.youm.maple.utils.render.RoundedUtil;
 

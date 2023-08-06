@@ -2,11 +2,20 @@ package top.youm.maple.core.module.modules.combat;
 
 import com.darkmagician6.eventapi.EventTarget;
 import com.darkmagician6.eventapi.events.Event;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.settings.KeyBinding;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.monster.EntityMob;
+import net.minecraft.entity.passive.EntityAnimal;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemSword;
+import net.minecraft.network.play.client.C08PacketPlayerBlockPlacement;
 import net.minecraft.network.play.client.C0APacketAnimation;
 import net.minecraft.network.play.server.S18PacketEntityTeleport;
-import net.minecraft.util.*;
+import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.MathHelper;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 import top.youm.maple.Maple;
@@ -23,12 +32,6 @@ import top.youm.maple.core.module.modules.world.Teams;
 import top.youm.maple.utils.TimerUtil;
 import top.youm.maple.utils.math.MathUtil;
 import top.youm.maple.utils.network.PacketUtil;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.monster.EntityMob;
-import net.minecraft.entity.passive.EntityAnimal;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemSword;
-import net.minecraft.network.play.client.C08PacketPlayerBlockPlacement;
 import top.youm.maple.utils.player.MovementUtil;
 import top.youm.maple.utils.player.RotationUtil;
 import top.youm.maple.utils.render.RenderUtil;
@@ -41,31 +44,31 @@ import java.util.List;
  * @author YouM
  */
 public class KillAura extends Module {
-    private final NumberSetting reach = new NumberSetting("Reach", 3.3, 6, 1, 0.1);
+    private final NumberSetting reach = new NumberSetting("Reach", 3.3, 6, 1, 0.01);
     private final NumberSetting minCps = new NumberSetting("Min CPS", 6, 20, 1, 1);
     private final NumberSetting maxCps = new NumberSetting("Max CPS", 11, 20, 1, 1);
     private final NumberSetting minSpeed = new NumberSetting("Min Speed", 0.5, 1.0, 0, 0.1);
     private final NumberSetting maxSpeed = new NumberSetting("Max Speed", 0.6, 1.0, 0, 0.1);
-    private final ModeSetting autoBlockMode = new ModeSetting("AutoBlock Mode", "Legit","Legit","Interaction","AAC" );
-    private final BoolSetting autoblock = new BoolSetting("Autoblock", false);
+    private final ModeSetting autoBlockMode = new ModeSetting("AutoBlock Mode", "Legit", "Legit", "Interaction", "AAC");
+    private final BoolSetting autoBlock = new BoolSetting("AutoBlock", false);
 
-    private final BoolSetting footCircle = new BoolSetting("foot circle",true);
+    private final BoolSetting footCircle = new BoolSetting("foot circle", true);
     private final NumberSetting footWidth = new NumberSetting("foot width", 2, 5, 1, 1);
 
-    private final BoolSetting scanCircle = new BoolSetting("scan circle",true);
+    private final BoolSetting scanCircle = new BoolSetting("scan circle", true);
     private final NumberSetting scanWidth = new NumberSetting("scan width", 2, 5, 1, 1);
 
     BoolSetting players = new BoolSetting("Players", true);
     BoolSetting mobs = new BoolSetting("Mobs", false);
     BoolSetting animals = new BoolSetting("Animals", false);
-    BoolSetting invisibles = new BoolSetting("Invisibles",false);
+    BoolSetting invisibles = new BoolSetting("Invisibles", false);
     BoolSetting ticks = new BoolSetting("Ticks", true);
     BoolSetting invisible = new BoolSetting("Invisible", false);
     BoolSetting nameTags = new BoolSetting("NameTags", true);
     BoolSetting packet = new BoolSetting("Packet", true);
-    ModeSetting rotateMode = new ModeSetting("RotateMode","Dynamic","Dynamic","Smooth","Resolver");
-    BoolSetting safeRotation = new BoolSetting("Safe Rotation",false);
-    BoolSetting followRotation = new BoolSetting("Follow",false);
+    ModeSetting rotateMode = new ModeSetting("RotateMode", "Dynamic", "Dynamic", "Smooth", "Resolver");
+    BoolSetting safeRotation = new BoolSetting("Safe Rotation", false);
+    BoolSetting followRotation = new BoolSetting("Follow", false);
     public List<EntityLivingBase> targets = new ArrayList<>();
     public static EntityLivingBase target;
     public static boolean blocking;
@@ -73,22 +76,25 @@ public class KillAura extends Module {
     private final TimerUtil timer = new TimerUtil();
 
     private int hitTicks = 0;
+
     public KillAura() {
         super("KillAura", ModuleCategory.COMBAT, Keyboard.KEY_NONE);
-        footWidth.addParent(footCircle,BoolSetting::getValue);
-        scanWidth.addParent(scanCircle,BoolSetting::getValue);
-        this.addSetting(reach, minCps, maxCps,footCircle,footWidth,scanCircle,scanWidth,autoblock,autoBlockMode,players,invisibles,mobs,animals,rotateMode,safeRotation,followRotation,maxSpeed,minSpeed,ticks,packet,nameTags,invisible);
+        footWidth.addParent(footCircle, BoolSetting::getValue);
+        scanWidth.addParent(scanCircle, BoolSetting::getValue);
+        this.addSetting(reach, minCps, maxCps, footCircle, footWidth, scanCircle, scanWidth, autoBlock, autoBlockMode, players, invisibles, mobs, animals, rotateMode, safeRotation, followRotation, maxSpeed, minSpeed, ticks, packet, nameTags, invisible);
     }
+
     boolean direction;
     float offsetY = 0;
+
     @EventTarget
-    public void onTick(TickEvent event){
-        if(direction){
+    public void onTick(TickEvent event) {
+        if (direction) {
             offsetY += 0.04;
             if (2 - offsetY < 0.02) {
                 direction = false;
             }
-        }else {
+        } else {
             offsetY -= 0.04;
             if (offsetY < 0.02) {
                 direction = true;
@@ -97,9 +103,9 @@ public class KillAura extends Module {
     }
 
     @EventTarget
-    public void onRender3D(Render3DEvent event){
+    public void onRender3D(Render3DEvent event) {
 
-        if(footCircle.getValue()){
+        if (footCircle.getValue()) {
             GL11.glPushMatrix();
             GL11.glTranslated(
                     mc.thePlayer.lastTickPosX + (mc.thePlayer.posX - mc.thePlayer.lastTickPosX) * mc.timer.renderPartialTicks - mc.getRenderManager().renderPosX,
@@ -108,35 +114,38 @@ public class KillAura extends Module {
             );
             GL11.glEnable(GL11.GL_BLEND);
             GL11.glEnable(GL11.GL_LINE_SMOOTH);
-            GL11.glDisable(GL11.GL_TEXTURE_2D);
             GL11.glDisable(GL11.GL_DEPTH_TEST);
-            GL11.glBlendFunc(GL11.GL_SRC_ALPHA,GL11.GL_ONE_MINUS_SRC_ALPHA);
+            GL11.glDisable(GL11.GL_TEXTURE_2D);
+            GlStateManager.disableTexture2D();
+            GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
             GL11.glLineWidth(footWidth.getValue().floatValue());
             GL11.glRotatef(90F, 1F, 0F, 0F);
             RenderUtil.color(HUD.getHUDThemeColor().getRGB());
             GL11.glBegin(GL11.GL_LINE_STRIP);
 
-            for(int i = 0; i <= 360; i += 2 ){
+            for (int i = 0; i <= 360; i += 2) {
                 GL11.glVertex2f(
                         (float) Math.cos(i * Math.PI / 180.0) * reach.getValue().floatValue(),
                         (float) Math.sin(i * Math.PI / 180.0) * reach.getValue().floatValue()
                 );
             }
             GL11.glEnd();
-            GL11.glEnable(GL11.GL_DEPTH_TEST);
+
             GL11.glEnable(GL11.GL_TEXTURE_2D);
+            GL11.glEnable(GL11.GL_DEPTH_TEST);
             GL11.glDisable(GL11.GL_LINE_SMOOTH);
             GL11.glDisable(GL11.GL_BLEND);
             GL11.glPopMatrix();
         }
-        if (targets.get(0).isDead || targets.get(0).getHealth() <= 0|| Maple.getInstance().getModuleManager().getModuleByClass(Scaffold.class).isToggle() || mc.thePlayer.isDead || mc.thePlayer.isSpectator())
+        if (targets.get(0).isDead || targets.get(0).getHealth() <= 0 || Maple.getInstance().getModuleManager().getModuleByClass(Scaffold.class).isToggle() || mc.thePlayer.isDead || mc.thePlayer.isSpectator())
             return;
-        if(target != null && this.scanCircle.getValue()){
+        if (target != null && this.scanCircle.getValue()) {
             drawCircle(event);
             drawShadow(event);
         }
     }
-    public void drawCircle(Render3DEvent event){
+
+    public void drawCircle(Render3DEvent event) {
 
         GL11.glPushMatrix();
         GL11.glEnable(GL11.GL_BLEND);
@@ -156,17 +165,18 @@ public class KillAura extends Module {
 
         GL11.glEnd();
         GL11.glEnable(GL11.GL_TEXTURE_2D);
-        GL11.glShadeModel( 7424);
+        GL11.glShadeModel(7424);
         GL11.glEnable(GL11.GL_DEPTH_TEST);
         GL11.glDisable(GL11.GL_BLEND);
         GL11.glPopMatrix();
     }
-    public void drawShadow(Render3DEvent event){
+
+    public void drawShadow(Render3DEvent event) {
         GL11.glPushMatrix();
         GL11.glEnable(GL11.GL_BLEND);
         GL11.glDisable(GL11.GL_DEPTH_TEST);
         GL11.glDisable(GL11.GL_TEXTURE_2D);
-        GL11.glShadeModel( 7425);
+        GL11.glShadeModel(7425);
         double x = target.lastTickPosX + (target.posX - target.lastTickPosX) * (double) event.getTicks() - mc.getRenderManager().viewerPosX;
         double y = target.lastTickPosY + (target.posY - target.lastTickPosY) * (double) event.getTicks() - mc.getRenderManager().viewerPosY + offsetY;
         double z = target.lastTickPosZ + (target.posZ - target.lastTickPosZ) * (double) event.getTicks() - mc.getRenderManager().viewerPosZ;
@@ -174,42 +184,44 @@ public class KillAura extends Module {
         for (int i = 0; i <= 360; i++) {
             double c1 = i * Math.PI * 2 / 360;
             double c2 = (i + 1) * Math.PI * 2 / 360;
-            GL11.glColor4f(HUD.red.getValue().floatValue() / 255f,HUD.green.getValue().floatValue() / 255f,HUD.blue.getValue().floatValue() / 255f, 0.4f);
+            GL11.glColor4f(HUD.red.getValue().floatValue() / 255f, HUD.green.getValue().floatValue() / 255f, HUD.blue.getValue().floatValue() / 255f, 0.4f);
             GL11.glVertex3d(x + 0.5 * Math.cos(c1) * 1.2, y, z + 0.5 * Math.sin(c1) * 1.2);
             GL11.glVertex3d(x + 0.5 * Math.cos(c2) * 1.2, y, z + 0.5 * Math.sin(c2) * 1.2);
-            GL11.glColor4f(HUD.red.getValue().floatValue() / 255f,HUD.green.getValue().floatValue() / 255f,HUD.blue.getValue().floatValue() / 255f, 0f);
+            GL11.glColor4f(HUD.red.getValue().floatValue() / 255f, HUD.green.getValue().floatValue() / 255f, HUD.blue.getValue().floatValue() / 255f, 0f);
             GL11.glVertex3d(x + 0.5 * Math.cos(c1) * 1.2, y + (direction ? -0.3 : 0.3), z + 0.5 * Math.sin(c1) * 1.2);
             GL11.glVertex3d(x + 0.5 * Math.cos(c2) * 1.2, y + (direction ? -0.3 : 0.3), z + 0.5 * Math.sin(c2) * 1.2);
         }
         GL11.glEnd();
         GL11.glEnable(GL11.GL_TEXTURE_2D);
-        GL11.glShadeModel((int) 7424);
+        GL11.glShadeModel(7424);
         GL11.glEnable(GL11.GL_DEPTH_TEST);
         GL11.glDisable(GL11.GL_BLEND);
         GL11.glPopMatrix();
     }
 
-    public void legitUnBlock(){
+    public void legitUnBlock() {
         KeyBinding.setKeyBindState(mc.gameSettings.keyBindUseItem.getKeyCode(), false);
     }
-    public void legitBlock(){
-        KeyBinding.setKeyBindState(mc.gameSettings.keyBindUseItem.getKeyCode(),true);
+
+    public void legitBlock() {
+        KeyBinding.setKeyBindState(mc.gameSettings.keyBindUseItem.getKeyCode(), true);
     }
 
     @EventTarget
-    public void respawn(RespawnPlayerEvent event){
-        if(Disabler.INSTANCE.isToggle() && Disabler.INSTANCE.killaura.getValue()){
+    public void respawn(RespawnPlayerEvent event) {
+        if (Disabler.INSTANCE.isToggle() && Disabler.INSTANCE.killaura.getValue()) {
             this.setToggle(false);
         }
     }
+
     @EventTarget
-    public void onMotion(MotionEvent event){
+    public void onMotion(MotionEvent event) {
         sortTargets();
-        this.setSuffixes(autoBlockMode.getValue());
-        if(autoBlockMode.getValue().equals("Legit")){
+        this.setSuffixes("cps:" + this.minCps.getValue().intValue() + "-" + this.maxCps.getValue().intValue() + " | range:" + reach.getValue().floatValue() +" | block:" + autoBlockMode.getValue());
+        if (autoBlockMode.getValue().equals("Legit")) {
             legitUnBlock();
         }
-        if(targets.get(0).getHealth() <= 0){
+        if (targets.get(0).getHealth() <= 0) {
             targets.remove(0);
         }
         if (targets.get(0).isDead || Maple.getInstance().getModuleManager().getModuleByClass(Scaffold.class).isToggle() || mc.thePlayer.isDead || mc.thePlayer.isSpectator()) {
@@ -218,9 +230,9 @@ public class KillAura extends Module {
         if (!targets.isEmpty()) {
             target = targets.get(0);
             if (event.getState() == Event.State.PRE) {
-                KeyBinding.setKeyBindState(mc.gameSettings.keyBindUseItem.getKeyCode(),false);
+                KeyBinding.setKeyBindState(mc.gameSettings.keyBindUseItem.getKeyCode(), false);
                 float[] smoothRotations = getRotationsToEnt(target);
-                switch (rotateMode.getValue()){
+                switch (rotateMode.getValue()) {
                     case "Dynamic":
                         smoothRotations[0] += MathUtil.getRandomInRange(-5, 5);
                         smoothRotations[1] += MathUtil.getRandomInRange(-5, 5);
@@ -233,28 +245,28 @@ public class KillAura extends Module {
                         }
                         break;
                     default:
-                        smoothRotations = RotationUtil.getSmoothRotations(target,maxSpeed.getValue().floatValue(),minSpeed.getValue().floatValue());
-                        if(MovementUtil.isMoving()){
-                            if (this.mc.thePlayer.movementInput.moveStrafe == -1.0) {
+                        smoothRotations = RotationUtil.getSmoothRotations(target, maxSpeed.getValue().floatValue(), minSpeed.getValue().floatValue());
+                        if (MovementUtil.isMoving()) {
+                            if (mc.thePlayer.movementInput.moveStrafe == -1.0) {
                                 smoothRotations[0] -= 5;
-                            }else if (this.mc.thePlayer.movementInput.moveStrafe == 1.0f) {
+                            } else if (mc.thePlayer.movementInput.moveStrafe == 1.0f) {
                                 smoothRotations[0] += 3;
                             }
                         }
-                        if(target.posY >= mc.thePlayer.posY + 2f){
+                        if (target.posY >= mc.thePlayer.posY + 2f) {
                             smoothRotations[1] += 5;
                         }
                 }
                 event.setYaw(smoothRotations[0]);
                 event.setPitch(smoothRotations[1]);
-                if(followRotation.getValue()){
+                if (followRotation.getValue()) {
                     mc.thePlayer.rotationYaw = smoothRotations[0];
                     mc.thePlayer.rotationPitch = smoothRotations[1];
                 }
                 RotationUtil.setRotations(smoothRotations);
             }
 
-            if (autoblock.getValue() && mc.thePlayer.getCurrentEquippedItem() != null && mc.thePlayer.getCurrentEquippedItem().getItem() instanceof ItemSword) {
+            if (autoBlock.getValue() && mc.thePlayer.getCurrentEquippedItem() != null && mc.thePlayer.getCurrentEquippedItem().getItem() instanceof ItemSword) {
                 mc.playerController.syncCurrentPlayItem();
                 hitTicks++;
                 blocking = true;
@@ -299,14 +311,14 @@ public class KillAura extends Module {
             if (event.getState() == Event.State.PRE) {
                 attacking = true;
                 if (timer.hasTimeElapsed((1000 / MathUtil.getRandomInRange(minCps.getValue().intValue(), maxCps.getValue().intValue())), true)) {
-                    if(safeRotation.getValue()){
-                        if(event.getYaw() + 4.0f >= getRotationsToEnt(target)[0] && event.getYaw() - 4.0f <= getRotationsToEnt(target)[0] && event.getPitch() + 8.0f >= getRotationsToEnt(target)[1] && event.getPitch() - 8.0f <= getRotationsToEnt(target)[1]){
+                    if (safeRotation.getValue()) {
+                        if (event.getYaw() + 4.0f >= getRotationsToEnt(target)[0] && event.getYaw() - 4.0f <= getRotationsToEnt(target)[0] && event.getPitch() + 8.0f >= getRotationsToEnt(target)[1] && event.getPitch() - 8.0f <= getRotationsToEnt(target)[1]) {
                             mc.thePlayer.swingItem();
-                            mc.playerController.attackEntity(mc.thePlayer,target);
+                            mc.playerController.attackEntity(mc.thePlayer, target);
                         }
-                    }else {
+                    } else {
                         mc.thePlayer.swingItem();
-                        mc.playerController.attackEntity(mc.thePlayer,target);
+                        mc.playerController.attackEntity(mc.thePlayer, target);
                     }
                     this.hitTicks = 0;
 
@@ -317,16 +329,18 @@ public class KillAura extends Module {
             attacking = false;
             blocking = false;
             this.hitTicks = 0;
-            if(autoBlockMode.getValue().equals("Legit")){
+            if (autoBlockMode.getValue().equals("Legit")) {
                 legitUnBlock();
             }
 
         }
     }
-    public boolean isInAABB(AxisAlignedBB aabb,EntityPlayer player){
+
+    public boolean isInAABB(AxisAlignedBB aabb, EntityPlayer player) {
 
         return false;
     }
+
     @EventTarget
     public void onPacketReceive(PacketReceiveEvent event) {
         if (packet.getValue() && target != null) {

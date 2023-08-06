@@ -7,13 +7,12 @@ import top.youm.maple.Maple;
 import top.youm.maple.core.module.Module;
 import top.youm.maple.core.module.ModuleCategory;
 import top.youm.maple.core.module.modules.visual.ClickGui;
-import top.youm.maple.core.ui.Component;
-import top.youm.maple.core.ui.MouseType;
+import top.youm.maple.core.ui.clickgui.classic.component.Component;
 import top.youm.maple.core.ui.clickgui.classic.component.CategoryComponent;
 import top.youm.maple.core.ui.clickgui.classic.component.ModuleComponent;
 import top.youm.maple.core.ui.clickgui.classic.state.UIState;
 import top.youm.maple.core.ui.font.FontLoaders;
-import top.youm.maple.core.ui.theme.Theme;
+import top.youm.maple.core.ui.clickgui.classic.theme.Theme;
 import top.youm.maple.utils.render.RenderUtil;
 import top.youm.maple.utils.render.RoundedUtil;
 

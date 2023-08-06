@@ -1,4 +1,4 @@
-package top.youm.maple.core.ui;
+package top.youm.maple.core.ui.clickgui.classic;
 
 /**
  * @author YouM

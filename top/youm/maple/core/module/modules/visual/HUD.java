@@ -3,11 +3,12 @@ package top.youm.maple.core.module.modules.visual;
 import com.darkmagician6.eventapi.EventTarget;
 import top.youm.maple.Maple;
 import top.youm.maple.common.events.Render2DEvent;
+import top.youm.maple.common.events.TickEvent;
 import top.youm.maple.common.settings.impl.BoolSetting;
 import top.youm.maple.common.settings.impl.NumberSetting;
 import top.youm.maple.core.module.Module;
 import top.youm.maple.core.module.ModuleCategory;
-import top.youm.maple.core.ui.theme.Theme;
+import top.youm.maple.core.ui.clickgui.classic.theme.Theme;
 import top.youm.maple.core.ui.font.FontLoaders;
 import org.lwjgl.input.Keyboard;
 
@@ -33,7 +34,7 @@ public class HUD extends Module {
         if(this.ttf_font.getValue()){
             FontLoaders.robotoR22.drawStringWithShadow(Maple.getInstance().NAME,5,5, getHUDThemeColor().getRGB());
         }else {
-            this.mc.fontRendererObj.drawStringWithShadow(Maple.getInstance().NAME,5,5, getHUDThemeColor().getRGB());
+            mc.fontRendererObj.drawStringWithShadow(Maple.getInstance().NAME,5,5, getHUDThemeColor().getRGB());
         }
     }
     public static Color getHUDThemeColor(){

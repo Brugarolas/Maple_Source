@@ -10,7 +10,7 @@ import top.youm.maple.core.module.Module;
 import top.youm.maple.core.module.ModuleCategory;
 import top.youm.maple.core.ui.hud.ModuleListUI;
 import org.lwjgl.input.Keyboard;
-import top.youm.maple.core.ui.theme.Theme;
+import top.youm.maple.core.ui.clickgui.classic.theme.Theme;
 
 /**
  * @author YouM

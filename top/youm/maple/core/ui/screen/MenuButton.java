@@ -1,6 +1,6 @@
 package top.youm.maple.core.ui.screen;
 
-import top.youm.maple.core.ui.theme.Theme;
+import top.youm.maple.core.ui.clickgui.classic.theme.Theme;
 import top.youm.maple.core.ui.font.CFontRenderer;
 import top.youm.maple.core.ui.font.FontLoaders;
 import top.youm.maple.utils.AnimationUtils;
