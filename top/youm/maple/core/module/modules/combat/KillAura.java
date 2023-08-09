@@ -16,6 +16,7 @@ import net.minecraft.network.play.server.S18PacketEntityTeleport;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.MathHelper;
+import net.minecraft.util.MovingObjectPosition;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 import top.youm.maple.Maple;
@@ -25,6 +26,9 @@ import top.youm.maple.common.settings.impl.ModeSetting;
 import top.youm.maple.common.settings.impl.NumberSetting;
 import top.youm.maple.core.module.Module;
 import top.youm.maple.core.module.ModuleCategory;
+import top.youm.maple.core.module.modules.combat.rise.RayCastUtil;
+import top.youm.maple.core.module.modules.combat.rise.RiseRotationUtil;
+import top.youm.maple.core.module.modules.combat.rise.Vector2f;
 import top.youm.maple.core.module.modules.movement.Scaffold;
 import top.youm.maple.core.module.modules.visual.HUD;
 import top.youm.maple.core.module.modules.world.Disabler;
@@ -51,6 +55,7 @@ public class KillAura extends Module {
     private final NumberSetting maxSpeed = new NumberSetting("Max Speed", 0.6, 1.0, 0, 0.1);
     private final ModeSetting autoBlockMode = new ModeSetting("AutoBlock Mode", "Legit", "Legit", "Interaction", "AAC");
     private final BoolSetting autoBlock = new BoolSetting("AutoBlock", false);
+    private final BoolSetting lookAtTheClosestPoint = new BoolSetting("lookAtTheClosestPoint", true);
 
     private final BoolSetting footCircle = new BoolSetting("foot circle", true);
     private final NumberSetting footWidth = new NumberSetting("foot width", 2, 5, 1, 1);
@@ -66,7 +71,7 @@ public class KillAura extends Module {
     BoolSetting invisible = new BoolSetting("Invisible", false);
     BoolSetting nameTags = new BoolSetting("NameTags", true);
     BoolSetting packet = new BoolSetting("Packet", true);
-    ModeSetting rotateMode = new ModeSetting("RotateMode", "Dynamic", "Dynamic", "Smooth", "Resolver");
+    ModeSetting rotateMode = new ModeSetting("RotateMode", "Dynamic", "Dynamic", "Smooth", "Legit");
     BoolSetting safeRotation = new BoolSetting("Safe Rotation", false);
     BoolSetting followRotation = new BoolSetting("Follow", false);
     public List<EntityLivingBase> targets = new ArrayList<>();
@@ -87,6 +92,33 @@ public class KillAura extends Module {
     boolean direction;
     float offsetY = 0;
 
+
+    private float randomYaw, randomPitch;
+    public float[] rotations() {
+        final double minRotationSpeed = this.minSpeed.getValue().doubleValue();
+        final double maxRotationSpeed = this.maxSpeed.getValue().doubleValue();
+        final float rotationSpeed = (float) MathUtil.getRandomInRange(minRotationSpeed, maxRotationSpeed);
+
+        final Vector2f targetRotations = RiseRotationUtil.calculate(target, lookAtTheClosestPoint.getValue(), reach.getValue().doubleValue());
+
+        this.randomiseTargetRotations();
+
+        targetRotations.x += randomYaw;
+        targetRotations.y += randomPitch;
+
+        if (RayCastUtil.rayCast(targetRotations, reach.getValue().doubleValue()).typeOfHit != MovingObjectPosition.MovingObjectType.ENTITY) {
+            randomYaw = randomPitch = 0;
+        }
+
+        if (rotationSpeed != 0) {
+            return new float[]{targetRotations.getX(), targetRotations.getY()};
+        }
+        return new float[]{targetRotations.getX(), targetRotations.getY()};
+    }
+    private void randomiseTargetRotations() {
+        randomYaw += (float) (Math.random() - 0.5f);
+        randomPitch += (float) (Math.random() - 0.5f) * 2;
+    }
     @EventTarget
     public void onTick(TickEvent event) {
         if (direction) {
@@ -238,11 +270,7 @@ public class KillAura extends Module {
                         smoothRotations[1] += MathUtil.getRandomInRange(-5, 5);
                         break;
                     case "Resolver":
-                        if (target.posY < 0) {
-                            smoothRotations[1] = 1;
-                        } else if (target.posY > 255) {
-                            smoothRotations[1] = 90;
-                        }
+                        smoothRotations = rotations();
                         break;
                     default:
                         smoothRotations = RotationUtil.getSmoothRotations(target, maxSpeed.getValue().floatValue(), minSpeed.getValue().floatValue());

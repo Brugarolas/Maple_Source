@@ -3,6 +3,8 @@ package top.youm.maple.core.module;
 import com.darkmagician6.eventapi.EventManager;
 import net.minecraft.client.Minecraft;
 import top.youm.maple.common.settings.Setting;
+import top.youm.maple.core.ui.hud.noti.Notification;
+import top.youm.maple.core.ui.hud.noti.NotificationManager;
 import top.youm.maple.utils.animation.Animation;
 import top.youm.maple.utils.animation.Direction;
 import top.youm.maple.utils.animation.SmoothStepAnimation;
@@ -52,9 +54,11 @@ public class Module {
         if (toggle) {
             EventManager.register(this);
             this.onEnable();
+            NotificationManager.show(this.name,this.name + ": has enabled",this);
         } else {
             EventManager.unregister(this);
             this.onDisable();
+            NotificationManager.show(this.name,this.name + ": has disabled",this);
         }
 
     }

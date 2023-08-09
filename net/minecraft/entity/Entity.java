@@ -6,6 +6,7 @@ import java.util.UUID;
 import java.util.concurrent.Callable;
 
 import top.youm.maple.Maple;
+import top.youm.maple.core.module.modules.combat.rise.Vector3d;
 import top.youm.maple.core.module.modules.player.SafeWalk;
 import top.youm.maple.utils.math.Vec2f;
 import top.youm.maple.utils.math.Vec3f;
@@ -555,9 +556,14 @@ public abstract class Entity implements ICommandSender
         return 0;
     }
 
+
+    public Vector3d getCustomPositionVector() {
+        return new Vector3d(posX, posY, posZ);
+    }
     /**
      * Called whenever the entity is walking inside of lava.
      */
+
     protected void setOnFireFromLava()
     {
         if (!this.isImmuneToFire)
@@ -567,6 +573,18 @@ public abstract class Entity implements ICommandSender
         }
     }
 
+    /**
+     * skid rise
+     */
+    public Vec3 getLookCustom(float yaw, float pitch) {
+        return this.getVectorForRotation(pitch, yaw);
+    }
+    public MovingObjectPosition rayTraceCustom(double blockReachDistance, float yaw, float pitch) {
+        final Vec3 vec3 = this.getPositionEyes(1.0F);
+        final Vec3 vec31 = this.getLookCustom(yaw, pitch);
+        final Vec3 vec32 = vec3.addVector(vec31.xCoord * blockReachDistance, vec31.yCoord * blockReachDistance, vec31.zCoord * blockReachDistance);
+        return this.worldObj.rayTraceBlocks(vec3, vec32, false, false, true);
+    }
     /**
      * Sets entity to burn for x amount of seconds, cannot lower amount of existing fire.
      */
@@ -1500,7 +1518,7 @@ public abstract class Entity implements ICommandSender
     /**
      * Creates a Vec3 using the pitch and yaw of the entities rotation.
      */
-    protected final Vec3 getVectorForRotation(float pitch, float yaw)
+    public final Vec3 getVectorForRotation(float pitch, float yaw)
     {
         float f = MathHelper.cos(-yaw * ((float)Math.PI / 180F) - (float)Math.PI);
         float f1 = MathHelper.sin(-yaw * ((float)Math.PI / 180F) - (float)Math.PI);

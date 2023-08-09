@@ -50,6 +50,8 @@ import net.minecraft.stats.StatFileWriter;
 import net.minecraft.tileentity.TileEntitySign;
 import net.minecraft.world.IInteractionObject;
 import net.minecraft.world.World;
+import top.youm.maple.core.module.modules.combat.rise.Vector2f;
+
 public class EntityPlayerSP extends AbstractClientPlayer
 {
     public final NetHandlerPlayClient sendQueue;
@@ -316,7 +318,9 @@ public class EntityPlayerSP extends AbstractClientPlayer
         event.setMessage(message.replaceAll("\\$\\{", ""));
         this.sendQueue.addToSendQueue(new C01PacketChatMessage(message));
     }
-
+    public Vector2f getPreviousRotation() {
+        return new Vector2f(lastReportedYaw, lastReportedPitch);
+    }
     /**
      * Swings the item the player is holding.
      */
