@@ -1,7 +1,8 @@
-package top.youm.maple.core.module.modules.visual.keystrokes;
+package top.youm.maple.core.ui.hud.keystrokes;
 
 import net.minecraft.client.Minecraft;
 import top.youm.maple.core.module.modules.visual.KeyStrokes;
+import top.youm.maple.core.ui.hud.KeyStrokesUI;
 import top.youm.maple.utils.AnimationUtils;
 import top.youm.maple.utils.render.RenderUtil;
 
@@ -23,9 +24,9 @@ public class MouseBox {
             animBackgroundColor = 0;
             fontColor = new Color(255,255,255);
         }
-        float center = KeyStrokes.y + (KeyStrokes.size + KeyStrokes.margin) * 2 + (KeyStrokes.size - 4) / 2.0f;
-        RenderUtil.drawRect(x,y,width,height,new Color(animBackgroundColor,animBackgroundColor,animBackgroundColor,200));
-        KeyStrokes.drawCenteredStringWithShadow(text,x + 20, center,fontColor);
+        float center = KeyStrokesUI.y + (KeyStrokesUI.size + KeyStrokesUI.margin) * 2 + (KeyStrokesUI.size - 4) / 2.0f;
+        RenderUtil.drawRect(x,y,width,height,new Color(animBackgroundColor,animBackgroundColor,animBackgroundColor,150));
+        KeyStrokesUI.drawCenteredStringWithShadow(text,x + 20, center,fontColor);
     }
 
 }

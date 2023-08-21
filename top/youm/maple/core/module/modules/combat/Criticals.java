@@ -20,7 +20,7 @@ import java.util.UUID;
  * @author YouM
  */
 public final class Criticals extends Module {
-    private final ModeSetting mode = new ModeSetting("Mode","Watchdog","Watchdog", "Packet", "Dev");
+    private final ModeSetting mode = new ModeSetting("Mode","Watchdog","Watchdog", "Packet", "Dev","Vulcan");
     private final NumberSetting delay = new NumberSetting("Delay", 1, 20, 0, 1);
 
     public Criticals() {
@@ -47,6 +47,15 @@ public final class Criticals extends Module {
                         for (double offset : new double[]{0.006253453, 0.002253453, 0.001253453}) {
                             mc.thePlayer.sendQueue.addToSendQueue(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX, mc.thePlayer.posY + offset, mc.thePlayer.posZ, false));
                         }
+                    }
+                }
+                break;
+            case "Vulcan":
+                if (mc.objectMouseOver.entityHit != null && mc.thePlayer.onGround) {
+                    if (mc.objectMouseOver.entityHit.hurtResistantTime > delay.getValue().intValue()) {
+                        mc.thePlayer.sendQueue.addToSendQueue(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX, mc.thePlayer.posY + 0.08250803780931, mc.thePlayer.posZ, false));
+                        mc.thePlayer.sendQueue.addToSendQueue(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX, mc.thePlayer.posY + 0.02156345320044, mc.thePlayer.posZ, false));
+                        mc.thePlayer.sendQueue.addToSendQueue(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX, mc.thePlayer.posY + 0.10402203322278, mc.thePlayer.posZ, false));
                     }
                 }
                 break;

@@ -1,5 +1,6 @@
 package net.minecraft.entity;
 
+import com.darkmagician6.eventapi.EventManager;
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 import com.google.common.collect.Maps;
@@ -12,6 +13,7 @@ import java.util.UUID;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.BaseAttributeMap;
@@ -50,6 +52,7 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
+import top.youm.maple.common.events.JumpFixEvent;
 
 public abstract class EntityLivingBase extends Entity
 {
@@ -1599,9 +1602,15 @@ public abstract class EntityLivingBase extends Entity
 
         if (this.isSprinting())
         {
-            float f = this.rotationYaw * ((float)Math.PI / 180F);
-            this.motionX -= (double)(MathHelper.sin(f) * 0.2F);
-            this.motionZ += (double)(MathHelper.cos(f) * 0.2F);
+            JumpFixEvent jumpFixEvent = new JumpFixEvent(this.rotationYaw);
+
+            if (this instanceof EntityPlayerSP) {
+                EventManager.call(jumpFixEvent);
+            }
+
+            float f = jumpFixEvent.getYaw() * 0.017453292F;
+            this.motionX -= (double) (MathHelper.sin(f) * 0.2F);
+            this.motionZ += (double) (MathHelper.cos(f) * 0.2F);
         }
 
         this.isAirBorne = true;

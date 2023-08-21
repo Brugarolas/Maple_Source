@@ -1,26 +1,33 @@
 package top.youm.maple.common.events;
 
 import com.darkmagician6.eventapi.events.Event;
+import net.minecraft.network.play.client.C03PacketPlayer;
 
-/**
- * @author YouM
- * when player int minecraft motion invoke this event
- */
-public class MotionEvent extends Event {
-    //player position X,position Y,position Z,
-    private double posX,posY,posZ;
-    //player head pitch angle yaw angle
-    private float pitch,yaw;
-    //player is on ground
-    private boolean onGround;
 
-    public MotionEvent(double posX, double posY, double posZ, float yaw, float pitch, boolean onGround) {
+public class TPEvent extends Event {
+
+    private C03PacketPlayer response;
+    private double posX;
+    private double posY;
+    private double posZ;
+    private float yaw;
+    private float pitch;
+
+    public TPEvent(C03PacketPlayer response, double posX, double posY, double posZ, float yaw, float pitch) {
+        this.response = response;
         this.posX = posX;
         this.posY = posY;
         this.posZ = posZ;
         this.yaw = yaw;
         this.pitch = pitch;
-        this.onGround = onGround;
+    }
+
+    public C03PacketPlayer getResponse() {
+        return response;
+    }
+
+    public void setResponse(C03PacketPlayer response) {
+        this.response = response;
     }
 
     public double getPosX() {
@@ -60,19 +67,6 @@ public class MotionEvent extends Event {
     }
 
     public void setPitch(float pitch) {
-        this.pitch = pitch;
-    }
-
-    public boolean isOnGround() {
-        return onGround;
-    }
-
-    public void setOnGround(boolean onGround) {
-        this.onGround = onGround;
-    }
-
-    public void setRotations(float yaw, float pitch) {
-        this.yaw = yaw;
         this.pitch = pitch;
     }
 }

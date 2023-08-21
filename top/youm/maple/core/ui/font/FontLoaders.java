@@ -48,7 +48,9 @@ public abstract class FontLoaders {
     public static CFontRenderer icon32 = new CFontRenderer(getFont("iconfont2",32),true,true);
     public static CFontRenderer rise18 = new CFontRenderer(getFont("product_sans_regular",18),true,true);
     public static CFontRenderer rise20 = new CFontRenderer(getFont("product_sans_regular",20),true,true);
-    public static CFontRenderer music30 = new CFontRenderer(getFont("music",30),true,true);
+    public static CFontRenderer aovel26 = new CFontRenderer(getFont("aovel",26),true,true);
+    public static CFontRenderer aovel22 = new CFontRenderer(getFont("aovel",22),true,true);
+
     public static Font getFont(String name ,int size) {
         Font font;
         try {

@@ -1,24 +1,25 @@
 package top.youm.maple.utils.player;
+
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockAir;
-import net.minecraft.block.BlockLiquid;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
 import net.minecraft.init.Blocks;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.MathHelper;
 import net.minecraft.util.Vec3;
-import top.youm.maple.core.module.modules.movement.Scaffold;
+import top.youm.maple.Maple;
+import top.youm.maple.core.module.modules.movement.SafeScaffold;
+import top.youm.maple.core.module.modules.movement.Speed;
 
 public class ScaffoldUtil {
-    private static final Minecraft mc = Minecraft.getMinecraft();
-
+    private static Minecraft mc = Minecraft.getMinecraft();
     public static class BlockCache {
-        public BlockPos position;
-        public EnumFacing facing;
+
+        private final BlockPos position;
+        private final EnumFacing facing;
 
         public BlockCache(final BlockPos position, final EnumFacing facing) {
             this.position = position;
@@ -29,188 +30,83 @@ public class ScaffoldUtil {
             return this.position;
         }
 
-        private EnumFacing getFacing() {
+        public EnumFacing getFacing() {
             return this.facing;
         }
-
     }
 
-    public static BlockCache grab() {
-        final EnumFacing[] invert = {EnumFacing.UP, EnumFacing.DOWN, EnumFacing.SOUTH, EnumFacing.NORTH,
-                EnumFacing.EAST, EnumFacing.WEST};
-        BlockPos position = new BlockPos(0, 0, 0);
-        if (MovementUtil.isMoving() && !mc.gameSettings.keyBindJump.isKeyDown()) {
-            for (double n2 = Scaffold.extend.getValue().doubleValue() + 0.0001, n3 = 0.0; n3 <= n2; n3 += n2 / (Math.floor(n2))) {
-                final BlockPos blockPos2 = new BlockPos(
-                        mc.thePlayer.posX - MathHelper.sin(RotationUtil.clampRotation()) * n3,
-                        mc.thePlayer.posY - 1.0,
-                        mc.thePlayer.posZ + MathHelper.cos(RotationUtil.clampRotation()) * n3);
-                final IBlockState blockState = mc.theWorld.getBlockState(blockPos2);
-                if (blockState != null && blockState.getBlock() == Blocks.air) {
-                    position = blockPos2;
-                    break;
-                }
-            }
-        } else {
-            position = new BlockPos(new BlockPos(mc.thePlayer.getPositionVector().xCoord,
-                    mc.thePlayer.getPositionVector().yCoord, mc.thePlayer.getPositionVector().zCoord))
-                    .offset(EnumFacing.DOWN);
+    public static double getYLevel() {
+        if (!SafeScaffold.keepY.getValue() || SafeScaffold.keepYMode.getValue().equals("Speed toggled") && !Maple.getInstance().getModuleManager().getModuleByClass(Speed.class).isToggle()) {
+            return mc.thePlayer.posY - 1.0;
         }
+        return mc.thePlayer.posY - 1.0 >= SafeScaffold.keepYCoord && Math.max(mc.thePlayer.posY, SafeScaffold.keepYCoord)
+                - Math.min(mc.thePlayer.posY, SafeScaffold.keepYCoord) <= 3.0 && !mc.gameSettings.keyBindJump.isKeyDown()
+                ? SafeScaffold.keepYCoord
+                : mc.thePlayer.posY - 1.0;
+    }
 
-        if (!(mc.theWorld.getBlockState(position).getBlock() instanceof BlockAir)
-                && !(mc.theWorld.getBlockState(position).getBlock() instanceof BlockLiquid)) {
-            return null;
-        }
-        EnumFacing[] values;
-        for (int length = (values = EnumFacing.values()).length, i = 0; i < length; ++i) {
-            final EnumFacing facing = values[i];
-            final BlockPos offset = position.offset(facing);
-            if (!(mc.theWorld.getBlockState(offset).getBlock() instanceof BlockAir)
-                    && !(mc.theWorld.getBlockState(position).getBlock() instanceof BlockLiquid)) {
-                return new BlockCache(offset, invert[facing.ordinal()]);
-            }
-        }
-        final BlockPos[] offsets = {new BlockPos(-1, 0, 0), new BlockPos(1, 0, 0), new BlockPos(0, 0, -1),
-                new BlockPos(0, 0, 1)};
-        BlockPos[] array;
-        for (int length2 = (array = offsets).length, j = 0; j < length2; ++j) {
-            final BlockPos offset2 = array[j];
-            final BlockPos offsetPos = position.add(offset2.getX(), 0, offset2.getZ());
-            if (mc.theWorld.getBlockState(offsetPos).getBlock() instanceof BlockAir) {
-                EnumFacing[] values2;
-                for (int length3 = (values2 = EnumFacing.values()).length, k = 0; k < length3; ++k) {
-                    final EnumFacing facing2 = values2[k];
-                    final BlockPos offset3 = offsetPos.offset(facing2);
-                    if (!(mc.theWorld.getBlockState(offset3).getBlock() instanceof BlockAir)) {
-                        return new BlockCache(offset3, invert[facing2.ordinal()]);
+    public static BlockCache getBlockInfo() {
+        final BlockPos belowBlockPos = new BlockPos(mc.thePlayer.posX, getYLevel() - (SafeScaffold.isDownwards() ? 1 : 0), mc.thePlayer.posZ);
+        if (mc.theWorld.getBlockState(belowBlockPos).getBlock() instanceof BlockAir) {
+            for (int x = 0; x < 4; x++) {
+                for (int z = 0; z < 4; z++) {
+                    for (int i = 1; i > -3; i -= 2) {
+                        final BlockPos blockPos = belowBlockPos.add(x * i, 0, z * i);
+                        if (mc.theWorld.getBlockState(blockPos).getBlock() instanceof BlockAir) {
+                            for (EnumFacing direction : EnumFacing.values()) {
+                                final BlockPos block = blockPos.offset(direction);
+                                final Material material = mc.theWorld.getBlockState(block).getBlock().getMaterial();
+                                if (material.isSolid() && !material.isLiquid()) {
+                                    return new BlockCache(block, direction.getOpposite());
+                                }
+                            }
+                        }
                     }
                 }
             }
-
         }
         return null;
     }
 
-    public static int grabBlockSlot() {
-        int slot = -1;
-        int highestStack = -1;
-        boolean didGetHotbar = false;
-        for (int i = 0; i < 9; ++i) {
-            final ItemStack itemStack = Minecraft.getMinecraft().thePlayer.inventory.mainInventory[i];
-            if (itemStack != null && itemStack.getItem() instanceof ItemBlock && canItemBePlaced(itemStack) && itemStack.stackSize > 0) {
-                if (Minecraft.getMinecraft().thePlayer.inventory.mainInventory[i].stackSize > highestStack && i < 9) {
-                    highestStack = Minecraft.getMinecraft().thePlayer.inventory.mainInventory[i].stackSize;
-                    slot = i;
-                    if (slot == getLastHotbarSlot()) {
-                        didGetHotbar = true;
-                    }
-                }
-                if (i > 8 && !didGetHotbar) {
-                    int hotbarNum = getFreeHotbarSlot();
-                    if (hotbarNum != -1 && Minecraft.getMinecraft().thePlayer.inventory.mainInventory[i].stackSize > highestStack) {
-                        highestStack = Minecraft.getMinecraft().thePlayer.inventory.mainInventory[i].stackSize;
-                        slot = i;
-                    }
+    public static int getBlockSlot() {
+        for (int i = 0; i < 9; i++) {
+            final ItemStack itemStack = mc.thePlayer.inventory.mainInventory[i];
+            if (itemStack != null && itemStack.getItem() instanceof ItemBlock && itemStack.stackSize > 0) {
+                final ItemBlock itemBlock = (ItemBlock) itemStack.getItem();
+                if (isBlockValid(itemBlock.getBlock())) {
+                    return i;
                 }
             }
         }
-        if (slot > 8) {
-            int hotbarNum = getFreeHotbarSlot();
-            if (hotbarNum != -1) {
-                Minecraft.getMinecraft().playerController.windowClick(Minecraft.getMinecraft().thePlayer.inventoryContainer.windowId, slot, hotbarNum, 2, Minecraft.getMinecraft().thePlayer);
-            } else {
-                return -1;
-            }
-        }
-        return slot;
+        return -1;
     }
 
-    public static int getLastHotbarSlot() {
-        int hotbarNum = -1;
-        for (int k = 0; k < 9; k++) {
-            final ItemStack itemStack = Minecraft.getMinecraft().thePlayer.inventory.mainInventory[k];
-            if (itemStack != null && itemStack.getItem() instanceof ItemBlock && canItemBePlaced(itemStack) && itemStack.stackSize > 1) {
-                hotbarNum = k;
-                continue;
+    public static int getBlockCount() {
+        int count = 0;
+        for (int i = 0; i < 9; i++) {
+            final ItemStack itemStack = mc.thePlayer.inventory.mainInventory[i];
+            if (itemStack != null && itemStack.getItem() instanceof ItemBlock && itemStack.stackSize > 0) {
+                final ItemBlock itemBlock = (ItemBlock) itemStack.getItem();
+                if (isBlockValid(itemBlock.getBlock())) {
+                    count += itemStack.stackSize;
+                }
             }
         }
-        return hotbarNum;
+        return count;
     }
 
-    public static int getFreeHotbarSlot() {
-        int hotbarNum = -1;
-        for (int k = 0; k < 9; k++) {
-            if (Minecraft.getMinecraft().thePlayer.inventory.mainInventory[k] == null) {
-                hotbarNum = k;
-                continue;
-            } else {
-                hotbarNum = 7;
-            }
-        }
-        return hotbarNum;
-    }
-
-
-    public static boolean canIItemBePlaced(Item item) {
-        if (Item.getIdFromItem(item) == 116)
-            return false;
-        if (Item.getIdFromItem(item) == 30)
-            return false;
-        if (Item.getIdFromItem(item) == 31)
-            return false;
-        if (Item.getIdFromItem(item) == 175)
-            return false;
-        if (Item.getIdFromItem(item) == 28)
-            return false;
-        if (Item.getIdFromItem(item) == 27)
-            return false;
-        if (Item.getIdFromItem(item) == 66)
-            return false;
-        if (Item.getIdFromItem(item) == 157)
-            return false;
-        if (Item.getIdFromItem(item) == 31)
-            return false;
-        if (Item.getIdFromItem(item) == 6)
-            return false;
-        if (Item.getIdFromItem(item) == 31)
-            return false;
-        if (Item.getIdFromItem(item) == 32)
-            return false;
-        if (Item.getIdFromItem(item) == 140)
-            return false;
-        if (Item.getIdFromItem(item) == 390)
-            return false;
-        if (Item.getIdFromItem(item) == 37)
-            return false;
-        if (Item.getIdFromItem(item) == 38)
-            return false;
-        if (Item.getIdFromItem(item) == 39)
-            return false;
-        if (Item.getIdFromItem(item) == 40)
-            return false;
-        if (Item.getIdFromItem(item) == 69)
-            return false;
-        if (Item.getIdFromItem(item) == 50)
-            return false;
-        if (Item.getIdFromItem(item) == 75)
-            return false;
-        if (Item.getIdFromItem(item) == 76)
-            return false;
-        if (Item.getIdFromItem(item) == 54)
-            return false;
-        if (Item.getIdFromItem(item) == 130)
-            return false;
-        if (Item.getIdFromItem(item) == 146)
-            return false;
-        if (Item.getIdFromItem(item) == 342)
-            return false;
-        if (Item.getIdFromItem(item) == 12)
-            return false;
-        if (Item.getIdFromItem(item) == 77)
-            return false;
-        if (Item.getIdFromItem(item) == 143)
-            return false;
-        return Item.getIdFromItem(item) != 46;
+    private static boolean isBlockValid(final Block block) {
+        return (block.isFullBlock() || block == Blocks.glass) &&
+                block != Blocks.sand &&
+                block != Blocks.gravel &&
+                block != Blocks.dispenser &&
+                block != Blocks.command_block &&
+                block != Blocks.noteblock &&
+                block != Blocks.furnace &&
+                block != Blocks.crafting_table &&
+                block != Blocks.tnt &&
+                block != Blocks.dropper &&
+                block != Blocks.beacon;
     }
 
     public static Vec3 getHypixelVec3(BlockCache data) {
@@ -230,73 +126,6 @@ public class ScaffoldUtil {
             x += 0.15;
         }
         return new Vec3(x, y, z);
-    }
-
-    public static boolean canItemBePlaced(ItemStack item) {
-        if (Item.getIdFromItem(item.getItem()) == 116)
-            return false;
-        if (Item.getIdFromItem(item.getItem()) == 30)
-            return false;
-        if (Item.getIdFromItem(item.getItem()) == 31)
-            return false;
-        if (Item.getIdFromItem(item.getItem()) == 175)
-            return false;
-        if (Item.getIdFromItem(item.getItem()) == 28)
-            return false;
-        if (Item.getIdFromItem(item.getItem()) == 27)
-            return false;
-        if (Item.getIdFromItem(item.getItem()) == 66)
-            return false;
-        if (Item.getIdFromItem(item.getItem()) == 157)
-            return false;
-        if (Item.getIdFromItem(item.getItem()) == 31)
-            return false;
-        if (Item.getIdFromItem(item.getItem()) == 6)
-            return false;
-        if (Item.getIdFromItem(item.getItem()) == 31)
-            return false;
-        if (Item.getIdFromItem(item.getItem()) == 32)
-            return false;
-        if (Item.getIdFromItem(item.getItem()) == 140)
-            return false;
-        if (Item.getIdFromItem(item.getItem()) == 390)
-            return false;
-        if (Item.getIdFromItem(item.getItem()) == 37)
-            return false;
-        if (Item.getIdFromItem(item.getItem()) == 38)
-            return false;
-        if (Item.getIdFromItem(item.getItem()) == 39)
-            return false;
-        if (Item.getIdFromItem(item.getItem()) == 40)
-            return false;
-        if (Item.getIdFromItem(item.getItem()) == 69)
-            return false;
-        if (Item.getIdFromItem(item.getItem()) == 50)
-            return false;
-        if (Item.getIdFromItem(item.getItem()) == 75)
-            return false;
-        if (Item.getIdFromItem(item.getItem()) == 76)
-            return false;
-        if (Item.getIdFromItem(item.getItem()) == 54)
-            return false;
-        if (Item.getIdFromItem(item.getItem()) == 130)
-            return false;
-        if (Item.getIdFromItem(item.getItem()) == 146)
-            return false;
-        if (Item.getIdFromItem(item.getItem()) == 342)
-            return false;
-        if (Item.getIdFromItem(item.getItem()) == 12)
-            return false;
-        if (Item.getIdFromItem(item.getItem()) == 77)
-            return false;
-        if (Item.getIdFromItem(item.getItem()) == 143)
-            return false;
-        if (Item.getIdFromItem(item.getItem()) == 46)
-            return false;
-        if (Item.getIdFromItem(item.getItem()) == 145)
-            return false;
-
-        return true;
     }
 
 }

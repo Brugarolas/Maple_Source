@@ -22,7 +22,7 @@ import java.util.List;
 public final class InventoryMove extends Module {
     private final TimerUtil delayTimer = new TimerUtil();
     private final ModeSetting mode = new ModeSetting("Mode","Vanilla","Vanilla","Delay");
-    private final List<KeyBinding> keys = Arrays.asList(
+    private static final List<KeyBinding> keys = Arrays.asList(
             mc.gameSettings.keyBindForward,
             mc.gameSettings.keyBindBack,
             mc.gameSettings.keyBindLeft,
@@ -30,7 +30,7 @@ public final class InventoryMove extends Module {
             mc.gameSettings.keyBindJump
     );
 
-    public void updateStates() {
+    public static void updateStates() {
         if (mc.currentScreen != null) {
             keys.forEach(k -> KeyBinding.setKeyBindState(k.getKeyCode(),GameSettings.isKeyDown(k)));
         }

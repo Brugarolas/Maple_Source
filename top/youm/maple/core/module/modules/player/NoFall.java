@@ -34,7 +34,7 @@ public final class NoFall extends Module {
         }
     }
     public NoFall() {
-        super("NoFall", ModuleCategory.PLAYER, Keyboard.KEY_NONE);
+        super("No Fall", ModuleCategory.PLAYER, Keyboard.KEY_NONE);
         this.addSetting(mode);
     }
 

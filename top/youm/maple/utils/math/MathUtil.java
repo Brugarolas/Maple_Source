@@ -1,5 +1,8 @@
 package top.youm.maple.utils.math;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.util.MathHelper;
+
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.security.SecureRandom;
@@ -8,6 +11,13 @@ public class MathUtil {
 
     public static int getRandomInRange(int min, int max) {
         return (int) ((Math.random() * (max - min)) + min);
+    }
+    public static double[] yawPos(double value) {
+        return yawPos(Minecraft.getMinecraft().thePlayer.rotationYaw * MathHelper.deg2Rad, value);
+    }
+
+    public static double[] yawPos(float yaw, double value) {
+        return new double[]{-MathHelper.sin(yaw) * value, MathHelper.cos(yaw) * value};
     }
 
     public static float getRandomInRange(float min, float max) {

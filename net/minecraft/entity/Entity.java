@@ -5,8 +5,12 @@ import java.util.Random;
 import java.util.UUID;
 import java.util.concurrent.Callable;
 
+import com.darkmagician6.eventapi.EventManager;
+import com.darkmagician6.eventapi.events.Event;
+import net.minecraft.client.entity.EntityPlayerSP;
 import top.youm.maple.Maple;
-import top.youm.maple.core.module.modules.combat.rise.Vector3d;
+import top.youm.maple.common.events.MoveInputEvent;
+import top.youm.maple.common.events.SafeWalkEvent;
 import top.youm.maple.core.module.modules.player.SafeWalk;
 import top.youm.maple.utils.math.Vec2f;
 import top.youm.maple.utils.math.Vec3f;
@@ -240,6 +244,10 @@ public abstract class Entity implements ICommandSender
      */
     protected Vec3 lastPortalVec;
 
+    /**
+     * entity is block edge
+     */
+    public boolean isBlockEdge = false;
     /**
      * A direction related to the position of the last portal the entity was in
      */
@@ -557,13 +565,9 @@ public abstract class Entity implements ICommandSender
     }
 
 
-    public Vector3d getCustomPositionVector() {
-        return new Vector3d(posX, posY, posZ);
-    }
     /**
      * Called whenever the entity is walking inside of lava.
      */
-
     protected void setOnFireFromLava()
     {
         if (!this.isImmuneToFire)
@@ -637,23 +641,19 @@ public abstract class Entity implements ICommandSender
      */
     public void moveEntity(double x, double y, double z)
     {
-        if (this.noClip)
-        {
+        if (this.noClip) {
             this.setEntityBoundingBox(this.getEntityBoundingBox().offset(x, y, z));
             this.resetPositionToBB();
-        }
-        else
-        {
+        } else {
             this.worldObj.theProfiler.startSection("move");
             double d0 = this.posX;
             double d1 = this.posY;
             double d2 = this.posZ;
 
-            if (this.isInWeb)
-            {
+            if (this.isInWeb) {
                 this.isInWeb = false;
                 x *= 0.25D;
-                y *= (double)0.05F;
+                y *= 0.05000000074505806D;
                 z *= 0.25D;
                 this.motionX = 0.0D;
                 this.motionY = 0.0D;
@@ -664,75 +664,52 @@ public abstract class Entity implements ICommandSender
             double d4 = y;
             double d5 = z;
 
-            SafeWalk safeWalk = Maple.getInstance().getModuleManager().getModuleByClass(SafeWalk.class);
-            boolean isSafe = safeWalk.isToggle() && safeWalk.start();
+            SafeWalkEvent safeWalkEvent = new SafeWalkEvent();
+            EventManager.call(safeWalkEvent);
 
-            boolean flag = this.onGround && (this.isSneaking() || isSafe) && this instanceof EntityPlayer;
+            boolean flag = this.onGround && (this.isSneaking() || safeWalkEvent.isSafe()) && this instanceof EntityPlayer;
 
-            if (flag)
-            {
-                if (isSafe) Minecraft.getMinecraft().thePlayer.setSneaking(true);
+            if (flag) {
                 double d6;
 
-                for (d6 = 0.05D; x != 0.0D && this.worldObj.getCollidingBoundingBoxes(this, this.getEntityBoundingBox().offset(x, -1.0D, 0.0D)).isEmpty(); d3 = x)
-                {
-                    if (x < d6 && x >= -d6)
-                    {
+                for (d6 = 0.05D; x != 0.0D && this.worldObj.getCollidingBoundingBoxes(this, this.getEntityBoundingBox().offset(x, -1.0D, 0.0D)).isEmpty(); d3 = x) {
+                    if (x < d6 && x >= -d6) {
                         x = 0.0D;
-                    }
-                    else if (x > 0.0D)
-                    {
+                        isBlockEdge = true;
+                    } else if (x > 0.0D) {
                         x -= d6;
-                    }
-                    else
-                    {
+                    } else {
                         x += d6;
                     }
                 }
 
-                for (; z != 0.0D && this.worldObj.getCollidingBoundingBoxes(this, this.getEntityBoundingBox().offset(0.0D, -1.0D, z)).isEmpty(); d5 = z)
-                {
-                    if (z < d6 && z >= -d6)
-                    {
+                for (; z != 0.0D && this.worldObj.getCollidingBoundingBoxes(this, this.getEntityBoundingBox().offset(0.0D, -1.0D, z)).isEmpty(); d5 = z) {
+                    if (z < d6 && z >= -d6) {
                         z = 0.0D;
-                    }
-                    else if (z > 0.0D)
-                    {
+                        isBlockEdge = true;
+                    } else if (z > 0.0D) {
                         z -= d6;
-                    }
-                    else
-                    {
+                    } else {
                         z += d6;
                     }
                 }
 
-                for (; x != 0.0D && z != 0.0D && this.worldObj.getCollidingBoundingBoxes(this, this.getEntityBoundingBox().offset(x, -1.0D, z)).isEmpty(); d5 = z)
-                {
-                    if (x < d6 && x >= -d6)
-                    {
+                for (; x != 0.0D && z != 0.0D && this.worldObj.getCollidingBoundingBoxes(this, this.getEntityBoundingBox().offset(x, -1.0D, z)).isEmpty(); d5 = z) {
+                    if (x < d6 && x >= -d6) {
                         x = 0.0D;
-                    }
-                    else if (x > 0.0D)
-                    {
+                    } else if (x > 0.0D) {
                         x -= d6;
-                    }
-                    else
-                    {
+                    } else {
                         x += d6;
                     }
 
                     d3 = x;
 
-                    if (z < d6 && z >= -d6)
-                    {
+                    if (z < d6 && z >= -d6) {
                         z = 0.0D;
-                    }
-                    else if (z > 0.0D)
-                    {
+                    } else if (z > 0.0D) {
                         z -= d6;
-                    }
-                    else
-                    {
+                    } else {
                         z += d6;
                     }
                 }
@@ -1266,26 +1243,32 @@ public abstract class Entity implements ICommandSender
     /**
      * Used in both water and by flying objects
      */
-    public void moveFlying(float strafe, float forward, float friction)
-    {
+    public void moveFlying(float strafe, float forward, float friction) {
+        MoveInputEvent playerMovementEvent = new MoveInputEvent(strafe, forward, friction, this.rotationYaw, this.rotationPitch);
+        if (this instanceof EntityPlayerSP) {
+            EventManager.call(playerMovementEvent);
+        }
+        if (playerMovementEvent.isCancelled()) return;
+
+        strafe = playerMovementEvent.getStrafe();
+        forward = playerMovementEvent.getForward();
+        friction = playerMovementEvent.getFriction();
         float f = strafe * strafe + forward * forward;
 
-        if (!(f < 1.0E-4F))
-        {
+        if (f >= 1.0E-4F) {
             f = MathHelper.sqrt_float(f);
 
-            if (f < 1.0F)
-            {
+            if (f < 1.0F) {
                 f = 1.0F;
             }
 
             f = friction / f;
             strafe = strafe * f;
             forward = forward * f;
-            float f1 = MathHelper.sin(this.rotationYaw * (float)Math.PI / 180.0F);
-            float f2 = MathHelper.cos(this.rotationYaw * (float)Math.PI / 180.0F);
-            this.motionX += (double)(strafe * f2 - forward * f1);
-            this.motionZ += (double)(forward * f2 + strafe * f1);
+            float f1 = MathHelper.sin(playerMovementEvent.getYaw() * (float) Math.PI / 180.0F);
+            float f2 = MathHelper.cos(playerMovementEvent.getYaw() * (float) Math.PI / 180.0F);
+            this.motionX += strafe * f2 - forward * f1;
+            this.motionZ += forward * f2 + strafe * f1;
         }
     }
 

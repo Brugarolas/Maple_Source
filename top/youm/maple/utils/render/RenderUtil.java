@@ -155,6 +155,29 @@ public class RenderUtil {
         if (!disableAlpha) glEnable(GL_ALPHA_TEST);
         GlStateManager.popMatrix();
     }
+    public static void drawTexturedRect(float x, float y, float width, float height, ResourceLocation image) {
+        GlStateManager.pushMatrix();
+        final boolean enableBlend = glIsEnabled(GL_BLEND);
+        final boolean disableAlpha = !glIsEnabled(GL_ALPHA_TEST);
+        if (!enableBlend) glEnable(GL_BLEND);
+        if (!disableAlpha) glDisable(GL_ALPHA_TEST);
+        mc.getTextureManager().bindTexture(image);
+        GlStateManager.color(1F, 1F, 1F, 1F);
+        drawModalRectWithCustomSizedTexture(x, y, 0, 0, width, height, width, height);
+        if (!enableBlend) glDisable(GL_BLEND);
+        if (!disableAlpha) glEnable(GL_ALPHA_TEST);
+        GlStateManager.popMatrix();
+    }
+    public static void drawHead(ResourceLocation skin, int x, int y, int width, int height) {
+        GL11.glColor4f(1F, 1F, 1F, 1F);
+        mc.getTextureManager().bindTexture(skin);
+        RenderUtil.drawScaledCustomSizeModalRect(x, y, 8F, 8F, 8, 8, width, height,
+                64F, 64F);
+        RenderUtil.drawScaledCustomSizeModalRect(x, y, 40F, 8F, 8, 8, width, height,
+                64F, 64F);
+    }
+
+
     public static void drawModalRectWithCustomSizedTexture(float x, float y, float u, float v, float width, float height, float textureWidth, float textureHeight)
     {
         float f = 1.0F / textureWidth;
@@ -166,6 +189,18 @@ public class RenderUtil {
         worldrenderer.pos((x + width), (y + height), 0.0D).tex(((u + width) * f), ((v + height) * f1)).endVertex();
         worldrenderer.pos((x + width), y, 0.0D).tex(((u + width) * f), (v * f1)).endVertex();
         worldrenderer.pos(x, y, 0.0D).tex((u * f), (v * f1)).endVertex();
+        tessellator.draw();
+    }
+    public static void drawScaledCustomSizeModalRect(int x, int y, float u, float v, int uWidth, int vHeight, int width, int height, float tileWidth, float tileHeight) {
+        float f = 1.0F / tileWidth;
+        float f1 = 1.0F / tileHeight;
+        Tessellator tessellator = Tessellator.getInstance();
+        WorldRenderer worldrenderer = tessellator.getWorldRenderer();
+        worldrenderer.begin(GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+        worldrenderer.pos(x, y + height, 0.0D).tex(u * f, (v + (float) vHeight) * f1).endVertex();
+        worldrenderer.pos(x + width, y + height, 0.0D).tex((u + (float) uWidth) * f, (v + (float) vHeight) * f1).endVertex();
+        worldrenderer.pos(x + width, y, 0.0D).tex((u + (float) uWidth) * f, v * f1).endVertex();
+        worldrenderer.pos(x, y, 0.0D).tex(u * f, v * f1).endVertex();
         tessellator.draw();
     }
     public static void color(int color) {
@@ -289,7 +324,19 @@ public class RenderUtil {
     public static void bindTexture(int texture) {
         glBindTexture(GL_TEXTURE_2D, texture);
     }
-
+    public static void drawTexturedModalRect(int x, int y, int textureX, int textureY, int width, int height)
+    {
+        float f = 0.00390625F;
+        float f1 = 0.00390625F;
+        Tessellator tessellator = Tessellator.getInstance();
+        WorldRenderer worldrenderer = tessellator.getWorldRenderer();
+        worldrenderer.begin(7, DefaultVertexFormats.POSITION_TEX);
+        worldrenderer.pos((x + 0.0f), (y + height), 0).tex(((textureX + 0.0f) * f), ((float)(textureY + height) * f1)).endVertex();
+        worldrenderer.pos((x + width), (y + height), 0).tex(((float)(textureX + width) * f), ((float)(textureY + height) * f1)).endVertex();
+        worldrenderer.pos((x + width), (y + 0.0f), 0).tex(((float)(textureX + width) * f), ((textureY + 0.0f) * f1)).endVertex();
+        worldrenderer.pos((x + 0.0f), (y + 0.0f),0).tex(((textureX + 0.0f) * f), ((textureY + 0.0f) * f1)).endVertex();
+        tessellator.draw();
+    }
     public static void originalRoundedRect(float paramXStart, float paramYStart, float paramXEnd, float paramYEnd, float radius, int color) {
         float alpha = (color >> 24 & 0xFF) / 255.0F;
         float red = (color >> 16 & 0xFF) / 255.0F;

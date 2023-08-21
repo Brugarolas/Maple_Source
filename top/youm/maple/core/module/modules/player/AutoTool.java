@@ -34,7 +34,7 @@ public class AutoTool extends Module {
                     Block block = mc.theWorld.getBlockState(objectMouseOver.getBlockPos()).getBlock();
                     updateItem(block);
                 }
-            } else if (KillAura.target != null) {
+            } else if (!KillAura.targets.isEmpty()) {
                 switchSword();
             }
         }

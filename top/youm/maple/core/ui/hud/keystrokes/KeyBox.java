@@ -1,9 +1,10 @@
-package top.youm.maple.core.module.modules.visual.keystrokes;
+package top.youm.maple.core.ui.hud.keystrokes;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
 import org.lwjgl.input.Keyboard;
 import top.youm.maple.core.module.modules.visual.KeyStrokes;
+import top.youm.maple.core.ui.hud.KeyStrokesUI;
 import top.youm.maple.utils.AnimationUtils;
 import top.youm.maple.utils.render.RenderUtil;
 
@@ -27,8 +28,8 @@ public class KeyBox {
             this.animBackgroundColor = 0;
             fontColor = new Color(255, 255, 255);
         }
-        RenderUtil.drawRect(x, y, width, height, new Color(animBackgroundColor, animBackgroundColor, animBackgroundColor, 200));
-        KeyStrokes.drawCenteredStringWithShadow(Keyboard.getKeyName(keyBinding.getKeyCode()).toUpperCase(), x + (width / 2.0f), y + (KeyStrokes.size / 2.0f), fontColor);
+        RenderUtil.drawRect(x, y, width, height, new Color(animBackgroundColor, animBackgroundColor, animBackgroundColor, 150));
+        KeyStrokesUI.drawCenteredStringWithShadow(Keyboard.getKeyName(keyBinding.getKeyCode()).toUpperCase(), x + (width / 2.0f), y + (KeyStrokesUI.size / 2.0f), fontColor);
     }
 
     public KeyBox(KeyBinding keyBinding) {

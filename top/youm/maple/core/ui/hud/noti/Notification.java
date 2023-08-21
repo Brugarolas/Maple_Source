@@ -38,7 +38,7 @@ public class Notification {
         this.message = message;
         this.title = title;
         this.notiHeight = 25.0f;
-        this.notiWidth = rise18.getStringWidth(message) + 15;
+        this.notiWidth = rise18.getStringWidth(message) + 45;
         this.animationX = sr.getScaledWidth();
         this.stayTime = stayTime;
         this.timer = new TimerUtil();
@@ -56,10 +56,10 @@ public class Notification {
         }
         this.animationY = animator.animate(offsetY, animationY,0.1f);
 
-        RoundedUtil.drawRound(this.animationX,this.animationY,this.notiWidth, notiHeight,2, new Color(0,0,0,130));
+        RoundedUtil.drawRound(this.animationX,this.animationY,this.notiWidth, notiHeight,2, new Color(0,0,0,150));
         RoundedUtil.drawRound(this.animationX,this.animationY + this.notiHeight - 2,this.notiWidth, 2,2, HUD.getHUDThemeColor());
-        robotoB22.drawStringWithShadow(title,animationX + 4,animationY + 4,-1);
-        rise18.drawStringWithShadow(message,animationX + 4,animationY + 6 + robotoB22.getHeight(),-1);
+        robotoB22.drawStringWithShadow(title,animationX + 35,animationY + 3,-1);
+        rise18.drawStringWithShadow(message,animationX + 35,animationY + 5 + robotoB22.getHeight(),-1);
     }
     public float getHeight() {
         return notiHeight;

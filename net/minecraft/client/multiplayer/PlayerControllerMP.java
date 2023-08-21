@@ -1,5 +1,6 @@
 package net.minecraft.client.multiplayer;
 
+import com.darkmagician6.eventapi.EventManager;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
@@ -8,6 +9,7 @@ import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.network.NetHandlerPlayClient;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.passive.EntityHorse;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemBlock;
@@ -28,6 +30,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldSettings;
+import top.youm.maple.common.events.AttackEvent;
 
 public class PlayerControllerMP
 {
@@ -492,15 +495,22 @@ public class PlayerControllerMP
     /**
      * Attacks an entity
      */
-    public void attackEntity(EntityPlayer playerIn, Entity targetEntity)
-    {
-        this.syncCurrentPlayItem();
-        this.netClientHandler.addToSendQueue(new C02PacketUseEntity(targetEntity, C02PacketUseEntity.Action.ATTACK));
-
-        if (this.currentGameType != WorldSettings.GameType.SPECTATOR)
-        {
-            playerIn.attackTargetEntityWithCurrentItem(targetEntity);
+    public void attackEntity(EntityPlayer playerIn, Entity targetEntity) {
+        boolean cancelled = false;
+        if (targetEntity instanceof EntityLivingBase) {
+            AttackEvent attackEvent = new AttackEvent((EntityLivingBase) targetEntity);
+            EventManager.call(attackEvent);
+            cancelled = attackEvent.isCancelled();
         }
+        if (!cancelled) {
+            this.syncCurrentPlayItem();
+            this.netClientHandler.addToSendQueue(new C02PacketUseEntity(targetEntity, C02PacketUseEntity.Action.ATTACK));
+
+            if (this.currentGameType != WorldSettings.GameType.SPECTATOR) {
+                playerIn.attackTargetEntityWithCurrentItem(targetEntity);
+            }
+        }
+
     }
 
     /**

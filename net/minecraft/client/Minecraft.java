@@ -1,6 +1,7 @@
 package net.minecraft.client;
 
 import com.darkmagician6.eventapi.EventManager;
+import com.darkmagician6.eventapi.EventTarget;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -40,6 +41,7 @@ import javax.imageio.ImageIO;
 
 import net.minecraft.client.gui.*;
 import top.youm.maple.Maple;
+import top.youm.maple.common.events.BlockPlaceableEvent;
 import top.youm.maple.common.events.KeyEvent;
 import top.youm.maple.common.events.TickEvent;
 import net.minecraft.block.Block;
@@ -177,6 +179,7 @@ import org.lwjgl.opengl.GLContext;
 import org.lwjgl.opengl.OpenGLException;
 import org.lwjgl.opengl.PixelFormat;
 import org.lwjgl.util.glu.GLU;
+import top.youm.maple.common.events.WorldEvent;
 import top.youm.maple.core.ui.screen.ProgressScreen;
 import top.youm.maple.utils.AnimationUtils;
 
@@ -2189,6 +2192,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage
             {
                 this.rightClickMouse();
             }
+            EventManager.call(new BlockPlaceableEvent());
 
             this.sendClickBlockToController(this.currentScreen == null && this.gameSettings.keyBindAttack.isKeyDown() && this.inGameHasFocus);
         }
@@ -2378,6 +2382,13 @@ public class Minecraft implements IThreadListener, IPlayerUsage
      */
     public void loadWorld(WorldClient worldClientIn, String loadingMessage)
     {
+        if (worldClientIn != this.theWorld) {
+            this.entityRenderer.getMapItemRenderer().clearLoadedMaps();
+        }
+        if (theWorld != null) {
+            WorldEvent e = new WorldEvent.Unload(theWorld);
+            EventManager.call(e);
+        }
         if (worldClientIn == null)
         {
             NetHandlerPlayClient nethandlerplayclient = this.getNetHandler();

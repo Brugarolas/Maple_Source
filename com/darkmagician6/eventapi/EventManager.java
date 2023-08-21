@@ -274,9 +274,8 @@ public final class EventManager {
     private static void invoke(MethodData data, Event argument) {
         try {
             data.getTarget().invoke(data.getSource(), argument);
-        } catch (IllegalAccessException e) {
-        } catch (IllegalArgumentException e) {
-        } catch (InvocationTargetException e) {
+        } catch (IllegalAccessException | InvocationTargetException | IllegalArgumentException exception) {
+            ;
         }
     }
 	

@@ -213,6 +213,7 @@ import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.storage.MapData;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import top.youm.maple.common.events.TPEvent;
 
 public class NetHandlerPlayClient implements INetHandlerPlayClient
 {
@@ -678,6 +679,26 @@ public class NetHandlerPlayClient implements INetHandlerPlayClient
         double d2 = packetIn.getZ();
         float f = packetIn.getYaw();
         float f1 = packetIn.getPitch();
+
+
+        final TPEvent event = new TPEvent(
+                new C03PacketPlayer.C06PacketPlayerPosLook(entityplayer.posX, entityplayer.posY, entityplayer.posZ, entityplayer.rotationYaw, entityplayer.rotationPitch, false),
+                d0,
+                d1,
+                d2,
+                f,
+                f1
+        );
+        EventManager.call(event);
+        if (event.isCancelled()) {
+            return;
+        }
+
+        d0 = event.getPosX();
+        d1 = event.getPosY();
+        d2 = event.getPosZ();
+        f = event.getYaw();
+        f1 = event.getPitch();
 
         if (packetIn.func_179834_f().contains(S08PacketPlayerPosLook.EnumFlags.X))
         {

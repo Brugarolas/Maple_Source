@@ -16,6 +16,7 @@ import joptsimple.OptionSet;
 import joptsimple.OptionSpec;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.Session;
+import top.youm.maple.Maple;
 
 
 public class Main
@@ -38,7 +39,7 @@ public class Main
         OptionSpec<Integer> optionspec6 = optionparser.accepts("proxyPort").withRequiredArg().defaultsTo("8080").ofType(Integer.class);
         OptionSpec<String> optionspec7 = optionparser.accepts("proxyUser").withRequiredArg();
         OptionSpec<String> optionspec8 = optionparser.accepts("proxyPass").withRequiredArg();
-        OptionSpec<String> optionspec9 = optionparser.accepts("username").withRequiredArg().defaultsTo("YoUMS" + Minecraft.getSystemTime() % 1000L);
+        OptionSpec<String> optionspec9 = optionparser.accepts("username").withRequiredArg().defaultsTo(Maple.getInstance().username);
         OptionSpec<String> optionspec10 = optionparser.accepts("uuid").withRequiredArg();
         OptionSpec<String> optionspec11 = optionparser.accepts("accessToken").withRequiredArg().required();
         OptionSpec<String> optionspec12 = optionparser.accepts("version").withRequiredArg().required();

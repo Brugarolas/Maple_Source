@@ -15,7 +15,7 @@ import org.lwjgl.input.Keyboard;
  */
 public class NoSlow extends Module {
     public NoSlow() {
-        super("NoSlow", ModuleCategory.MOVEMENT, Keyboard.KEY_NONE);
+        super("No Slow", ModuleCategory.MOVEMENT, Keyboard.KEY_NONE);
     }
 
     @EventTarget

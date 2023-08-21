@@ -1,6 +1,7 @@
 package top.youm.maple.common.events;
 
 import com.darkmagician6.eventapi.events.Event;
+import top.youm.maple.utils.player.MovementUtil;
 
 /**
  * @author YouM
@@ -9,6 +10,7 @@ import com.darkmagician6.eventapi.events.Event;
 public class MoveEvent extends Event {
     //player position X,position Y,position Z
     private double x, y, z;
+
     public MoveEvent(double x, double y, double z) {
         this.x = x;
         this.y = y;
@@ -32,5 +34,7 @@ public class MoveEvent extends Event {
     public void setZ(double z) {
         this.z = z;
     }
-
+    public void setSpeed(double speed) {
+        MovementUtil.setSpeed(this, speed);
+    }
 }

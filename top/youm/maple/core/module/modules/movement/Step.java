@@ -17,6 +17,7 @@ public class Step extends Module {
     private BoolSetting ncp = new BoolSetting("NCP", false);
     public Step() {
         super("Step", ModuleCategory.MOVEMENT, Keyboard.KEY_NONE);
+        this.addSetting(ncp,height);
     }
     @EventTarget
     private void onMotion(MotionEvent e) {

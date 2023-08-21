@@ -2,21 +2,24 @@ package top.youm.maple.core.module.modules.combat;
 
 import com.darkmagician6.eventapi.EventTarget;
 import com.darkmagician6.eventapi.events.Event;
+import net.minecraft.client.gui.Gui;
+import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.resources.DefaultPlayerSkin;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemSword;
 import net.minecraft.network.play.client.C08PacketPlayerBlockPlacement;
 import net.minecraft.network.play.client.C0APacketAnimation;
 import net.minecraft.network.play.server.S18PacketEntityTeleport;
-import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.BlockPos;
-import net.minecraft.util.MathHelper;
-import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.potion.Potion;
+import net.minecraft.util.*;
+import org.apache.commons.lang3.RandomUtils;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 import top.youm.maple.Maple;
@@ -26,37 +29,43 @@ import top.youm.maple.common.settings.impl.ModeSetting;
 import top.youm.maple.common.settings.impl.NumberSetting;
 import top.youm.maple.core.module.Module;
 import top.youm.maple.core.module.ModuleCategory;
-import top.youm.maple.core.module.modules.combat.rise.RayCastUtil;
-import top.youm.maple.core.module.modules.combat.rise.RiseRotationUtil;
-import top.youm.maple.core.module.modules.combat.rise.Vector2f;
-import top.youm.maple.core.module.modules.movement.Scaffold;
+import top.youm.maple.core.module.modules.movement.SafeScaffold;
 import top.youm.maple.core.module.modules.visual.HUD;
-import top.youm.maple.core.module.modules.world.Disabler;
 import top.youm.maple.core.module.modules.world.Teams;
+import top.youm.maple.core.ui.font.FontLoaders;
+import top.youm.maple.utils.AnimationUtils;
 import top.youm.maple.utils.TimerUtil;
+import top.youm.maple.utils.liquidbounce.Rotation;
+import top.youm.maple.utils.liquidbounce.RotationUtils;
 import top.youm.maple.utils.math.MathUtil;
 import top.youm.maple.utils.network.PacketUtil;
-import top.youm.maple.utils.player.MovementUtil;
 import top.youm.maple.utils.player.RotationUtil;
 import top.youm.maple.utils.render.RenderUtil;
+import top.youm.maple.utils.render.RoundedUtil;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
+
+import static net.optifine.CustomColors.random;
 
 /**
  * @author YouM
  */
 public class KillAura extends Module {
+
+    private float yaw = 0;
     private final NumberSetting reach = new NumberSetting("Reach", 3.3, 6, 1, 0.01);
     private final NumberSetting minCps = new NumberSetting("Min CPS", 6, 20, 1, 1);
     private final NumberSetting maxCps = new NumberSetting("Max CPS", 11, 20, 1, 1);
-    private final NumberSetting minSpeed = new NumberSetting("Min Speed", 0.5, 1.0, 0, 0.1);
-    private final NumberSetting maxSpeed = new NumberSetting("Max Speed", 0.6, 1.0, 0, 0.1);
-    private final ModeSetting autoBlockMode = new ModeSetting("AutoBlock Mode", "Legit", "Legit", "Interaction", "AAC");
+    private final NumberSetting minSpeed = new NumberSetting("Min Speed", 0.5, 2.0, 0, 0.1);
+    private final NumberSetting maxSpeed = new NumberSetting("Max Speed", 0.6, 2.0, 0, 0.1);
+    private final NumberSetting maxRotateSpeed = new NumberSetting("Max Rotate Speed", 180, 180, 0, 1);
+    private final NumberSetting minRotateSpeed = new NumberSetting("Min Rotate Speed", 180, 180, 0, 1);
+    private final ModeSetting autoBlockMode = new ModeSetting("AutoBlock Mode", "Legit", "Legit", "Interaction", "AAC", "Vulcan");
     private final BoolSetting autoBlock = new BoolSetting("AutoBlock", false);
-    private final BoolSetting lookAtTheClosestPoint = new BoolSetting("lookAtTheClosestPoint", true);
-
     private final BoolSetting footCircle = new BoolSetting("foot circle", true);
     private final NumberSetting footWidth = new NumberSetting("foot width", 2, 5, 1, 1);
 
@@ -66,70 +75,88 @@ public class KillAura extends Module {
     BoolSetting players = new BoolSetting("Players", true);
     BoolSetting mobs = new BoolSetting("Mobs", false);
     BoolSetting animals = new BoolSetting("Animals", false);
-    BoolSetting invisibles = new BoolSetting("Invisibles", false);
-    BoolSetting ticks = new BoolSetting("Ticks", true);
     BoolSetting invisible = new BoolSetting("Invisible", false);
+    BoolSetting ticks = new BoolSetting("Ticks", true);
     BoolSetting nameTags = new BoolSetting("NameTags", true);
     BoolSetting packet = new BoolSetting("Packet", true);
-    ModeSetting rotateMode = new ModeSetting("RotateMode", "Dynamic", "Dynamic", "Smooth", "Legit");
+    ModeSetting rotateMode = new ModeSetting("RotateMode", "Dynamic", "Dynamic", "Smooth", "Grim", "Vanilla");
     BoolSetting safeRotation = new BoolSetting("Safe Rotation", false);
     BoolSetting followRotation = new BoolSetting("Follow", false);
-    public List<EntityLivingBase> targets = new ArrayList<>();
+    public static List<EntityLivingBase> targets = new ArrayList<>();
     public static EntityLivingBase target;
     public static boolean blocking;
     public static boolean attacking;
     private final TimerUtil timer = new TimerUtil();
 
     private int hitTicks = 0;
+    private final BoolSetting autoDisable = new BoolSetting("auto c", true);
 
     public KillAura() {
-        super("KillAura", ModuleCategory.COMBAT, Keyboard.KEY_NONE);
+        super("Kill Aura", ModuleCategory.COMBAT, Keyboard.KEY_NONE);
         footWidth.addParent(footCircle, BoolSetting::getValue);
         scanWidth.addParent(scanCircle, BoolSetting::getValue);
-        this.addSetting(reach, minCps, maxCps, footCircle, footWidth, scanCircle, scanWidth, autoBlock, autoBlockMode, players, invisibles, mobs, animals, rotateMode, safeRotation, followRotation, maxSpeed, minSpeed, ticks, packet, nameTags, invisible);
+        autoBlockMode.addParent(autoBlock, BoolSetting::getValue);
+        maxSpeed.addParent(rotateMode, rotateMode -> rotateMode.getValue().equals("Smooth"));
+        minSpeed.addParent(rotateMode, rotateMode -> rotateMode.getValue().equals("Smooth"));
+        maxRotateSpeed.addParent(rotateMode, rotateMode -> rotateMode.getValue().equals("Grim"));
+        minRotateSpeed.addParent(rotateMode, rotateMode -> rotateMode.getValue().equals("Grim"));
+        this.addSetting(reach, minCps, maxCps, footCircle, footWidth, scanCircle, scanWidth, autoDisable, autoBlock, autoBlockMode, players, invisible, mobs, animals, rotateMode, safeRotation, followRotation, maxSpeed, minSpeed, maxRotateSpeed, minRotateSpeed, ticks, packet, nameTags);
     }
 
     boolean direction;
     float offsetY = 0;
-
-
-    private float randomYaw, randomPitch;
-    public float[] rotations() {
-        final double minRotationSpeed = this.minSpeed.getValue().doubleValue();
-        final double maxRotationSpeed = this.maxSpeed.getValue().doubleValue();
-        final float rotationSpeed = (float) MathUtil.getRandomInRange(minRotationSpeed, maxRotationSpeed);
-
-        final Vector2f targetRotations = RiseRotationUtil.calculate(target, lookAtTheClosestPoint.getValue(), reach.getValue().doubleValue());
-
-        this.randomiseTargetRotations();
-
-        targetRotations.x += randomYaw;
-        targetRotations.y += randomPitch;
-
-        if (RayCastUtil.rayCast(targetRotations, reach.getValue().doubleValue()).typeOfHit != MovingObjectPosition.MovingObjectType.ENTITY) {
-            randomYaw = randomPitch = 0;
+    private AnimationUtils animator = new AnimationUtils();
+    private float size;
+    private float health = 120;
+    @EventTarget
+    public void onRender2D(Render2DEvent event){
+        if(!targets.isEmpty()){
+            size = animator.animate(100,size,0.15f);
+            health = animator.animate(target.getHealth() / target.getMaxHealth() * 120,health,0.1f);
+        }else{
+            health = animator.animate(0,health,0.1f);
+            size = animator.animate(0,size,0.15f);
         }
 
-        if (rotationSpeed != 0) {
-            return new float[]{targetRotations.getX(), targetRotations.getY()};
-        }
-        return new float[]{targetRotations.getX(), targetRotations.getY()};
+        ScaledResolution sr = new ScaledResolution(mc);
+        int width = sr.getScaledWidth();
+        int height = sr.getScaledHeight();
+        int x = width - (width / 3);
+        int y = height - (height / 3);
+        RenderUtil.scale(x + (200 / 2.0f),y + (50 / 2.0f),size / 100,()->{
+            RoundedUtil.drawRound(x,y,200,50,2,new Color(0,0,0,120));
+            ResourceLocation locationSkin;
+            if(mc.getNetHandler().getPlayerInfo(target.getUniqueID()) != null){
+                locationSkin = mc.getNetHandler().getPlayerInfo(target.getUniqueID()).getLocationSkin();
+            }else {
+                locationSkin = DefaultPlayerSkin.getDefaultSkinLegacy();
+            }
+            RenderUtil.drawHead(locationSkin,x + 8,y + 8,34,34);
+            FontLoaders.robotoB32.drawStringWithShadow(target.getName(),x + 50,y + 8,-1);
+            FontLoaders.comfortaaB24.drawStringWithShadow(" " + ((float)Math.round(target.getHealth() *10)) / 10,x + 174,y + 30,HUD.getHUDThemeColor().getRGB());
+            RoundedUtil.drawRound(x + 50,y + 30,health,10,5,HUD.getHUDThemeColor());
+        });
+
     }
-    private void randomiseTargetRotations() {
-        randomYaw += (float) (Math.random() - 0.5f);
-        randomPitch += (float) (Math.random() - 0.5f) * 2;
-    }
+
     @EventTarget
     public void onTick(TickEvent event) {
-        if (direction) {
-            offsetY += 0.04;
-            if (2 - offsetY < 0.02) {
-                direction = false;
+        this.setSuffixes(this.minCps.getValue().intValue() + "-" + this.maxCps.getValue().intValue() + " " + reach.getValue().floatValue());
+        if (mc.thePlayer != null) {
+            if ((mc.thePlayer.getHealth() <= 0.0f || mc.thePlayer.isDead) && this.autoDisable.getValue()) {
+                this.setToggle(false);
             }
-        } else {
-            offsetY -= 0.04;
-            if (offsetY < 0.02) {
-                direction = true;
+
+            if (direction) {
+                offsetY += 0.04;
+                if (2 - offsetY < 0.02) {
+                    direction = false;
+                }
+            } else {
+                offsetY -= 0.04;
+                if (offsetY < 0.02) {
+                    direction = true;
+                }
             }
         }
     }
@@ -148,7 +175,6 @@ public class KillAura extends Module {
             GL11.glEnable(GL11.GL_LINE_SMOOTH);
             GL11.glDisable(GL11.GL_DEPTH_TEST);
             GL11.glDisable(GL11.GL_TEXTURE_2D);
-            GlStateManager.disableTexture2D();
             GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
             GL11.glLineWidth(footWidth.getValue().floatValue());
             GL11.glRotatef(90F, 1F, 0F, 0F);
@@ -169,7 +195,10 @@ public class KillAura extends Module {
             GL11.glDisable(GL11.GL_BLEND);
             GL11.glPopMatrix();
         }
-        if (targets.get(0).isDead || targets.get(0).getHealth() <= 0 || Maple.getInstance().getModuleManager().getModuleByClass(Scaffold.class).isToggle() || mc.thePlayer.isDead || mc.thePlayer.isSpectator())
+        if (targets.size() == 0) {
+            return;
+        }
+        if (targets.get(0).isDead || targets.get(0).getHealth() <= 0 || Maple.getInstance().getModuleManager().getModuleByClass(SafeScaffold.class).isToggle() || mc.thePlayer.isDead || mc.thePlayer.isSpectator())
             return;
         if (target != null && this.scanCircle.getValue()) {
             drawCircle(event);
@@ -231,9 +260,6 @@ public class KillAura extends Module {
         GL11.glPopMatrix();
     }
 
-    public void legitUnBlock() {
-        KeyBinding.setKeyBindState(mc.gameSettings.keyBindUseItem.getKeyCode(), false);
-    }
 
     public void legitBlock() {
         KeyBinding.setKeyBindState(mc.gameSettings.keyBindUseItem.getKeyCode(), true);
@@ -241,22 +267,23 @@ public class KillAura extends Module {
 
     @EventTarget
     public void respawn(RespawnPlayerEvent event) {
-        if (Disabler.INSTANCE.isToggle() && Disabler.INSTANCE.killaura.getValue()) {
+        if (autoDisable.getValue()) {
             this.setToggle(false);
         }
     }
 
+    private float[] randomRotation;
+
     @EventTarget
     public void onMotion(MotionEvent event) {
         sortTargets();
-        this.setSuffixes("cps:" + this.minCps.getValue().intValue() + "-" + this.maxCps.getValue().intValue() + " | range:" + reach.getValue().floatValue() +" | block:" + autoBlockMode.getValue());
-        if (autoBlockMode.getValue().equals("Legit")) {
-            legitUnBlock();
+        if (targets.size() == 0) {
+            return;
         }
         if (targets.get(0).getHealth() <= 0) {
             targets.remove(0);
         }
-        if (targets.get(0).isDead || Maple.getInstance().getModuleManager().getModuleByClass(Scaffold.class).isToggle() || mc.thePlayer.isDead || mc.thePlayer.isSpectator()) {
+        if (targets.get(0).isDead || Maple.getInstance().getModuleManager().getModuleByClass(SafeScaffold.class).isToggle() || mc.thePlayer.isDead || mc.thePlayer.isSpectator()) {
             return;
         }
         if (!targets.isEmpty()) {
@@ -266,33 +293,37 @@ public class KillAura extends Module {
                 float[] smoothRotations = getRotationsToEnt(target);
                 switch (rotateMode.getValue()) {
                     case "Dynamic":
-                        smoothRotations[0] += MathUtil.getRandomInRange(-5, 5);
-                        smoothRotations[1] += MathUtil.getRandomInRange(-5, 5);
+                        if (timer.hasTimeElapsed(100, true)) {
+                            smoothRotations[0] += MathUtil.getRandomInRange(-7, 7);
+                            smoothRotations[1] += MathUtil.getRandomInRange(-5, 10);
+                            randomRotation = smoothRotations;
+                        } else {
+                            smoothRotations = randomRotation;
+                        }
                         break;
-                    case "Resolver":
-                        smoothRotations = rotations();
+                    case "Grim":
+                        Rotation targetRotation = getTargetRotation(target);
+                        smoothRotations[0] = targetRotation.getYaw();
+                        smoothRotations[1] = targetRotation.getPitch();
+                        break;
+                    case "Vanilla":
+                        smoothRotations = getRotationsToEnt(target);
                         break;
                     default:
                         smoothRotations = RotationUtil.getSmoothRotations(target, maxSpeed.getValue().floatValue(), minSpeed.getValue().floatValue());
-                        if (MovementUtil.isMoving()) {
-                            if (mc.thePlayer.movementInput.moveStrafe == -1.0) {
-                                smoothRotations[0] -= 5;
-                            } else if (mc.thePlayer.movementInput.moveStrafe == 1.0f) {
-                                smoothRotations[0] += 3;
-                            }
-                        }
-                        if (target.posY >= mc.thePlayer.posY + 2f) {
-                            smoothRotations[1] += 5;
-                        }
                 }
+
                 event.setYaw(smoothRotations[0]);
                 event.setPitch(smoothRotations[1]);
+                this.yaw = event.getYaw();
                 if (followRotation.getValue()) {
                     mc.thePlayer.rotationYaw = smoothRotations[0];
                     mc.thePlayer.rotationPitch = smoothRotations[1];
                 }
                 RotationUtil.setRotations(smoothRotations);
             }
+            if (!RotationUtil.isMouseOver(event.getYaw(), event.getPitch(), target, reach.getValue().floatValue()))
+                return;
 
             if (autoBlock.getValue() && mc.thePlayer.getCurrentEquippedItem() != null && mc.thePlayer.getCurrentEquippedItem().getItem() instanceof ItemSword) {
                 mc.playerController.syncCurrentPlayItem();
@@ -331,6 +362,7 @@ public class KillAura extends Module {
                                 blocking = false;
                             }
                         }
+                    default:
                         break;
                 }
                 PacketUtil.sendPacket(new C0APacketAnimation());
@@ -339,14 +371,10 @@ public class KillAura extends Module {
             if (event.getState() == Event.State.PRE) {
                 attacking = true;
                 if (timer.hasTimeElapsed((1000 / MathUtil.getRandomInRange(minCps.getValue().intValue(), maxCps.getValue().intValue())), true)) {
-                    if (safeRotation.getValue()) {
-                        if (event.getYaw() + 4.0f >= getRotationsToEnt(target)[0] && event.getYaw() - 4.0f <= getRotationsToEnt(target)[0] && event.getPitch() + 8.0f >= getRotationsToEnt(target)[1] && event.getPitch() - 8.0f <= getRotationsToEnt(target)[1]) {
-                            mc.thePlayer.swingItem();
-                            mc.playerController.attackEntity(mc.thePlayer, target);
-                        }
-                    } else {
-                        mc.thePlayer.swingItem();
-                        mc.playerController.attackEntity(mc.thePlayer, target);
+                    mc.thePlayer.swingItem();
+                    mc.playerController.attackEntity(mc.thePlayer, target);
+                    if (mc.thePlayer.fallDistance > 0 && !mc.thePlayer.onGround && !mc.thePlayer.isOnLadder() && !mc.thePlayer.isInWater() && !mc.thePlayer.isPotionActive(Potion.blindness) && mc.thePlayer.ridingEntity == null) {
+                        mc.thePlayer.onCriticalHit(target);
                     }
                     this.hitTicks = 0;
 
@@ -357,16 +385,21 @@ public class KillAura extends Module {
             attacking = false;
             blocking = false;
             this.hitTicks = 0;
-            if (autoBlockMode.getValue().equals("Legit")) {
-                legitUnBlock();
-            }
-
         }
     }
 
-    public boolean isInAABB(AxisAlignedBB aabb, EntityPlayer player) {
+    @EventTarget
+    public void onJumpFixEvent(JumpFixEvent event) {
+        if (!targets.isEmpty()) {
+            event.setYaw(yaw);
+        }
+    }
 
-        return false;
+    @EventTarget
+    public void onPlayerMoveUpdateEvent(MoveInputEvent event) {
+        if (!targets.isEmpty()) {
+            event.setYaw(yaw);
+        }
     }
 
     @EventTarget
@@ -382,7 +415,9 @@ public class KillAura extends Module {
             }
         }
     }
-
+    public static ItemStack getItemStack() {
+        return (mc.thePlayer == null || mc.thePlayer.inventoryContainer == null ? null : mc.thePlayer.getHeldItem());
+    }
     @Override
     public void onDisable() {
         targets.clear();
@@ -409,11 +444,11 @@ public class KillAura extends Module {
             return false;
         }
         if (Teams.isInTeam(entLiving)) return false;
-        if (entLiving instanceof EntityPlayer && players.getValue() && !entLiving.isInvisible()) {
+        if (entLiving instanceof EntityPlayer && players.getValue() && !entLiving.isInvisible() && !antiBot.isNPC(entLiving)) {
             return true;
         }
 
-        if (entLiving instanceof EntityPlayer && invisibles.getValue() && entLiving.isInvisible() && !antiBot.isServerBot(target)) {
+        if (entLiving instanceof EntityPlayer && invisible.getValue() && entLiving.isInvisible()) {
             return true;
         }
         if (entLiving instanceof EntityMob && mobs.getValue()) {
@@ -426,9 +461,6 @@ public class KillAura extends Module {
             if (nameTags.getValue() && (entLiving.getDisplayName().getFormattedText().contains("§c") || entLiving.getDisplayName().getFormattedText().contains("§4"))) {
                 return false;
             }
-        }
-        if (!entLiving.canEntityBeSeen(mc.thePlayer) && invisible.getValue()) {
-            return false;
         }
         return entLiving instanceof EntityAnimal && animals.getValue();
     }
@@ -443,7 +475,7 @@ public class KillAura extends Module {
         // radian unit
         double radianUnit = 180.0D / Math.PI;
         /*
-         * atan2(x,y) need two parameters to compute angle
+         * atan 2(x,y) need two parameters to compute angle
          * radian * radianUnit
          */
         // player head yaw rotation
@@ -457,5 +489,35 @@ public class KillAura extends Module {
                 + MathHelper.wrapAngleTo180_float(rotationPitch - mc.thePlayer.rotationPitch);
 
         return new float[]{finishedYaw, -MathHelper.clamp_float(finishedPitch, -90, 90)};
+    }
+
+    private Rotation getTargetRotation(Entity entity) {
+        AxisAlignedBB boundingBox = entity.getEntityBoundingBox();
+        boundingBox = boundingBox.offset(
+                (entity.posX - entity.prevPosX - (mc.thePlayer.posX - mc.thePlayer.prevPosX)) * RandomUtils.nextFloat(minRotateSpeed.getValue().floatValue(), maxRotateSpeed.getValue().floatValue()),
+                (entity.posY - entity.prevPosY - (mc.thePlayer.posY - mc.thePlayer.prevPosY)) * RandomUtils.nextFloat(minRotateSpeed.getValue().floatValue(), maxRotateSpeed.getValue().floatValue()),
+                (entity.posZ - entity.prevPosZ - (mc.thePlayer.posZ - mc.thePlayer.prevPosZ)) * RandomUtils.nextFloat(minRotateSpeed.getValue().floatValue(), maxRotateSpeed.getValue().floatValue())
+        );
+        Vec3 lastHitVec = new Vec3(0.0f, 0.0f, 0.0f);
+        AxisAlignedBB bb = entity.getEntityBoundingBox();
+        if (RotationUtils.targetRotation == null || (random.nextBoolean() && !timer.hasTimeElapsed((1000 / MathUtil.getRandomInRange(minCps.getValue().intValue(), maxCps.getValue().intValue()))))) {
+            lastHitVec = new Vec3(
+                    MathHelper.clamp_double(mc.thePlayer.posX, bb.minX, bb.maxX) + RandomUtils.nextDouble(0, 0.2),
+                    MathHelper.clamp_double(mc.thePlayer.posY + 1.62F, bb.minY, bb.maxY) + RandomUtils.nextDouble(0, 0.2),
+                    MathHelper.clamp_double(mc.thePlayer.posZ, bb.minZ, bb.maxZ) + RandomUtils.nextDouble(0, 0.2)
+            );
+        }
+        return RotationUtils.limitAngleChange(
+                RotationUtils.serverRotation,
+                Objects.requireNonNull(RotationUtils.OtherRotation(
+                        boundingBox,
+                        lastHitVec,
+                        true,
+                        false,
+                        reach.getValue().floatValue()
+                )),
+                (float) (Math.random() * (maxRotateSpeed.getValue().floatValue() - minRotateSpeed.getValue().floatValue()) + minRotateSpeed.getValue().floatValue()),
+                (float) (Math.random() * (maxRotateSpeed.getValue().floatValue() - minRotateSpeed.getValue().floatValue()) + minRotateSpeed.getValue().floatValue())
+        );
     }
 }

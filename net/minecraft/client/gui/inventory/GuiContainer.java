@@ -18,6 +18,8 @@ import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.input.Keyboard;
+import top.youm.maple.core.module.modules.movement.InventoryMove;
+import top.youm.maple.core.module.modules.player.ChestStealer;
 
 public abstract class GuiContainer extends GuiScreen
 {
@@ -98,6 +100,19 @@ public abstract class GuiContainer extends GuiScreen
      */
     public void drawScreen(int mouseX, int mouseY, float partialTicks)
     {
+        if (ChestStealer.canSteal()) {
+            if (ChestStealer.silent.getValue()) {
+                ChestStealer.stealing = true;
+                InventoryMove.updateStates();
+                mc.inGameHasFocus = true;
+                mc.mouseHelper.grabMouseCursor();
+                mc.currentScreen = null;
+                return;
+            } else if (ChestStealer.freeLook.getValue()) {
+                mc.inGameHasFocus = true;
+                mc.mouseHelper.grabMouseCursor();
+            }
+        }
         this.drawDefaultBackground();
         int i = this.guiLeft;
         int j = this.guiTop;

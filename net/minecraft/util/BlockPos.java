@@ -2,6 +2,9 @@ package net.minecraft.util;
 
 import com.google.common.collect.AbstractIterator;
 import java.util.Iterator;
+
+import net.minecraft.block.Block;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 
 public class BlockPos extends Vec3i
@@ -56,6 +59,9 @@ public class BlockPos extends Vec3i
     public BlockPos add(int x, int y, int z)
     {
         return x == 0 && y == 0 && z == 0 ? this : new BlockPos(this.getX() + x, this.getY() + y, this.getZ() + z);
+    }
+    public Block getBlock() {
+        return Minecraft.getMinecraft().theWorld.getBlockState(this).getBlock();
     }
 
     /**
