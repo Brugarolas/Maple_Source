@@ -40,7 +40,7 @@ extends GuiScreen {
         this.username.drawTextBox();
         this.password.drawTextBox();
         this.drawCenteredString(this.mc.fontRendererObj, "Alt Login", width / 2, 20, -1);
-        this.drawCenteredString(this.mc.fontRendererObj, this.thread == null ? (Object)((Object)EnumChatFormatting.GRAY) + "Idle..." : this.thread.getStatus(), width / 2, 29, -1);
+        this.drawCenteredString(this.mc.fontRendererObj, this.thread == null ? (EnumChatFormatting.GRAY) + "Idle..." : this.thread.getStatus(), width / 2, 29, -1);
         if (this.username.getText().isEmpty()) {
             this.drawString(this.mc.fontRendererObj, "Username / E-Mail", width / 2 - 96, 66, -7829368);
         }

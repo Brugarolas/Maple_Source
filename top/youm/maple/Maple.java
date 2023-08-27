@@ -34,8 +34,8 @@ public class Maple {
     }
     public static Logger log = LogManager.getLogger();
     public String NAME = "Maple";
-    public String VERSION = "beta-1.2";
-    public String dev = "YouM";
+    public String VERSION = "beta-2";
+    public boolean DevMode = true;
     public Account account;
     public String username = NAME + "Dev" + MathUtil.getRandomInRange(1,999);
     private ModuleManager moduleManager;
@@ -54,7 +54,7 @@ public class Maple {
         commandManager = new CommandManager();
         commandManager.initialize();
 
-        log.info("developer: " + dev.toString());
+        log.info("developers: YouM");
         Display.setTitle(NAME + " | " + VERSION);
         configManager = new ConfigManager();
         runCatching(() -> {

@@ -22,7 +22,7 @@ public class ModuleComponent extends Component {
         super(module.getName());
         this.module = module;
         this.width = ClassicClickGUI.screenWidth - ClassicClickGUI.navbarWidth - 15;
-        this.height = 25;
+        this.height = 28;
         this.dialog = new DialogComponent(module);
     }
 

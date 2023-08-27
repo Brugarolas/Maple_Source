@@ -13,6 +13,7 @@ import top.youm.maple.common.settings.impl.ModeSetting;
 import top.youm.maple.common.settings.impl.NumberSetting;
 import top.youm.maple.core.module.Module;
 import top.youm.maple.core.module.ModuleCategory;
+import top.youm.maple.utils.player.MovementUtil;
 
 import java.util.ArrayList;
 
@@ -20,7 +21,7 @@ import java.util.ArrayList;
  * @author YouM
  */
 public class Fly extends Module {
-    private final ModeSetting mode = new ModeSetting("Mode", "WatchDog","WatchDog","Vanilla","AirWalk");
+    private final ModeSetting mode = new ModeSetting("Mode", "WatchDog","WatchDog","Vanilla","AirWalk","Vulcan");
     private final NumberSetting speed = new NumberSetting("Speed", 2, 5, 0, 0.1);
     private float stage;
     private int ticks;
@@ -54,7 +55,7 @@ public class Fly extends Module {
                     mc.thePlayer.onGround = true;
                     mc.timer.timerSpeed = 2;
                 } else {
-                    this.setSpeed(0,mc.thePlayer.rotationYaw, mc.thePlayer.movementInput.moveStrafe, mc.thePlayer.movementInput.moveForward);
+                    MovementUtil.setSpeed(0,mc.thePlayer.rotationYaw, mc.thePlayer.movementInput.moveStrafe, mc.thePlayer.movementInput.moveForward);
                     mc.timer.timerSpeed = 5;
                 }
                 break;
@@ -65,6 +66,11 @@ public class Fly extends Module {
                 mc.thePlayer.motionY = 0;
                 mc.thePlayer.onGround = true;
                 break;
+            default:
+                mc.thePlayer.motionY = 0;
+                mc.thePlayer.onGround = true;
+                mc.thePlayer.sendQueue.addToSendQueue(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX, mc.thePlayer.posY - 0.15, mc.thePlayer.posZ, true));
+
         }
     }
 
@@ -77,30 +83,6 @@ public class Fly extends Module {
                 doFly = true;
             }
         }
-    }
-    public void setSpeed(double moveSpeed, float yaw, double strafe, double forward) {
-        if (forward != 0.0D) {
-            if (strafe > 0.0D) {
-                yaw += ((forward > 0.0D) ? -45 : 45);
-            } else if (strafe < 0.0D) {
-                yaw += ((forward > 0.0D) ? 45 : -45);
-            }
-            strafe = 0.0D;
-            if (forward > 0.0D) {
-                forward = 1.0D;
-            } else if (forward < 0.0D) {
-                forward = -1.0D;
-            }
-        }
-        if (strafe > 0.0D) {
-            strafe = 1.0D;
-        } else if (strafe < 0.0D) {
-            strafe = -1.0D;
-        }
-        double mx = Math.cos(Math.toRadians((yaw + 90.0F)));
-        double mz = Math.sin(Math.toRadians((yaw + 90.0F)));
-        mc.thePlayer.motionX = forward * moveSpeed * mx + strafe * moveSpeed * mz;
-        mc.thePlayer.motionZ = forward * moveSpeed * mz - strafe * moveSpeed * mx;
     }
     @EventTarget
     public void onTick(TickEvent event){

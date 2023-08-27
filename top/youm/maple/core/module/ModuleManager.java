@@ -3,6 +3,8 @@ package top.youm.maple.core.module;
 import com.darkmagician6.eventapi.EventManager;
 import com.darkmagician6.eventapi.EventTarget;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import top.youm.maple.common.events.KeyEvent;
 import top.youm.maple.core.module.modules.combat.*;
 import top.youm.maple.core.module.modules.movement.*;
@@ -18,8 +20,21 @@ import java.util.List;
  */
 public class ModuleManager {
     public List<Module> modules = new ArrayList<>();
-
+    private static final Logger logger = LogManager.getLogger();
     public void initialize(){
+        /*if(Maple.getInstance().account.getUid() != null){
+            try {
+                String decrypt = RsaUtil.decryptByPrivateKey(Maple.getInstance().account.getUid(), RsaUtil.generateKey().get("privateKeyStr"));
+                for (float accountNum : RsaUtil.accounts) {
+                    if (accountNum != Float.parseFloat(decrypt) + 114514) {
+                        return;
+                    }
+                }
+            } catch (Exception e) {
+                logger.error("脑瘫玩应，别几把瞎搞我的端子，操你妈逼");
+                System.exit(0);
+            }
+        }*/
         /* combat */
         this.modules.add(new KillAura());
         this.modules.add(new FastBow());

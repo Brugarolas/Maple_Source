@@ -374,15 +374,6 @@ public class SafeScaffold extends Module {
             place();
         }
 
-/*            new Thread(()->{
-                try {
-                    Thread.sleep(rotateDelay.getValue().longValue());
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                }*/
-/*                mc.thePlayer.isBlockEdge = false;*/
-/*            }).start();*/
-
     }
 
     @EventTarget

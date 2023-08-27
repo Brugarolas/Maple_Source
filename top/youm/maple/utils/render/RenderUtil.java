@@ -53,13 +53,10 @@ public class RenderUtil {
         GL11.glDisable(GL11.GL_POLYGON_SMOOTH);
         GL11.glPopMatrix();
     }
-    public static int reAlpha(int color, float alpha) {
+    public static int reAlpha(int color, int alpha) {
         try {
             Color c = new Color(color);
-            float r = ((float) 1 / 255) * c.getRed();
-            float g = ((float) 1 / 255) * c.getGreen();
-            float b = ((float) 1 / 255) * c.getBlue();
-            return new Color(r, g, b, alpha).getRGB();
+            return new Color(c.getRed(), c.getGreen(), c.getBlue(), alpha).getRGB();
         } catch (Throwable e) {
             e.printStackTrace();
         }

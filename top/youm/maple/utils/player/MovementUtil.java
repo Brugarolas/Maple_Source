@@ -48,8 +48,8 @@ public class MovementUtil  {
         }
         double mx = Math.cos(Math.toRadians((yaw + 90.0F)));
         double mz = Math.sin(Math.toRadians((yaw + 90.0F)));
-        mc.thePlayer.motionX = forward * moveSpeed * mx + strafe * moveSpeed * mz;
-        mc.thePlayer.motionZ = forward * moveSpeed * mz - strafe * moveSpeed * mx;
+        mc.thePlayer.motionX = (forward * moveSpeed * mx) + (strafe * moveSpeed * mz);
+        mc.thePlayer.motionZ = (forward * moveSpeed * mz) - (strafe * moveSpeed * mx);
     }
 
     public static void setSpeed(double moveSpeed) {

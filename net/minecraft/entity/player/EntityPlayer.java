@@ -766,14 +766,12 @@ public abstract class EntityPlayer extends EntityLivingBase
         this.addScore(amount);
         Collection<ScoreObjective> collection = this.getWorldScoreboard().getObjectivesFromCriteria(IScoreObjectiveCriteria.totalKillCount);
 
-        if (entityIn instanceof EntityPlayer)
-        {
+        if (entityIn instanceof EntityPlayer) {
             this.triggerAchievement(StatList.playerKillsStat);
             collection.addAll(this.getWorldScoreboard().getObjectivesFromCriteria(IScoreObjectiveCriteria.playerKillCount));
             collection.addAll(this.func_175137_e(entityIn));
         }
-        else
-        {
+        else {
             this.triggerAchievement(StatList.mobKillsStat);
         }
 

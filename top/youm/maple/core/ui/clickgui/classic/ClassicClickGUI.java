@@ -135,6 +135,7 @@ public class ClassicClickGUI extends GuiScreen {
         } else {
             UIState.dialog.input(typedChar, keyCode);
         }
+
     }
 
     @Override

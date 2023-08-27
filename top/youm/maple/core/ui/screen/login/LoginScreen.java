@@ -1,45 +1,37 @@
 package top.youm.maple.core.ui.screen.login;
 
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.*;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.util.ResourceLocation;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.lwjgl.input.Keyboard;
-import top.youm.maple.core.ui.clickgui.classic.component.Component;
-import top.youm.maple.utils.render.Circle;
-import top.youm.maple.utils.render.CircleManager;
+import top.youm.maple.Account;
+import top.youm.maple.Maple;
+import top.youm.maple.utils.math.RsaUtil;
 import top.youm.maple.utils.render.RenderUtil;
-import top.youm.maple.utils.render.Stencil;
-import top.youm.maple.utils.render.gl.ShaderUtil;
 
-import java.awt.*;
 import java.io.IOException;
+import java.util.Map;
 
 /**
  * @author YouM
  * Created on 2023/8/27
  */
 public class LoginScreen extends GuiScreen {
-    public static LoginTextField userNameField = new LoginTextField(4, mc.fontRendererObj, 0, 0, 180, 25);
-
-    private LoginButton loginButton = new LoginButton();
-    private final ShaderUtil backgroundShader = new ShaderUtil("Maple/shader/background.frag");
-    private long initTime = System.currentTimeMillis();
-
+    private GuiTextField userNameField;
+    public Logger logger = LogManager.getLogger();
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
+        this.drawDefaultBackground();
+        RenderUtil.scale(this.width / 2.0f,this.height / 3.5f,1.5f,()->{
+            mc.fontRendererObj.drawCenteredString("Maple Client HWID Login",this.width / 2.0f,this.height / 3.5f,-1);
+        });
+        if (this.userNameField.getText().isEmpty()) {
+            this.drawString(mc.fontRendererObj, "Your HWID", userNameField.xPosition + (userNameField.getWidth() / 2) - 92, userNameField.yPosition + (20 - mc.fontRendererObj.FONT_HEIGHT) / 2, -7829368);
+        }
 
-        ScaledResolution sr = new ScaledResolution(mc);
-        drawBackground();
-        userNameField.xPosition = (int) ((sr.getScaledWidth() - userNameField.getWidth()) / 2.0f);
-        userNameField.yPosition = (int) ((sr.getScaledHeight() - 50) / 2.0f);
         userNameField.drawTextBox();
-
-
-        loginButton.update((sr.getScaledWidth() - loginButton.width) / 2.0f,(sr.getScaledHeight()) / 2.0f + 20,mouseX,mouseY);
-        loginButton.drawComponent();
         super.drawScreen(mouseX, mouseY, partialTicks);
     }
 
@@ -47,36 +39,42 @@ public class LoginScreen extends GuiScreen {
     protected void keyTyped(char typedChar, int keyCode) throws IOException {
         userNameField.textboxKeyTyped(typedChar,keyCode);
     }
-    public void drawBackground(){
-        backgroundShader.init();
-        backgroundShader.setUniformf("time",(System.currentTimeMillis() - initTime) / 1000f);
-        backgroundShader.setUniformf("resolution",this.width / 2.0f,this.height / 2.0f);
-        ShaderUtil.drawQuads();
-        backgroundShader.unload();
-    }
-    @Override
-    protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
-        super.mouseClicked(mouseX, mouseY, mouseButton);
-        loginButton.onMouseClick(mouseButton);
-    }
-
-    @Override
-    protected void mouseReleased(int mouseX, int mouseY, int state) {
-        super.mouseReleased(mouseX, mouseY, state);
-    }
-
 
     @Override
     public void initGui() {
-        super.initGui();
-        initTime = System.currentTimeMillis();
+        ScaledResolution sr = new ScaledResolution(mc);
+        this.buttonList.add(new GuiButton(0, width / 2 - 50, (sr.getScaledHeight()) / 2,100,20, "Login"));
+        userNameField = new GuiTextField(1, mc.fontRendererObj, (int) ((sr.getScaledWidth() - 200) / 2.0f), (sr.getScaledHeight() - 50) / 2, 200, 20);
+        userNameField.setMaxStringLength(500);
         userNameField.setFocused(true);
         Keyboard.enableRepeatEvents(true);
     }
 
     @Override
+    protected void actionPerformed(GuiButton button) throws IOException {
+        super.actionPerformed(button);
+        if(button.id == 0){
+            Map<String, String> keys = RsaUtil.generateKey();
+            String privateKeyStr = keys.get("privateKeyStr");
+            String text = userNameField.getText();
+            try {
+                String decrypt = RsaUtil.decryptByPrivateKey(text, privateKeyStr);
+                for (float accountNum : RsaUtil.accounts) {
+                    if (accountNum == Float.parseFloat(decrypt) + 114514) {
+                        Account account = new Account("0");
+                        account.setUid(String.valueOf(accountNum));
+                        Maple.getInstance().account = account;
+                        mc.displayGuiScreen(new GuiMainMenu());
+                    }
+                }
+            } catch (Exception e) {
+                logger.warn("failed uid,not to login");
+            }
+        }
+    }
+
+    @Override
     public void updateScreen() {
         userNameField.updateCursorCounter();
-
     }
 }

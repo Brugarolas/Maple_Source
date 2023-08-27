@@ -5,5 +5,17 @@ package top.youm.maple;
  * Created on 2023/8/27
  */
 public class Account {
-    public String uid;
+    private String uid;
+
+    public Account(String uid) {
+        this.uid = uid;
+    }
+
+    public String getUid() {
+        return uid;
+    }
+
+    public void setUid(String uid) {
+        this.uid = uid;
+    }
 }
