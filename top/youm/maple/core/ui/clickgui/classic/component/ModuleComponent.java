@@ -7,13 +7,17 @@ import top.youm.maple.core.ui.clickgui.classic.state.UIState;
 import top.youm.maple.core.ui.clickgui.classic.theme.Theme;
 import top.youm.maple.core.ui.clickgui.classic.MouseType;
 import top.youm.maple.core.ui.font.FontLoaders;
+import top.youm.maple.utils.AnimationUtils;
 import top.youm.maple.utils.render.RenderUtil;
 import top.youm.maple.utils.render.RoundedUtil;
+
+import java.awt.*;
 
 public class ModuleComponent extends Component {
     private Module module;
     public float animation = 30;
     public DialogComponent dialog;
+    private int animAlpha = 0;
     public ModuleComponent(Module module) {
         super(module.getName());
         this.module = module;
@@ -26,7 +30,14 @@ public class ModuleComponent extends Component {
     public void draw(float xPos, float yPos, int mouseX, int mouseY) {
         super.draw(xPos,yPos,mouseX,mouseY);
         this.width = ClassicClickGUI.screenWidth - ClassicClickGUI.navbarWidth - 15;
-        RoundedUtil.drawRound(x + 3, y, width, height, 11, Theme.moduleTheme);
+
+        if(componentHover()){
+            animAlpha = animator.animate(255,animAlpha,0.1f);
+            RoundedUtil.drawRoundOutline(x + 3, y, width, height, 3,0.5f, Theme.moduleTheme,new Color(255,255,255,animAlpha));
+        }else {
+            animAlpha = animator.animate(0,animAlpha,0.15f);
+            RoundedUtil.drawRound(x + 3, y, width, height, 3, Theme.moduleTheme);
+        }
         FontLoaders.comfortaaB18.drawStringWithShadow(module.getName(), x + 7, y + height / 2.0f - FontLoaders.comfortaaB18.getHeight() / 2.0f, Theme.font.getRGB());
         if (module.isToggle()) {
             if (animation >= 10) {
@@ -39,7 +50,7 @@ public class ModuleComponent extends Component {
             }
             RoundedUtil.drawRound(x + width - 30, y + height / 2.0f - 3, 20, 6, 3, Theme.enableButton);
         }
-        RenderUtil.drawSmoothCircle(x + width - animation, y + height / 2.0f, 6, -1);
+        RenderUtil.drawSmoothCircle(x + width - animation, y + height / 2.0f, 6, new Color(255,255,255));
 
         RoundedUtil.drawRound((x + width - 70 - 4),  (y + height / 2.0f - 4), 28, 8,2,Theme.theme);
         if(this.equals(UIState.focusKey)){

@@ -7,6 +7,8 @@ import top.youm.maple.core.ui.clickgui.classic.MouseType;
 import top.youm.maple.utils.render.RenderUtil;
 import top.youm.maple.utils.render.RoundedUtil;
 
+import java.awt.*;
+
 public class ButtonComponent extends Component {
     private final BoolSetting boolSetting;
     private float animationBool = 10;
@@ -27,13 +29,13 @@ public class ButtonComponent extends Component {
                 animationBool = animator.animate(10, animationBool, 0.08f);
             }
             RoundedUtil.drawRound(x - 30, y, 20, 6, 3, Theme.theme);
-            RenderUtil.drawSmoothCircle(x - animationBool, y + 3, 6, -1);
+            RenderUtil.drawSmoothCircle(x - animationBool, y + 3, 6, new Color(255,255,255));
         } else {
             if (animationBool < 30) {
                 animationBool = animator.animate(30, animationBool, 0.08f);
             }
             RoundedUtil.drawRound(x - 30, y, 20, 6, 3, Theme.enableButton);
-            RenderUtil.drawSmoothCircle(x - animationBool, y + 3, 6,-1);
+            RenderUtil.drawSmoothCircle(x - animationBool, y + 3, 6,new Color(255,255,255));
         }
     }
 

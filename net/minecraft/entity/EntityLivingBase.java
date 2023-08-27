@@ -53,6 +53,7 @@ import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import top.youm.maple.common.events.JumpFixEvent;
+import top.youm.maple.common.events.LivingUpdateEvent;
 
 public abstract class EntityLivingBase extends Entity
 {
@@ -392,6 +393,7 @@ public abstract class EntityLivingBase extends Entity
         this.prevRotationYaw = this.rotationYaw;
         this.prevRotationPitch = this.rotationPitch;
         this.worldObj.theProfiler.endSection();
+        EventManager.call(new LivingUpdateEvent(this));
     }
 
     /**

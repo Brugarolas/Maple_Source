@@ -2,12 +2,17 @@ package top.youm.maple;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import de.florianmichael.viamcp.ViaMCP;
+import top.youm.maple.alts.AltManager;
 import top.youm.maple.core.command.CommandManager;
 import top.youm.maple.core.config.ConfigManager;
 import top.youm.maple.core.module.ModuleManager;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.lwjgl.opengl.Display;
+import top.youm.maple.core.ui.clickgui.classic.theme.ColorTheme;
+import top.youm.maple.core.ui.clickgui.classic.theme.Theme;
+import top.youm.maple.utils.BadPacketsComponent;
 import top.youm.maple.utils.math.MathUtil;
 
 import java.util.List;
@@ -29,30 +34,19 @@ public class Maple {
     }
     public static Logger log = LogManager.getLogger();
     public String NAME = "Maple";
-    public String VERSION = "beta-1.0";
+    public String VERSION = "beta-1.2";
     public String dev = "YouM";
-
+    public Account account;
     public String username = NAME + "Dev" + MathUtil.getRandomInRange(1,999);
     private ModuleManager moduleManager;
     private ConfigManager configManager;
     private CommandManager commandManager;
+    private AltManager altManager;
     public List<String> songList;
-/*    public void initializeToolkit()
-    {
-        final CountDownLatch latch = new CountDownLatch(1);
-        SwingUtilities.invokeLater(() -> {
-            new JFXPanel();
-            latch.countDown();
-        });
-        try {
-            latch.await();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }*/
     public void startGame(){
-/*        initializeToolkit();*/
-/*        musicPlayerScreen = new MusicPlayerScreen();*/
+        setTheme(Theme.themes.get("Blue"));
+
+        altManager = new AltManager();
         gson = new GsonBuilder().setPrettyPrinting().excludeFieldsWithoutExposeAnnotation().create();
         moduleManager = new ModuleManager();
         moduleManager.initialize();
@@ -67,6 +61,13 @@ public class Maple {
             configManager.initialize();
             configManager.load();
         });
+
+        runCatching(()->{
+            ViaMCP.create();
+            ViaMCP.INSTANCE.initAsyncSlider();
+            ViaMCP.INSTANCE.initAsyncSlider(100, 100, 110, 20);
+        });
+        new BadPacketsComponent().init();
     }
     public void shutDownGame(){
         log.info("Thank you to play Maple client. Goodbye");
@@ -80,7 +81,17 @@ public class Maple {
         return configManager;
     }
 
+    public AltManager getAltManager() {
+        return altManager;
+    }
+
     public List<String> getSongList() {
         return songList;
+    }
+    public static void setTheme(ColorTheme theme){
+        Theme.theme = theme.getTheme();
+        Theme.themeHover = theme.getThemeHover();
+        Theme.moduleTheme = theme.getModuleTheme();
+        Theme.enableButton = theme.getEnableButton();
     }
 }

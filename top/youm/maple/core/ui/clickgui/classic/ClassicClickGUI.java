@@ -2,7 +2,9 @@ package top.youm.maple.core.ui.clickgui.classic;
 
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.client.renderer.GlStateManager;
 import org.lwjgl.input.Keyboard;
+import org.lwjgl.opengl.GL11;
 import top.youm.maple.Maple;
 import top.youm.maple.core.module.Module;
 import top.youm.maple.core.module.ModuleCategory;
@@ -13,9 +15,12 @@ import top.youm.maple.core.ui.clickgui.classic.component.ModuleComponent;
 import top.youm.maple.core.ui.clickgui.classic.state.UIState;
 import top.youm.maple.core.ui.font.FontLoaders;
 import top.youm.maple.core.ui.clickgui.classic.theme.Theme;
+import top.youm.maple.utils.AnimationUtils;
 import top.youm.maple.utils.render.RenderUtil;
 import top.youm.maple.utils.render.RoundedUtil;
+import top.youm.maple.utils.render.ShadowUtils;
 
+import java.awt.*;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +34,7 @@ public class ClassicClickGUI extends GuiScreen {
     private final List<CategoryComponent> categoryButtons = new ArrayList<>();
     private final List<ModuleComponent> moduleComponents = new ArrayList<>();
     public CategoryComponent currentComponent;
+    private AnimationUtils animationUtils = new AnimationUtils();
 
     public ClassicClickGUI() {
         for (ModuleCategory value : ModuleCategory.values()) {
@@ -69,7 +75,14 @@ public class ClassicClickGUI extends GuiScreen {
                 this.dragY = mouseY;
             }
         }
-        RoundedUtil.drawRound(x, y, screenWidth, screenHeight, 2, Theme.background);
+        ShadowUtils.shadow(8.0f,()->{
+            RenderUtil.drawRoundedRect(x, y, screenWidth, screenHeight, 2, new Color(0,0,0));
+        },()->{
+            RenderUtil.drawRoundedRect(x, y, screenWidth, screenHeight, 2, new Color(0,0,0));
+        });
+
+        RoundedUtil.drawRound(x + .625f, y + 40.625f, screenWidth - 0.25f, screenHeight - 40, 2, Theme.background);
+        RenderUtil.drawRect(x, y + 29, screenWidth + 1.25f, 12, Theme.background);
         /* top menu */
         topRouter(mouseX, mouseY);
         /* navbar menu */
@@ -83,19 +96,20 @@ public class ClassicClickGUI extends GuiScreen {
             UIState.dialog.draw(0, 0, mouseX, mouseY);
         }
 
+
     }
 
     public void topRouter(int mouseX, int mouseY) {
-        RoundedUtil.drawRound(x, y, screenWidth, 20, 2, Theme.theme);
-        RenderUtil.drawRect(x - 1, y + 19, screenWidth + 2, 10, Theme.theme);
-        FontLoaders.comfortaaB40.drawStringWithShadow(Maple.getInstance().NAME, x + 10, y + 6, -1);
-        FontLoaders.comfortaaB22.drawStringWithShadow(Maple.getInstance().VERSION, x + 10 + FontLoaders.comfortaaB40.getStringWidth(Maple.getInstance().NAME) + 2, y + FontLoaders.comfortaaB40.getHeight() , -1);
+        RoundedUtil.drawRound(x + 0.625f, y + 0.625f, screenWidth - 0.25f, 20, 2, Theme.theme);
+        RenderUtil.drawRect(x, y + 20, screenWidth + 1.25f, 10, Theme.theme);
+        FontLoaders.neverlose.drawStringWithShadow(Maple.getInstance().NAME, x + 10, y + 6, -1);
     }
 
 
     public static int navbarWidth = 110;
 
     public void navbar(int mouseX, int mouseY) {
+        RenderUtil.drawGradientRect(x + navbarWidth - 2,y + 30,0.5f,screenHeight - 30,new Color(50,50,50),new Color(70,70,70));
         int yOffset = 0;
         for (CategoryComponent categoryButton : categoryButtons) {
             categoryButton.draw(x + 15, y + 35 + yOffset, mouseX, mouseY);
@@ -111,6 +125,7 @@ public class ClassicClickGUI extends GuiScreen {
         if (!UIState.settingFocused) {
             if (keyCode == Keyboard.KEY_RSHIFT || keyCode == Keyboard.KEY_ESCAPE) {
                 this.onGuiClosed();
+                mc.displayGuiScreen(null);
                 ClickGui clickGui = Maple.getInstance().getModuleManager().getModuleByClass(ClickGui.class);
                 clickGui.setToggle(false);
             }

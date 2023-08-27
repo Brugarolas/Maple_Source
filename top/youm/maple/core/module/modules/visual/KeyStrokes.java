@@ -10,6 +10,7 @@ import top.youm.maple.core.module.ModuleCategory;
 public class KeyStrokes extends Module {
     public KeyStrokes() {
         super("Key Strokes", ModuleCategory.VISUAL, Keyboard.KEY_NONE);
+        this.isRenderModule = true;
     }
 
 }

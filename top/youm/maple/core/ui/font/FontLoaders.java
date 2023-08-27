@@ -47,10 +47,13 @@ public abstract class FontLoaders {
     public static CFontRenderer icon28 = new CFontRenderer(getFont("iconfont2",28),true,true);
     public static CFontRenderer icon32 = new CFontRenderer(getFont("iconfont2",32),true,true);
     public static CFontRenderer rise18 = new CFontRenderer(getFont("product_sans_regular",18),true,true);
-    public static CFontRenderer rise20 = new CFontRenderer(getFont("product_sans_regular",20),true,true);
-    public static CFontRenderer aovel26 = new CFontRenderer(getFont("aovel",26),true,true);
-    public static CFontRenderer aovel22 = new CFontRenderer(getFont("aovel",22),true,true);
+    public static CFontRenderer rise28 = new CFontRenderer(getFont("product_sans_regular",28),true,true);
+    public static CFontRenderer aovel24 = new CFontRenderer(getFont("aovel",24),true,true);
+    public static CFontRenderer aovel32 = new CFontRenderer(getFont("aovel",32),true,true);
 
+    public static CFontRenderer aovel22 = new CFontRenderer(getFont("aovel",22),true,true);
+    public static CFontRenderer neverlose = new CFontRenderer(getFont("neverlose",40),true,true);
+    public static CFontRenderer commonIcon = new CFontRenderer(getFont("common",38),true,true);
     public static Font getFont(String name ,int size) {
         Font font;
         try {

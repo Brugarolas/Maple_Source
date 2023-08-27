@@ -2,6 +2,7 @@ package top.youm.maple.core.module.modules.movement;
 
 import com.darkmagician6.eventapi.EventTarget;
 import top.youm.maple.common.events.MotionEvent;
+import top.youm.maple.common.events.TickEvent;
 import top.youm.maple.common.settings.impl.BoolSetting;
 import top.youm.maple.common.settings.impl.NumberSetting;
 import top.youm.maple.core.module.Module;
@@ -18,6 +19,10 @@ public class Step extends Module {
     public Step() {
         super("Step", ModuleCategory.MOVEMENT, Keyboard.KEY_NONE);
         this.addSetting(ncp,height);
+    }
+    @EventTarget
+    public void onTick(TickEvent event){
+        this.setSuffixes(ncp.getValue() ? ncp.getName() : "");
     }
     @EventTarget
     private void onMotion(MotionEvent e) {

@@ -6,9 +6,11 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import top.youm.maple.common.settings.*;
 import top.youm.maple.common.settings.impl.BoolSetting;
+import top.youm.maple.common.settings.impl.ColorThemeSetting;
 import top.youm.maple.common.settings.impl.ModeSetting;
 import top.youm.maple.common.settings.impl.NumberSetting;
 import top.youm.maple.core.module.Module;
+import top.youm.maple.core.ui.clickgui.classic.theme.ColorTheme;
 import top.youm.maple.utils.animation.Animation;
 import top.youm.maple.utils.animation.Direction;
 import top.youm.maple.utils.animation.SmoothStepAnimation;
@@ -47,6 +49,9 @@ public class DialogComponent extends Component {
                 subComponents.add(new SliderComponent((NumberSetting) setting));
             }else if (setting instanceof ModeSetting) {
                 subComponents.add(new DropdownComponent((ModeSetting) setting));
+            }else if (setting instanceof ColorThemeSetting) {
+                subComponents.add(new ColorThemeComponent((ColorThemeSetting) setting));
+                System.out.println(setting.getName());
             }
         }
         this.y = -350;
@@ -82,8 +87,12 @@ public class DialogComponent extends Component {
             if(!component.isDisplay()){
                continue;
             }
-            FontLoaders.comfortaaB24.drawStringWithShadow(component.getName(),x + 5,y + 16 + offsetY + getScroll(),Theme.font.getRGB());
-            component.draw(x + width,y + 25 - 3 + offsetY + getScroll(),mouseX,mouseY);
+            if(component instanceof ColorThemeComponent){
+                component.draw(x + 5,y + 25 - 3 + offsetY + getScroll() + component.getHeight(),mouseX,mouseY);
+            }else{
+                FontLoaders.comfortaaB24.drawStringWithShadow(component.getName(),x + 5,y + 16 + offsetY + getScroll(),Theme.font.getRGB());
+                component.draw(x + width,y + 25 - 3 + offsetY + getScroll(),mouseX,mouseY);
+            }
             offsetY += 30;
         }
         RenderUtil.stopGlScissor();

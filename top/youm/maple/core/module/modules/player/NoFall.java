@@ -3,6 +3,7 @@ package top.youm.maple.core.module.modules.player;
 import com.darkmagician6.eventapi.EventTarget;
 import com.darkmagician6.eventapi.events.Event;
 import top.youm.maple.common.events.MotionEvent;
+import top.youm.maple.common.events.TickEvent;
 import top.youm.maple.common.settings.impl.ModeSetting;
 import top.youm.maple.core.module.Module;
 import top.youm.maple.core.module.ModuleCategory;
@@ -17,6 +18,10 @@ import org.lwjgl.input.Keyboard;
 public final class NoFall extends Module {
 
     private final ModeSetting mode = new ModeSetting("Mode","Vanilla","Vanilla","Packet","Edit");
+    @EventTarget
+    public void onTick(TickEvent event){
+        this.setSuffixes(mode.getValue());
+    }
     @EventTarget
     public void onMotion(MotionEvent event) {
         if (event.getState() == Event.State.PRE) {

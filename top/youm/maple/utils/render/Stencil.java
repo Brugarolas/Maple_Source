@@ -43,18 +43,17 @@ public class Stencil {
         }
     }
 
-    public static void write(boolean renderClipLayer, Framebuffer fb) {
-        Stencil.checkSetupFBO(fb);
-        glClearStencil(0);
+    public static void initStencilToWrite() {
+        //init
+        mc.getFramebuffer().bindFramebuffer(false);
+        checkSetupFBO(mc.getFramebuffer());
         glClear(GL_STENCIL_BUFFER_BIT);
         glEnable(GL_STENCIL_TEST);
-        glStencilFunc(GL_ALWAYS, 1, 65535);
-        glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
-        if (!renderClipLayer) {
-            GlStateManager.colorMask(false, false, false, false);
-        }
-    }
 
+        glStencilFunc(GL_ALWAYS, 1, 1);
+        glStencilOp(GL_REPLACE, GL_REPLACE, GL_REPLACE);
+        glColorMask(false, false, false, false);
+    }
     public static void checkSetupFBO() {
         Framebuffer fbo = mc.getFramebuffer();
         if (fbo != null && fbo.depthBuffer > -1) {
@@ -79,5 +78,12 @@ public class Stencil {
         EXTFramebufferObject.glFramebufferRenderbufferEXT(36160, 36096, 36161, stencil_depth_buffer_ID);
     }
 
-
+    public static void readStencilBuffer(int ref) {
+        glColorMask(true, true, true, true);
+        glStencilFunc(GL_EQUAL, ref, 1);
+        glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
+    }
+    public static void uninitStencilBuffer() {
+        glDisable(GL_STENCIL_TEST);
+    }
 }

@@ -11,6 +11,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicInteger;
+
+import de.florianmichael.viamcp.gui.GuiProtocolSelector;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
@@ -19,8 +21,6 @@ import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.client.settings.GameSettings;
-import net.minecraft.realms.RealmsBridge;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
@@ -36,6 +36,7 @@ import org.apache.logging.log4j.Logger;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GLContext;
 import org.lwjgl.util.glu.Project;
+import top.youm.maple.alts.GuiAltLogin;
 
 public class GuiMainMenu extends GuiScreen implements GuiYesNoCallback
 {
@@ -240,6 +241,9 @@ public class GuiMainMenu extends GuiScreen implements GuiYesNoCallback
     {
         this.buttonList.add(new GuiButton(1, this.width / 2 - 100, p_73969_1_, I18n.format("menu.singleplayer")));
         this.buttonList.add(new GuiButton(2, this.width / 2 - 100, p_73969_1_ + p_73969_2_ * 1, I18n.format("menu.multiplayer")));
+        this.buttonList.add(new GuiButton(3, this.width / 2 - 100, p_73969_1_ + p_73969_2_ * 2, "Alt Manager"));
+
+        this.buttonList.add(new GuiButton(69, 5, 5, 90, 20, "Version"));
     }
 
     /**
@@ -267,7 +271,10 @@ public class GuiMainMenu extends GuiScreen implements GuiYesNoCallback
         {
             this.mc.displayGuiScreen(new GuiOptions(this, this.mc.gameSettings));
         }
-
+        if (button.id == 69)
+        {
+            this.mc.displayGuiScreen(new GuiProtocolSelector(this));
+        }
         if (button.id == 5)
         {
             this.mc.displayGuiScreen(new GuiLanguage(this, this.mc.gameSettings, this.mc.getLanguageManager()));
@@ -282,7 +289,10 @@ public class GuiMainMenu extends GuiScreen implements GuiYesNoCallback
         {
             this.mc.displayGuiScreen(new GuiMultiplayer(this));
         }
-
+        if (button.id == 3)
+        {
+            this.mc.displayGuiScreen(new GuiAltLogin(this));
+        }
         if (button.id == 4)
         {
             this.mc.shutdown();

@@ -8,10 +8,7 @@ import net.minecraft.network.play.client.C03PacketPlayer;
 import net.minecraft.network.play.server.S08PacketPlayerPosLook;
 import net.minecraft.potion.Potion;
 import net.minecraft.util.BlockPos;
-import top.youm.maple.common.events.MotionEvent;
-import top.youm.maple.common.events.MoveEvent;
-import top.youm.maple.common.events.MoveInputEvent;
-import top.youm.maple.common.events.PacketReceiveEvent;
+import top.youm.maple.common.events.*;
 import top.youm.maple.common.settings.impl.BoolSetting;
 import top.youm.maple.common.settings.impl.ModeSetting;
 import top.youm.maple.common.settings.impl.NumberSetting;
@@ -59,10 +56,12 @@ public final class Speed extends Module {
         vanillaSpeed.addParent(mode, modeSetting -> modeSetting.getValue().equals("Vanilla") || modeSetting.getValue().equals("BHop"));
         this.addSetting(mode, vanillaSpeed, watchdogMode, verusMode, viperMode, autoDisable, groundSpeed, timer);
     }
-
+    @EventTarget
+    public void onTick(TickEvent event){
+        this.setSuffixes(mode.getValue());
+    }
     @EventTarget
     public void onMotionEvent(MotionEvent e) {
-        this.setSuffixes(mode.getValue());
         if (setTimer) {
             mc.timer.timerSpeed = timer.getValue().floatValue();
         }
@@ -311,7 +310,7 @@ public final class Speed extends Module {
 
     @EventTarget
     public void onPacketReceiveEvent(PacketReceiveEvent e) {
-        if (e.getPacket() instanceof S08PacketPlayerPosLook && Disabler.INSTANCE.isToggle()) {
+        if (e.getPacket() instanceof S08PacketPlayerPosLook) {
             this.setToggle(!this.isToggle());
         }
     }

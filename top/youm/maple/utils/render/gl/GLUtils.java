@@ -17,6 +17,9 @@ import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.util.glu.GLU;
 
+import static org.lwjgl.opengl.GL11.GL_ONE_MINUS_SRC_ALPHA;
+import static org.lwjgl.opengl.GL11.GL_SRC_ALPHA;
+
 public final class GLUtils {
     public static final FloatBuffer MODELVIEW = BufferUtils.createFloatBuffer((int)16);
     public static final FloatBuffer PROJECTION = BufferUtils.createFloatBuffer((int)16);
@@ -92,5 +95,28 @@ public final class GLUtils {
     public static IntBuffer getViewport() {
         return VIEWPORT;
     }
+    public static void startBlend() {
+        GlStateManager.enableBlend();
+        GlStateManager.blendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    }
+    public static void endBlend() {
+        GlStateManager.disableBlend();
+    }
+    public static void setup2DRendering(boolean blend) {
+        if (blend) {
+            startBlend();
+        }
+        GlStateManager.disableTexture2D();
+    }
+
+    public static void setup2DRendering() {
+        setup2DRendering(true);
+    }
+
+    public static void end2DRendering() {
+        GlStateManager.enableTexture2D();
+        endBlend();
+    }
+
 }
 

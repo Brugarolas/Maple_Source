@@ -19,7 +19,7 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.input.Keyboard;
 import top.youm.maple.core.module.modules.movement.InventoryMove;
-import top.youm.maple.core.module.modules.player.ChestStealer;
+import top.youm.maple.core.module.modules.world.ChestStealer;
 
 public abstract class GuiContainer extends GuiScreen
 {

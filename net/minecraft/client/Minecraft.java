@@ -1,7 +1,6 @@
 package net.minecraft.client;
 
 import com.darkmagician6.eventapi.EventManager;
-import com.darkmagician6.eventapi.EventTarget;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -39,6 +38,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.FutureTask;
 import javax.imageio.ImageIO;
 
+import de.florianmichael.viamcp.fixes.AttackOrder;
 import net.minecraft.client.gui.*;
 import top.youm.maple.Maple;
 import top.youm.maple.common.events.BlockPlaceableEvent;
@@ -180,7 +180,8 @@ import org.lwjgl.opengl.OpenGLException;
 import org.lwjgl.opengl.PixelFormat;
 import org.lwjgl.util.glu.GLU;
 import top.youm.maple.common.events.WorldEvent;
-import top.youm.maple.core.ui.screen.ProgressScreen;
+import top.youm.maple.core.ui.screen.login.LoginScreen;
+import top.youm.maple.core.ui.screen.progress.ProgressScreen;
 import top.youm.maple.utils.AnimationUtils;
 
 public class Minecraft implements IThreadListener, IPlayerUsage
@@ -583,14 +584,9 @@ public class Minecraft implements IThreadListener, IPlayerUsage
         this.ingameGUI = new GuiIngame(this);
         Maple.getInstance().startGame();
         progressScreen.drawScreen(1);
-        if (this.serverName != null)
-        {
-            this.displayGuiScreen(new GuiConnecting(new GuiMainMenu(), this, this.serverName, this.serverPort));
-        }
-        else
-        {
-            this.displayGuiScreen(new GuiMainMenu());
-        }
+
+        this.displayGuiScreen(new LoginScreen());
+
 
         this.renderEngine.deleteTexture(this.mojangLogo);
         this.mojangLogo = null;
@@ -1548,7 +1544,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage
     {
         if (this.leftClickCounter <= 0)
         {
-            this.thePlayer.swingItem();
+            AttackOrder.sendConditionalSwing(this.objectMouseOver);
 
             if (this.objectMouseOver == null)
             {
@@ -1564,7 +1560,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage
                 switch (this.objectMouseOver.typeOfHit)
                 {
                     case ENTITY:
-                        this.playerController.attackEntity(this.thePlayer, this.objectMouseOver.entityHit);
+                        AttackOrder.sendFixedAttack(this.thePlayer, this.objectMouseOver.entityHit);
                         break;
 
                     case BLOCK:

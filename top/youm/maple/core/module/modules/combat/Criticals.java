@@ -7,6 +7,7 @@ import net.minecraft.network.play.client.C18PacketSpectate;
 import org.lwjgl.input.Keyboard;
 import top.youm.maple.Maple;
 import top.youm.maple.common.events.MotionEvent;
+import top.youm.maple.common.events.TickEvent;
 import top.youm.maple.common.settings.impl.ModeSetting;
 import top.youm.maple.common.settings.impl.NumberSetting;
 import top.youm.maple.core.module.Module;
@@ -27,10 +28,13 @@ public final class Criticals extends Module {
         super("Criticals", ModuleCategory.COMBAT, Keyboard.KEY_NONE);
         this.addSetting(mode, delay);
     }
-
+    @EventTarget
+    public void onTick(TickEvent event){
+        this.setSuffixes(mode.getValue());
+    }
     @EventTarget
     public void onMotionEvent(MotionEvent e) {
-        this.setSuffixes(mode.getValue());
+
         switch (mode.getValue()) {
             case "Watchdog":
                 if (KillAura.attacking && e.isOnGround() && !Maple.getInstance().getModuleManager().getModuleByClass(Step.class).isToggle()) {

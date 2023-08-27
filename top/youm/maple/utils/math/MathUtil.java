@@ -15,7 +15,14 @@ public class MathUtil {
     public static double[] yawPos(double value) {
         return yawPos(Minecraft.getMinecraft().thePlayer.rotationYaw * MathHelper.deg2Rad, value);
     }
-
+    public static double roundToPlace(final double value, final int places) {
+        if (places < 0) {
+            throw new IllegalArgumentException();
+        }
+        BigDecimal bd = new BigDecimal(value);
+        bd = bd.setScale(places, RoundingMode.HALF_UP);
+        return bd.doubleValue();
+    }
     public static double[] yawPos(float yaw, double value) {
         return new double[]{-MathHelper.sin(yaw) * value, MathHelper.cos(yaw) * value};
     }

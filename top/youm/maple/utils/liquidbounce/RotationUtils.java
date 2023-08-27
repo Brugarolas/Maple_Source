@@ -84,6 +84,7 @@ public final class RotationUtils{
         return new Vec3(bb.minX + (bb.maxX - bb.minX) * 0.5, bb.minY + (bb.maxY - bb.minY) * 0.5, bb.minZ + (bb.maxZ - bb.minZ) * 0.5);
     }
 
+
     public static VecRotation searchCenter(final AxisAlignedBB bb, final boolean outborder, final boolean random,
                                            final boolean predict, final boolean throughWalls, final float distance) {
         return searchCenter(bb, outborder, random, predict, throughWalls, distance, 0F, false);

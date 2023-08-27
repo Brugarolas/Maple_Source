@@ -9,6 +9,8 @@ import top.youm.maple.core.ui.clickgui.classic.MouseType;
 import top.youm.maple.utils.render.RenderUtil;
 import top.youm.maple.utils.render.RoundedUtil;
 
+import java.awt.*;
+
 public class SliderComponent extends Component {
     private final NumberSetting numberSetting;
     private float percentBar;
@@ -34,7 +36,7 @@ public class SliderComponent extends Component {
         FontLoaders.comfortaaB22.drawStringWithShadow(String.valueOf(this.numberSetting.getValue().floatValue()),x - 215 + animation,y - 13,-1);
         RoundedUtil.drawRound(x - 210, y, 200, 5, 3, Theme.enableButton);
         RoundedUtil.drawRound(x - 210, y, animation, 5, 3, Theme.theme);
-        RenderUtil.drawSmoothCircle(x - 210 + animation, y + 2, hover ? 7 : 6, -1);
+        RenderUtil.drawSmoothCircle(x - 210 + animation, y + 2, hover ? 7 : 6, new Color(255,255,255));
         if (hover && dragging) {
             setValue(numberSetting);
         }

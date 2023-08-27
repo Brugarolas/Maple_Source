@@ -11,7 +11,7 @@ import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.Vec3;
 import top.youm.maple.Maple;
-import top.youm.maple.core.module.modules.movement.SafeScaffold;
+import top.youm.maple.core.module.modules.world.SafeScaffold;
 import top.youm.maple.core.module.modules.movement.Speed;
 
 public class ScaffoldUtil {

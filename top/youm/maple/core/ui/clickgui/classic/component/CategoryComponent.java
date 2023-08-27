@@ -1,5 +1,7 @@
 package top.youm.maple.core.ui.clickgui.classic.component;
 
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.settings.KeyBinding;
 import org.lwjgl.input.Mouse;
 import top.youm.maple.core.module.ModuleCategory;
 import top.youm.maple.core.ui.clickgui.classic.ClassicClickGUI;
@@ -12,8 +14,12 @@ import top.youm.maple.core.ui.clickgui.classic.theme.Theme;
 import top.youm.maple.core.ui.clickgui.classic.MouseType;
 import top.youm.maple.core.ui.font.FontLoaders;
 import top.youm.maple.utils.math.MathUtil;
+import top.youm.maple.utils.render.CircleManager;
+import top.youm.maple.utils.render.RenderUtil;
 import top.youm.maple.utils.render.RoundedUtil;
+import top.youm.maple.utils.render.Stencil;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,7 +35,7 @@ public class CategoryComponent extends Component {
     private Animation scrollAnimation;
     private List<ModuleComponent> moduleComponents = new ArrayList<>();
     private float animation;
-
+    private CircleManager circles = new CircleManager();
     public CategoryComponent(ModuleCategory category) {
         super(category.name().substring(0, 1).toUpperCase() + category.name().substring(1).toLowerCase());
         this.scrollAnimation = new SmoothStepAnimation(0, 0.0, Direction.BACKWARDS);
@@ -44,8 +50,17 @@ public class CategoryComponent extends Component {
     public void draw(float xPos, float yPos, int mouseX, int mouseY) {
         super.draw(xPos,yPos,mouseX,mouseY);
         if (UIState.currentCategory == category) {
+
             RoundedUtil.drawRound(x, y, width, height, 2, Theme.theme);
             animation = animator.animate(7, animation, 0.08f);
+
+            circles.runCircles();
+            Stencil.write(false);
+            RenderUtil.drawRoundedRect(x, y, width, height, 2, -1);
+            Stencil.erase(true);
+            GlStateManager.enableBlend();
+            circles.drawCircles();
+            Stencil.dispose();
         } else if (componentHover()) {
             RoundedUtil.drawRound(x, y, width, height, 2, Theme.themeHover);
         }
@@ -56,6 +71,7 @@ public class CategoryComponent extends Component {
                 animation = animator.animate(0, animation, 0.08f);
             }
         }
+
         FontLoaders.icon28.drawStringWithShadow(renderIcon().icon, xPos + 2 + animation, y + height / 2.0f - FontLoaders.robotoR22.getHeight() / 2.0f, Theme.font.getRGB());
         FontLoaders.robotoB22.drawStringWithShadow(name, xPos + 1 + animation + FontLoaders.icon28.getStringWidth(renderIcon().icon) + 3, y + height / 2.0f - FontLoaders.robotoR22.getHeight() / 2.0f, Theme.font.getRGB());
 
@@ -93,6 +109,7 @@ public class CategoryComponent extends Component {
         if (mouseType == MouseType.CLICK) {
             if (componentHover() && mouseButton == 0) {
                 UIState.currentCategory = this.category;
+                this.circles.addCircle(mouseX,mouseY,85,45, mc.gameSettings.keyBindAttack.getKeyCode());
             }
         }
     }

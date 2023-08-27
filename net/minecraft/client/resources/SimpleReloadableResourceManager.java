@@ -118,4 +118,8 @@ public class SimpleReloadableResourceManager implements IReloadableResourceManag
             iresourcemanagerreloadlistener.onResourceManagerReload(this);
         }
     }
+
+    public Map<String, FallbackResourceManager> getDomainResourceManagers() {
+        return domainResourceManagers;
+    }
 }

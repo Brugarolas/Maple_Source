@@ -8,6 +8,7 @@ import net.minecraft.network.play.server.S08PacketPlayerPosLook;
 import org.lwjgl.input.Keyboard;
 import top.youm.maple.common.events.MotionEvent;
 import top.youm.maple.common.events.PacketReceiveEvent;
+import top.youm.maple.common.events.TickEvent;
 import top.youm.maple.common.settings.impl.ModeSetting;
 import top.youm.maple.common.settings.impl.NumberSetting;
 import top.youm.maple.core.module.Module;
@@ -100,6 +101,10 @@ public class Fly extends Module {
         double mz = Math.sin(Math.toRadians((yaw + 90.0F)));
         mc.thePlayer.motionX = forward * moveSpeed * mx + strafe * moveSpeed * mz;
         mc.thePlayer.motionZ = forward * moveSpeed * mz - strafe * moveSpeed * mx;
+    }
+    @EventTarget
+    public void onTick(TickEvent event){
+        this.setSuffixes(mode.getValue());
     }
     @Override
     public void onEnable() {

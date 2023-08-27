@@ -10,6 +10,7 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.shader.Framebuffer;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
+import top.youm.maple.utils.render.gl.GLUtils;
 
 import java.awt.Color;
 import java.util.Objects;
@@ -25,6 +26,23 @@ public class RenderUtil {
     }
 
     public static Minecraft mc = Minecraft.getMinecraft();
+    public static void enableGL2D() {
+        GL11.glDisable(2929);
+        GL11.glEnable(3042);
+        GL11.glDisable(3553);
+        GL11.glBlendFunc(770, 771);
+        GL11.glDepthMask(true);
+        GL11.glEnable(2848);
+        GL11.glHint(3154, 4354);
+        GL11.glHint(3155, 4354);
+    }
+    public static void disableGL2D() {
+        GL11.glEnable(3553);
+        GL11.glDisable(3042);
+        GL11.glDisable(2848);
+        GL11.glHint(3154, 4352);
+        GL11.glHint(3155, 4352);
+    }
     public static void drawCircleImage(ResourceLocation image, int x, int y, int width, int height){
 
         GL11.glPushMatrix();
@@ -55,6 +73,7 @@ public class RenderUtil {
         drawRect(x + borderWidth, y + height - borderWidth, width - borderWidth * 2.0F, borderWidth, borderColor);
     }
 
+
     public static void drawBorder(float x, float y, float width, float height, float borderWidth, Color borderColor) {
         drawRect(x + borderWidth, y + borderWidth, width - borderWidth * 2.0F, borderWidth, borderColor);
         drawRect(x, y + borderWidth, borderWidth, height - borderWidth, borderColor);
@@ -72,6 +91,34 @@ public class RenderUtil {
         for (int i = 1; i<=width;i++){
             Gui.drawRect((int) (x+i-1), (int) y, (int) (x+i), (int) y2,ColorUtil.fade(10,i * index,color,255).getRGB());
         }
+    }
+    public static void drawBorderedRect(final float x, final float y, final float x2, final float y2, final float l1, final int col1, final int col2) {
+        Gui.drawRect((int) x, (int) y, (int) x2, (int) y2, col2);
+        final float f = (col1 >> 24 & 0xFF) / 255.0f;
+        final float f2 = (col1 >> 16 & 0xFF) / 255.0f;
+        final float f3 = (col1 >> 8 & 0xFF) / 255.0f;
+        final float f4 = (col1 & 0xFF) / 255.0f;
+        GL11.glEnable(3042);
+        GL11.glDisable(3553);
+        GL11.glBlendFunc(770, 771);
+        GL11.glEnable(2848);
+        GL11.glPushMatrix();
+        GL11.glColor4f(f2, f3, f4, f);
+        GL11.glLineWidth(l1);
+        GL11.glBegin(1);
+        GL11.glVertex2d((double)x, (double)y);
+        GL11.glVertex2d((double)x, (double)y2);
+        GL11.glVertex2d((double)x2, (double)y2);
+        GL11.glVertex2d((double)x2, (double)y);
+        GL11.glVertex2d((double)x, (double)y);
+        GL11.glVertex2d((double)x2, (double)y);
+        GL11.glVertex2d((double)x, (double)y2);
+        GL11.glVertex2d((double)x2, (double)y2);
+        GL11.glEnd();
+        GL11.glPopMatrix();
+        GL11.glEnable(3553);
+        GL11.glDisable(3042);
+        GL11.glDisable(2848);
     }
     public static void drawScaledCustomSizeModalCircle(int x, int y, float u, float v, int uWidth, int vHeight, int width, int height, float tileWidth, float tileHeight) {
         float f = 1.0F / tileWidth;
@@ -169,12 +216,14 @@ public class RenderUtil {
         GlStateManager.popMatrix();
     }
     public static void drawHead(ResourceLocation skin, int x, int y, int width, int height) {
+
         GL11.glColor4f(1F, 1F, 1F, 1F);
         mc.getTextureManager().bindTexture(skin);
         RenderUtil.drawScaledCustomSizeModalRect(x, y, 8F, 8F, 8, 8, width, height,
                 64F, 64F);
         RenderUtil.drawScaledCustomSizeModalRect(x, y, 40F, 8F, 8, 8, width, height,
                 64F, 64F);
+
     }
 
 
@@ -367,10 +416,8 @@ public class RenderUtil {
         GlStateManager.enableBlend();
         GlStateManager.disableTexture2D();
         GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
+        GL11.glEnable(GL11.GL_POLYGON_SMOOTH);
         GlStateManager.color(red, green, blue, alpha);
-        glEnable(GL_POINT_SMOOTH);
-        glHint(GL_POINT_SMOOTH_HINT, GL_NICEST);
-        glPointSize(radius * (2 * mc.gameSettings.guiScale));
 
         worldrenderer.begin(GL_POLYGON, DefaultVertexFormats.POSITION);
 
@@ -385,6 +432,7 @@ public class RenderUtil {
             worldrenderer.pos(x1 + Math.sin(i * degree) * radius, y2 + Math.cos(i * degree) * radius, 0.0D).endVertex();
 
         tessellator.draw();
+        GL11.glDisable(GL11.GL_POLYGON_SMOOTH);
         GlStateManager.enableTexture2D();
         GlStateManager.disableBlend();
     }
@@ -465,6 +513,9 @@ public class RenderUtil {
     public static void drawGradientRect(float left, float top, float right, float bottom, Color topRightColor ,Color topLeftColor,Color bottomRightColor,Color bottomLeftColor) {
         drawCustomGradientRect(left,top,left + right,top + bottom,topRightColor,topLeftColor,bottomRightColor,bottomLeftColor);
     }
+    public static void drawGradientRect(float left, float top, float right, float bottom, Color RightColor ,Color LeftColor) {
+        drawGradientRect(left,top,left + right,top + bottom,RightColor.getRGB(),LeftColor.getRGB());
+    }
     public static void drawRoundedRect(float x, float y, float width, float height, float radius, int color) {
         originalRoundedRect(x, y, width + x, height + y, radius, color);
     }
@@ -488,59 +539,31 @@ public class RenderUtil {
         GL11.glDisable(3089);
         GL11.glPopMatrix();
     }
+
+
     public static void drawSmoothCircle(double x, double y, float radius, Color color) {
-        GlStateManager.color(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
-        GlStateManager.pushMatrix();
-        GlStateManager.enableBlend();
-        GlStateManager.blendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-        GlStateManager.disableTexture2D();
-        glEnable(GL_POINT_SMOOTH);
-        glHint(GL_POINT_SMOOTH_HINT, GL_NICEST);
-        glPointSize(radius * (2 * mc.gameSettings.guiScale));
-
-        glBegin(GL_POINTS);
-        glVertex2d(x, y);
-        glEnd();
-
-        GlStateManager.enableTexture2D();
-        GlStateManager.disableBlend();
-        GlStateManager.popMatrix();
+        GL11.glPushMatrix();
+        GL11.glDisable(GL11.GL_TEXTURE_2D);
+        GL11.glEnable(GL11.GL_BLEND);
+        GL11.glEnable(GL11.GL_ALPHA_TEST);
+        GL11.glEnable(GL11.GL_POLYGON_SMOOTH);
+        GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+        GL11.glColor4f(color.getRed() / 255.0f,color.getGreen() / 255.0f,color.getBlue() / 255.0f,color.getAlpha() / 255.0f);
+        GL11.glBegin(GL11.GL_POLYGON);
+        for (int i = 0; i <= 360; i++) {
+            double x2 = Math.sin(((i * Math.PI) / 180)) * radius;
+            double y2 = Math.cos(((i * Math.PI) / 180)) * radius;
+            GL11.glVertex3d(x + x2, y + y2, 0);
+        }
+        GL11.glEnd();
+        GL11.glDisable(GL11.GL_POLYGON_SMOOTH);
+        GL11.glDisable(GL11.GL_BLEND);
+        GL11.glDisable(GL11.GL_ALPHA_TEST);
+        GL11.glEnable(GL11.GL_TEXTURE_2D);
+        GL11.glPopMatrix();
     }
-    public static void drawSmoothCircle(double x, double y, float radius, int color) {
-        GlStateManager.pushMatrix();
-        color(color);
-        GlStateManager.enableBlend();
-        GlStateManager.blendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-        GlStateManager.disableTexture2D();
-        glEnable(GL_POINT_SMOOTH);
-        glHint(GL_POINT_SMOOTH_HINT, GL_NICEST);
-        glPointSize(radius * (2 * mc.gameSettings.guiScale));
 
-        glBegin(GL_POINTS);
-        glVertex2d(x, y);
-        glEnd();
 
-        GlStateManager.enableTexture2D();
-        GlStateManager.disableBlend();
-        GlStateManager.popMatrix();
-    }
-    public static void drawCircle(float x, float y, float radius, int start, int end) {
-        GlStateManager.enableBlend();
-        GlStateManager.disableTexture2D();
-        GlStateManager.tryBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ZERO);
-        glColor(Color.WHITE.getRGB());
-
-        glEnable(GL_LINE_SMOOTH);
-        glLineWidth(2F);
-        glBegin(GL_LINE_STRIP);
-        for (float i = end; i >= start; i -= (360 / 90.0f))
-            glVertex2f((float) (x + (Math.cos(i * Math.PI / 180) * (radius * 1.001F))), (float) (y + (Math.sin(i * Math.PI / 180) * (radius * 1.001F))));
-        glEnd();
-        glDisable(GL_LINE_SMOOTH);
-
-        enableTexture2D();
-        disableBlend();
-    }
     public static void drawShadowRect(float x, float y, float width, float height, String image) {
         glPushMatrix();
         final boolean enableBlend = glIsEnabled(GL_BLEND);
@@ -553,5 +576,65 @@ public class RenderUtil {
         if (!enableBlend) glDisable(GL_BLEND);
         if (!disableAlpha) glEnable(GL_ALPHA_TEST);
         glPopMatrix();
+    }
+    public static void drawBorderedCircle(double x, double y, float radius, int outsideC, int insideC) {
+        //  GL11.glEnable((int)3042);
+        GL11.glDisable((int)3553);
+        GL11.glBlendFunc((int)770, (int)771);
+        GL11.glEnable((int)2848);
+        GL11.glPushMatrix();
+        float scale = 0.1f;
+        GL11.glScalef((float)0.1f, (float)0.1f, (float)0.1f);
+        drawCircle(x *= 10, y *= 10, radius *= 10.0f, insideC);
+        // drawUnfilledCircle(x, y, radius, 1.0f, outsideC);
+        GL11.glScalef((float)10.0f, (float)10.0f, (float)10.0f);
+        GL11.glPopMatrix();
+        GL11.glEnable((int)3553);
+        //  GL11.glDisable((int)3042);
+        GL11.glDisable((int)2848);
+    }
+    public static void drawCircle(double x, double y, float radius, int color) {
+        float alpha = (float)(color >> 24 & 255) / 255.0f;
+        float red = (float)(color >> 16 & 255) / 255.0f;
+        float green = (float)(color >> 8 & 255) / 255.0f;
+        float blue = (float)(color & 255) / 255.0f;
+        GL11.glColor4f((float)red, (float)green, (float)blue, (float)alpha);
+        GL11.glBegin((int)9);
+        int i = 0;
+        while (i <= 360) {
+            GL11.glVertex2d((double)((double)x + Math.sin((double)i * 3.141526 / 180.0) * (double)radius), (double)((double)y + Math.cos((double)i * 3.141526 / 180.0) * (double)radius));
+            ++i;
+        }
+        GL11.glEnd();
+    }
+    public static void drawCircle(float cx, float cy, float r, final int num_segments, final int c) {
+        GL11.glPushMatrix();
+        cx *= 2.0f;
+        cy *= 2.0f;
+        final float f = (c >> 24 & 0xFF) / 255.0f;
+        final float f2 = (c >> 16 & 0xFF) / 255.0f;
+        final float f3 = (c >> 8 & 0xFF) / 255.0f;
+        final float f4 = (c & 0xFF) / 255.0f;
+        final float theta = (float)(6.2831852 / num_segments);
+        final float p = (float)Math.cos(theta);
+        final float s = (float)Math.sin(theta);
+        float x;
+        r = (x = r * 2.0f);
+        float y = 0.0f;
+        enableGL2D();
+        GL11.glScalef(0.5f, 0.5f, 0.5f);
+        GL11.glColor4f(f2, f3, f4, f);
+        GL11.glBegin(2);
+        for (int ii = 0; ii < num_segments; ++ii) {
+            GL11.glVertex2f(x + cx, y + cy);
+            final float t = x;
+            x = p * x - s * y;
+            y = s * t + p * y;
+        }
+        GL11.glEnd();
+        GL11.glScalef(2.0f, 2.0f, 2.0f);
+        disableGL2D();
+        GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
+        GL11.glPopMatrix();
     }
 }

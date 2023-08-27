@@ -7,6 +7,7 @@ import net.minecraft.util.BlockPos;
 import org.lwjgl.input.Keyboard;
 import top.youm.maple.common.events.MotionEvent;
 import top.youm.maple.common.events.TPEvent;
+import top.youm.maple.common.events.TickEvent;
 import top.youm.maple.common.settings.impl.ModeSetting;
 import top.youm.maple.common.settings.impl.NumberSetting;
 import top.youm.maple.core.module.Module;
@@ -23,6 +24,10 @@ public class AntiVoid extends Module {
     public AntiVoid() {
         super("AntiVoid", ModuleCategory.PLAYER, Keyboard.KEY_NONE);
         this.addSetting(distance);
+    }
+    @EventTarget
+    public void onTick(TickEvent event){
+        this.setSuffixes(mode.getValue());
     }
     @EventTarget
     public void onMotion(MotionEvent event){

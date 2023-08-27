@@ -3,6 +3,7 @@ package top.youm.maple.core.module.modules.movement;
 import com.darkmagician6.eventapi.EventTarget;
 import com.darkmagician6.eventapi.events.Event;
 import top.youm.maple.common.events.MotionEvent;
+import top.youm.maple.common.events.TickEvent;
 import top.youm.maple.common.settings.impl.ModeSetting;
 import top.youm.maple.core.module.Module;
 import top.youm.maple.core.module.ModuleCategory;
@@ -52,8 +53,11 @@ public final class InventoryMove extends Module {
                 }
                 break;
         }
-    };
-
+    }
+    @EventTarget
+    public void onTick(TickEvent event){
+        this.setSuffixes(mode.getValue());
+    }
 
     public InventoryMove() {
         super("Inventory Move", ModuleCategory.MOVEMENT, Keyboard.KEY_NONE);

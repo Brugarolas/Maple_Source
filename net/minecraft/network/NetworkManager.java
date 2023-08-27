@@ -3,16 +3,15 @@ package net.minecraft.network;
 import com.darkmagician6.eventapi.EventManager;
 import com.google.common.collect.Queues;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
+import com.viaversion.viaversion.api.connection.UserConnection;
+import com.viaversion.viaversion.connection.UserConnectionImpl;
+import com.viaversion.viaversion.protocol.ProtocolPipelineImpl;
+import de.florianmichael.vialoadingbase.ViaLoadingBase;
+import de.florianmichael.vialoadingbase.netty.event.CompressionReorderEvent;
+import de.florianmichael.viamcp.MCPVLBPipeline;
+import de.florianmichael.viamcp.ViaMCP;
 import io.netty.bootstrap.Bootstrap;
-import io.netty.channel.Channel;
-import io.netty.channel.ChannelException;
-import io.netty.channel.ChannelFuture;
-import io.netty.channel.ChannelFutureListener;
-import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.ChannelInitializer;
-import io.netty.channel.ChannelOption;
-import io.netty.channel.EventLoopGroup;
-import io.netty.channel.SimpleChannelInboundHandler;
+import io.netty.channel.*;
 import io.netty.channel.epoll.Epoll;
 import io.netty.channel.epoll.EpollEventLoopGroup;
 import io.netty.channel.epoll.EpollSocketChannel;
@@ -171,6 +170,60 @@ public class NetworkManager extends SimpleChannelInboundHandler<Packet>
         logger.debug("Set listener of {} to {}", this, handler);
         this.packetListener = handler;
     }
+    private void dispatchUnregisteredPacket(final Packet inPacket, final GenericFutureListener<? extends Future<? super Void>>[] futureListeners) {
+        final EnumConnectionState enumconnectionstate = EnumConnectionState.getFromPacket(inPacket);
+        final EnumConnectionState enumconnectionstate1 = this.channel.attr(attrKeyConnectionState).get();
+
+        if (enumconnectionstate1 != enumconnectionstate) {
+            logger.debug("Disabled auto read");
+            this.channel.config().setAutoRead(false);
+        }
+
+        if (this.channel.eventLoop().inEventLoop()) {
+            if (enumconnectionstate != enumconnectionstate1) {
+                this.setConnectionState(enumconnectionstate);
+            }
+
+            final ChannelFuture channelfuture = this.channel.writeAndFlush(inPacket);
+
+            if (futureListeners != null) {
+                channelfuture.addListeners(futureListeners);
+            }
+
+            channelfuture.addListener(ChannelFutureListener.FIRE_EXCEPTION_ON_FAILURE);
+        } else {
+            this.channel.eventLoop().execute(new Runnable() {
+                public void run() {
+                    if (enumconnectionstate != enumconnectionstate1) {
+                        NetworkManager.this.setConnectionState(enumconnectionstate);
+                    }
+
+                    final ChannelFuture channelfuture1 = NetworkManager.this.channel.writeAndFlush(inPacket);
+
+                    if (futureListeners != null) {
+                        channelfuture1.addListeners(futureListeners);
+                    }
+
+                    channelfuture1.addListener(ChannelFutureListener.FIRE_EXCEPTION_ON_FAILURE);
+                }
+            });
+        }
+    }
+    public void sendUnregisteredPacket(final Packet packetIn) {
+        if (this.isChannelOpen()) {
+            this.flushOutboundQueue();
+            this.dispatchUnregisteredPacket(packetIn, null);
+        } else {
+            this.readWriteLock.writeLock().lock();
+
+            try {
+                this.outboundPacketsQueue.add(new NetworkManager.InboundHandlerTuplePacketListener(packetIn, (GenericFutureListener[]) null));
+            } finally {
+                this.readWriteLock.writeLock().unlock();
+            }
+        }
+    }
+
 
     public void sendPacket(Packet packetIn)
     {
@@ -395,7 +448,13 @@ public class NetworkManager extends SimpleChannelInboundHandler<Packet>
                     ;
                 }
 
-                p_initChannel_1_.pipeline().addLast("timeout", new ReadTimeoutHandler(30)).addLast("splitter", new MessageDeserializer2()).addLast("decoder", new MessageDeserializer(EnumPacketDirection.CLIENTBOUND)).addLast("prepender", new MessageSerializer2()).addLast("encoder", new MessageSerializer(EnumPacketDirection.SERVERBOUND)).addLast("packet_handler", networkmanager);
+                p_initChannel_1_.pipeline().addLast("timeout",(new ReadTimeoutHandler(30))).addLast("splitter", (new MessageDeserializer2())).addLast("decoder", (new MessageDeserializer(EnumPacketDirection.CLIENTBOUND))).addLast("prepender", (new MessageSerializer2())).addLast("encoder", (new MessageSerializer(EnumPacketDirection.SERVERBOUND))).addLast("packet_handler", networkmanager);
+                if (p_initChannel_1_ instanceof SocketChannel && ViaLoadingBase.getInstance().getTargetVersion().getVersion() != ViaMCP.NATIVE_VERSION) {
+                    final UserConnection user = new UserConnectionImpl(p_initChannel_1_, true);
+                    new ProtocolPipelineImpl(user);
+
+                    p_initChannel_1_.pipeline().addLast(new MCPVLBPipeline(user));
+                }
             }
         }).channel(oclass).connect(address, serverPort).syncUninterruptibly();
         return networkmanager;
@@ -504,6 +563,7 @@ public class NetworkManager extends SimpleChannelInboundHandler<Packet>
                 this.channel.pipeline().remove("compress");
             }
         }
+        this.channel.pipeline().fireUserEventTriggered(new CompressionReorderEvent());
     }
 
     public void checkDisconnected()

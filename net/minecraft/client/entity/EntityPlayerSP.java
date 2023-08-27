@@ -3,9 +3,7 @@ package net.minecraft.client.entity;
 import com.darkmagician6.eventapi.EventManager;
 import com.darkmagician6.eventapi.events.Event;
 import net.minecraft.util.*;
-import top.youm.maple.common.events.ChatEvent;
-import top.youm.maple.common.events.MotionEvent;
-import top.youm.maple.common.events.MoveEvent;
+import top.youm.maple.common.events.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.MovingSoundMinecartRiding;
 import net.minecraft.client.audio.PositionedSoundRecord;
@@ -50,7 +48,6 @@ import net.minecraft.stats.StatFileWriter;
 import net.minecraft.tileentity.TileEntitySign;
 import net.minecraft.world.IInteractionObject;
 import net.minecraft.world.World;
-import top.youm.maple.common.events.OpenChestEvent;
 
 
 public class EntityPlayerSP extends AbstractClientPlayer
@@ -821,9 +818,13 @@ public class EntityPlayerSP extends AbstractClientPlayer
 
         if (this.isUsingItem() && !this.isRiding())
         {
-            this.movementInput.moveStrafe *= 0.2F;
-            this.movementInput.moveForward *= 0.2F;
-            this.sprintToggleTimer = 0;
+            SlowDownEvent slowDownEvent = new SlowDownEvent();
+            EventManager.call(slowDownEvent);
+            if (!slowDownEvent.isCancelled()) {
+                this.movementInput.moveStrafe *= 0.2F;
+                this.movementInput.moveForward *= 0.2F;
+                this.sprintToggleTimer = 0;
+            }
         }
 
         this.pushOutOfBlocks(this.posX - (double)this.width * 0.35D, this.getEntityBoundingBox().minY + 0.5D, this.posZ + (double)this.width * 0.35D);

@@ -20,6 +20,7 @@ public class ModuleList extends Module {
 
     public BoolSetting border = new BoolSetting("Border",false);
     public BoolSetting sidebar = new BoolSetting("sidebar",true);
+    public BoolSetting noRender = new BoolSetting("noRender",false);
     public BoolSetting edge = new BoolSetting("edge",false);
     public ModeSetting borderMode = new ModeSetting("Mode","Border","Shadow","Border");
     public NumberSetting rectPadding = new NumberSetting("Padding",10,10,4,1);
@@ -38,6 +39,7 @@ public class ModuleList extends Module {
         red.addParent(mode,modeSetting -> modeSetting.getValue().equals("Gradient"));
         green.addParent(mode,modeSetting -> modeSetting.getValue().equals("Gradient"));
         blue.addParent(mode,modeSetting -> modeSetting.getValue().equals("Gradient"));
-        this.addSetting(mode,font,rect,edge,rectPadding,sidebar,border,borderMode,shadowStrength,rectAlpha,speed,red,green,blue);
+        this.addSetting(mode,font,noRender,rect,edge,rectPadding,sidebar,border,borderMode,shadowStrength,rectAlpha,speed,red,green,blue);
+        this.isRenderModule = true;
     }
 }

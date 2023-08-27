@@ -8,8 +8,7 @@ import top.youm.maple.core.module.modules.combat.*;
 import top.youm.maple.core.module.modules.movement.*;
 import top.youm.maple.core.module.modules.player.*;
 import top.youm.maple.core.module.modules.visual.*;
-import top.youm.maple.core.module.modules.world.Disabler;
-import top.youm.maple.core.module.modules.world.Teams;
+import top.youm.maple.core.module.modules.world.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,23 +33,19 @@ public class ModuleManager {
         this.modules.add(new Speed());
         this.modules.add(new Step());
         this.modules.add(new Fly());
-        this.modules.add(new SafeScaffold());
         this.modules.add(new InventoryMove());
         this.modules.add(new NoSlow());
         /* player */
         this.modules.add(new FullBright());
         this.modules.add(new SafeWalk());
         this.modules.add(new InvManager());
-        this.modules.add(new FastPlace());
         this.modules.add(new NoFall());
         this.modules.add(new Timer());
         this.modules.add(new Blink());
         this.modules.add(new AutoArmor());
         this.modules.add(new AutoTool());
         this.modules.add(new Freecam());
-        this.modules.add(new AutoL());
         this.modules.add(new AntiVoid());
-        this.modules.add(new ChestStealer());
         /* visual */
         this.modules.add(new Animations());
         this.modules.add(new KeyStrokes());
@@ -58,11 +53,21 @@ public class ModuleManager {
         this.modules.add(new ModuleList());
         this.modules.add(new ClickGui());
         this.modules.add(new ESP());
+        this.modules.add(new NameTag());
         this.modules.add(new Statistics());
+        this.modules.add(new DamageParticle());
+        this.modules.add(new MotionBlur());
+        this.modules.add(new ItemPhysical());
         /* world*/
         this.modules.add(new Teams());
         this.modules.add(new Disabler());
+        this.modules.add(new ChestStealer());
+        this.modules.add(new AutoL());
+        this.modules.add(new FastPlace());
+        this.modules.add(new SafeScaffold());
+        this.modules.add(new AutoReport());
         EventManager.register(this);
+        this.getModuleByClass(HUD.class).initRenderModule();
     }
     public <T extends Module> T getModuleByClass(Class<T> moduleClass){
         for (Module module : modules) {

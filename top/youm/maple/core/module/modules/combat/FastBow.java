@@ -22,6 +22,7 @@ public class FastBow extends Module {
 
     @EventTarget
     public void onTick(MotionEvent event) {
+        this.setSuffixes(mode.getValue());
         if (this.mc.thePlayer.getItemInUseDuration() >= 15 || mode.getValue().equals("Vanilla")) {
             if (this.mc.thePlayer.onGround && this.mc.thePlayer.getItemInUse().getItem() instanceof ItemBow) {
                 for (int i = 0; i < (mode.getValue().equals("Vanilla") ? 20 : 8); ++i)

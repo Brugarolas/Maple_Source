@@ -4,54 +4,87 @@ import com.darkmagician6.eventapi.EventTarget;
 import net.minecraft.client.gui.ScaledResolution;
 import top.youm.maple.Maple;
 import top.youm.maple.common.events.Render2DEvent;
-import top.youm.maple.common.events.TickEvent;
 import top.youm.maple.common.settings.impl.BoolSetting;
+import top.youm.maple.common.settings.impl.ModeSetting;
 import top.youm.maple.common.settings.impl.NumberSetting;
 import top.youm.maple.core.module.Module;
 import top.youm.maple.core.module.ModuleCategory;
 import top.youm.maple.core.ui.clickgui.classic.theme.Theme;
 import top.youm.maple.core.ui.font.FontLoaders;
 import org.lwjgl.input.Keyboard;
-import top.youm.maple.core.ui.hud.KeyStrokesUI;
-import top.youm.maple.core.ui.hud.ModuleListUI;
-import top.youm.maple.core.ui.hud.noti.NotificationManager;
+import top.youm.maple.core.ui.hud.components.HUDComponent;
+import top.youm.maple.core.ui.hud.components.KeyStrokesUI;
+import top.youm.maple.core.ui.hud.components.ModuleListUI;
+import top.youm.maple.core.ui.hud.components.StatisticsUI;
+import top.youm.maple.core.ui.hud.components.noti.NotificationManager;
+import top.youm.maple.utils.render.RenderUtil;
 
 import java.awt.*;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author YouM
  */
 public class HUD extends Module {
-    public BoolSetting ttf_font = new BoolSetting("ttf-font",false);
-    public static BoolSetting notification = new BoolSetting("notification",true);
-    public static BoolSetting moduleList = new BoolSetting("ModuleList",true);
-    public static BoolSetting keyStrokes = new BoolSetting("KeyStrokes",true);
+    private final Map<Module, HUDComponent> ModuleUI = new HashMap<>();
+    public BoolSetting ttf_font = new BoolSetting("TTF-Font",false);
+    public ModeSetting mode = new ModeSetting("Mode","CSGO","CSGO","Text");
+    public static BoolSetting notification = new BoolSetting("Notification",true);
+
     public static NumberSetting red = new NumberSetting("red",Theme.theme.getRed(),255,0,1);
     public static NumberSetting green = new NumberSetting("green",Theme.theme.getGreen(),255,0,1);
     public static NumberSetting blue = new NumberSetting("blue",Theme.theme.getBlue(),255,0,1);
-    private final ModuleListUI moduleListUI = new ModuleListUI();
-    private final KeyStrokesUI keyStrokesUI = new KeyStrokesUI();
     public HUD() {
         super("HUD", ModuleCategory.VISUAL, Keyboard.KEY_NONE);
         this.setToggle(true);
-        this.addSetting(ttf_font,notification,keyStrokes,red,green,blue);
+        this.addSetting(ttf_font,mode,notification,red,green,blue);
+        this.isRenderModule = true;
+    }
+    public void initRenderModule(){
+        this.ModuleUI.put(Maple.getInstance().getModuleManager().getModuleByClass(ModuleList.class),new ModuleListUI());
+        this.ModuleUI.put(Maple.getInstance().getModuleManager().getModuleByClass(KeyStrokes.class),new KeyStrokesUI());
+        this.ModuleUI.put(Maple.getInstance().getModuleManager().getModuleByClass(Statistics.class),new StatisticsUI());
     }
     @EventTarget
     public void onRender(Render2DEvent event){
         ScaledResolution sr = new ScaledResolution(mc);
+        String date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
+        String text = " | " + Maple.getInstance().VERSION + " | " + mc.thePlayer.getName() + " | " + date;
+        switch (mode.getValue()){
+            case "CSGO":
+                if(ttf_font.getValue()){
+                    RenderUtil.drawRect(2,2,FontLoaders.aovel22.getStringWidth(Maple.getInstance().NAME + text) + 4,FontLoaders.aovel22.getHeight() + 4,new Color(0,0,0,150));
+                }else{
+                    RenderUtil.drawRect(2,2,mc.fontRendererObj.getStringWidth(Maple.getInstance().NAME + text) + 4, mc.fontRendererObj.FONT_HEIGHT + 4,new Color(0,0,0,150));
+                }
+                if(this.ttf_font.getValue()){
+                    FontLoaders.aovel22.drawStringWithShadow(Maple.getInstance().NAME,5,5, HUD.getHUDThemeColor().getRGB());
+                    FontLoaders.aovel22.drawStringWithShadow(text,5 + FontLoaders.aovel22.getStringWidth(Maple.getInstance().NAME),5, -1);
+                }else {
+                    mc.fontRendererObj.drawStringWithShadow(Maple.getInstance().NAME,5,5, HUD.getHUDThemeColor().getRGB());
+                    mc.fontRendererObj.drawStringWithShadow(text,5 + mc.fontRendererObj.getStringWidth(Maple.getInstance().NAME),5, -1);
+                }
+                break;
+            case "Text":
+                if(this.ttf_font.getValue()){
+                    FontLoaders.aovel22.drawStringWithShadow(Maple.getInstance().NAME.substring(0,1),5,5, HUD.getHUDThemeColor().getRGB());
+                    FontLoaders.aovel22.drawStringWithShadow(Maple.getInstance().NAME.substring(1),5 + FontLoaders.aovel22.getStringWidth(Maple.getInstance().NAME.substring(0,1)),5, -1);
+                }else {
+                    mc.fontRendererObj.drawStringWithShadow(Maple.getInstance().NAME.substring(0,1),5,5, HUD.getHUDThemeColor().getRGB());
+                    mc.fontRendererObj.drawStringWithShadow(Maple.getInstance().NAME.substring(1),5 + mc.fontRendererObj.getStringWidth(Maple.getInstance().NAME.substring(0,1)),5, -1);
+                }
+        }
 
-        if(this.ttf_font.getValue()){
-            FontLoaders.robotoR22.drawStringWithShadow(Maple.getInstance().NAME,5,5, getHUDThemeColor().getRGB());
-        }else {
-            mc.fontRendererObj.drawStringWithShadow(Maple.getInstance().NAME,5,5, getHUDThemeColor().getRGB());
-        }
+
         NotificationManager.draw(sr.getScaledWidth(),sr.getScaledHeight() - (sr.getScaledHeight() / 10.0f));
-        if(moduleList.getValue()){
-            moduleListUI.draw();
-        }
-        if(keyStrokes.getValue()){
-            keyStrokesUI.draw();
-        }
+        ModuleUI.forEach((module, hudComponent) -> {
+            if(module.isToggle()){
+                hudComponent.draw(module);
+            }
+        });
     }
     public static Color getHUDThemeColor(){
         return new Color(red.getValue().intValue(),green.getValue().intValue(),blue.getValue().intValue());

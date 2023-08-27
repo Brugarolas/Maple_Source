@@ -326,7 +326,7 @@ public class EntityRenderer implements IResourceManagerReloadListener
         }
     }
 
-    private void loadShader(ResourceLocation resourceLocationIn)
+    public void loadShader(ResourceLocation resourceLocationIn)
     {
         if (OpenGlHelper.isFramebufferEnabled())
         {
@@ -1896,35 +1896,33 @@ public class EntityRenderer implements IResourceManagerReloadListener
             Reflector.callVoid(Reflector.ForgeHooksClient_dispatchRenderLast, renderglobal, partialTicks);
         }
 
-        EventManager.call(new Render3DEvent(partialTicks));
+
         this.mc.mcProfiler.endStartSection("hand");
 
-        if (this.renderHand && !Shaders.isShadowPass)
-        {
-            if (flag)
-            {
+        EventManager.call(new Render3DEvent(partialTicks));
+        GL11.glColor4f(1, 1, 1, 1);
+
+        if (this.renderHand && !Shaders.isShadowPass) {
+            if (flag) {
                 ShadersRender.renderHand1(this, partialTicks, pass);
                 Shaders.renderCompositeFinal();
             }
 
             GlStateManager.clear(256);
 
-            if (flag)
-            {
+            if (flag) {
                 ShadersRender.renderFPOverlay(this, partialTicks, pass);
-            }
-            else
-            {
+            } else {
                 this.renderHand(partialTicks, pass);
             }
 
             this.renderWorldDirections(partialTicks);
         }
 
-        if (flag)
-        {
+        if (flag) {
             Shaders.endRender();
         }
+
     }
 
     private void renderCloudsCheck(RenderGlobal renderGlobalIn, float partialTicks, int pass)

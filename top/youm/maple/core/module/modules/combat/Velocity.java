@@ -9,6 +9,7 @@ import net.minecraft.network.play.server.S27PacketExplosion;
 import org.lwjgl.input.Keyboard;
 import top.youm.maple.common.events.PacketReceiveEvent;
 import top.youm.maple.common.events.PacketSendEvent;
+import top.youm.maple.common.events.TickEvent;
 import top.youm.maple.common.events.WorldEvent;
 import top.youm.maple.common.settings.impl.BoolSetting;
 import top.youm.maple.common.settings.impl.ModeSetting;
@@ -154,5 +155,8 @@ public class Velocity extends Module {
         }
         return false;
     }
-
+    @EventTarget
+    public void onTick(TickEvent event){
+        this.setSuffixes(mode.getValue());
+    }
 }

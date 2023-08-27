@@ -3,8 +3,7 @@ package top.youm.maple.core.module;
 import com.darkmagician6.eventapi.EventManager;
 import net.minecraft.client.Minecraft;
 import top.youm.maple.common.settings.Setting;
-import top.youm.maple.core.ui.hud.noti.Notification;
-import top.youm.maple.core.ui.hud.noti.NotificationManager;
+import top.youm.maple.core.ui.hud.components.noti.NotificationManager;
 import top.youm.maple.utils.animation.Animation;
 import top.youm.maple.utils.animation.Direction;
 import top.youm.maple.utils.animation.SmoothStepAnimation;
@@ -20,6 +19,7 @@ import java.util.stream.Collectors;
 public class Module {
     public static Minecraft mc = Minecraft.getMinecraft();
     private boolean toggle;
+    public boolean isRenderModule = false;
     public Animation animation = new SmoothStepAnimation(200,1).setDirection(Direction.BACKWARDS);
     private String name;
     private String suffixes = "";

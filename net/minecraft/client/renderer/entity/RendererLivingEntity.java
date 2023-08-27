@@ -16,6 +16,7 @@ import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.entity.layers.LayerRenderer;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EnumPlayerModelParts;
@@ -31,6 +32,8 @@ import net.optifine.shaders.Shaders;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.lwjgl.opengl.GL11;
+import top.youm.maple.Maple;
+import top.youm.maple.core.module.modules.visual.NameTag;
 
 public abstract class RendererLivingEntity<T extends EntityLivingBase> extends Render<T>
 {
@@ -631,8 +634,15 @@ public abstract class RendererLivingEntity<T extends EntityLivingBase> extends R
 
     public void renderName(T entity, double x, double y, double z)
     {
+        if(     entity instanceof EntityPlayer &&
+                Maple.getInstance().getModuleManager() != null
+                && Maple.getInstance().getModuleManager().getModuleByClass(NameTag.class) != null
+                && Maple.getInstance().getModuleManager().getModuleByClass(NameTag.class).isToggle()) {
+            return;
+        }
         if (!Reflector.RenderLivingEvent_Specials_Pre_Constructor.exists() || !Reflector.postForgeBusEvent(Reflector.RenderLivingEvent_Specials_Pre_Constructor, entity, this, x, y, z))
         {
+
             if (this.canRenderName(entity))
             {
                 double d0 = entity.getDistanceSqToEntity(this.renderManager.livingPlayer);
