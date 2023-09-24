@@ -40,9 +40,9 @@ public class ModuleCategoryButton extends ButtonComponent {
             animationX = animator.animate(0,animationX,0.2f);
             animationAlpha = animator.animate(0,animationAlpha,0.1f);
         }
-        RoundedUtil.drawRound(x + 12 + animationX, y - 2, FontLoaders.aovel22.getStringWidth(getName()) + 10,20,3, new Color(85,85,85,animationAlpha));
+        RoundedUtil.drawRound(x + 12 + animationX, y - 2, FontLoaders.title.getStringWidth(getName()) + 10,20,3, new Color(85,85,85,animationAlpha));
         if(onComponentHover()){
-            FontLoaders.aovel22.drawCenteredStringWithShadow(getName(),x + 12 + animationX + ((FontLoaders.aovel22.getStringWidth(getName()) + 10) / 2.0f) ,y + 3, new Color(210, 210, 210,animationAlpha).getRGB());
+            FontLoaders.title.drawCenteredStringWithShadow(getName(),x + 12 + animationX + ((FontLoaders.title.getStringWidth(getName()) + 10) / 2.0f) ,y + 3, new Color(210, 210, 210,animationAlpha).getRGB());
         }
         GlStateManager.pushMatrix();
         Stencil.write(false);

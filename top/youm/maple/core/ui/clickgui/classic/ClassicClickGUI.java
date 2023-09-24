@@ -2,9 +2,7 @@ package top.youm.maple.core.ui.clickgui.classic;
 
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;
-import net.minecraft.client.renderer.GlStateManager;
 import org.lwjgl.input.Keyboard;
-import org.lwjgl.opengl.GL11;
 import top.youm.maple.Maple;
 import top.youm.maple.core.module.Module;
 import top.youm.maple.core.module.ModuleCategory;
@@ -15,7 +13,6 @@ import top.youm.maple.core.ui.clickgui.classic.component.ModuleComponent;
 import top.youm.maple.core.ui.clickgui.classic.state.UIState;
 import top.youm.maple.core.ui.font.FontLoaders;
 import top.youm.maple.core.ui.clickgui.classic.theme.Theme;
-import top.youm.maple.utils.AnimationUtils;
 import top.youm.maple.utils.render.RenderUtil;
 import top.youm.maple.utils.render.RoundedUtil;
 import top.youm.maple.utils.render.ShadowUtils;
@@ -28,14 +25,13 @@ import java.util.List;
 public class ClassicClickGUI extends GuiScreen {
     public static int x, y;
     public static int screenWidth = 450, screenHeight = 260;
+    public static int navbarWidth = 110;
     public int dragX, dragY;
     public boolean isDragging = false;
     public boolean sizeDragging = false;
     private final List<CategoryComponent> categoryButtons = new ArrayList<>();
     private final List<ModuleComponent> moduleComponents = new ArrayList<>();
     public CategoryComponent currentComponent;
-    private AnimationUtils animationUtils = new AnimationUtils();
-
     public ClassicClickGUI() {
         for (ModuleCategory value : ModuleCategory.values()) {
             CategoryComponent categoryComponent = new CategoryComponent(value);
@@ -46,7 +42,6 @@ public class ClassicClickGUI extends GuiScreen {
             moduleComponents.add(new ModuleComponent(value));
         }
     }
-
     @Override
     public void initGui() {
         super.initGui();
@@ -54,9 +49,9 @@ public class ClassicClickGUI extends GuiScreen {
         x = sr.getScaledWidth() / 2 - screenWidth / 2;
         y = sr.getScaledHeight() / 2 - screenHeight / 2;
     }
-
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
+        // scale and move the screen
         super.drawScreen(mouseX, mouseY, partialTicks);
         if (isDragging) {
             x = mouseX - dragX;
@@ -75,12 +70,11 @@ public class ClassicClickGUI extends GuiScreen {
                 this.dragY = mouseY;
             }
         }
-        ShadowUtils.shadow(8.0f,()->{
-            RenderUtil.drawRoundedRect(x, y, screenWidth, screenHeight, 2, new Color(0,0,0));
-        },()->{
-            RenderUtil.drawRoundedRect(x, y, screenWidth, screenHeight, 2, new Color(0,0,0));
-        });
-
+        //draw background
+        ShadowUtils.shadow(8.0f,
+                ()->RenderUtil.drawRoundedRect(x, y, screenWidth, screenHeight, 2, new Color(0,0,0))
+                ,()->RenderUtil.drawRoundedRect(x, y, screenWidth, screenHeight, 2, new Color(0,0,0))
+        );
         RoundedUtil.drawRound(x + .625f, y + 40.625f, screenWidth - 0.25f, screenHeight - 40, 2, Theme.background);
         RenderUtil.drawRect(x, y + 29, screenWidth + 1.25f, 12, Theme.background);
         /* top menu */
@@ -91,12 +85,9 @@ public class ClassicClickGUI extends GuiScreen {
         RenderUtil.startGlScissor(x + navbarWidth, y + 30, screenWidth - navbarWidth - 10, screenHeight - 30);
         currentComponent.moduleMenu(mouseX, mouseY);
         RenderUtil.stopGlScissor();
-
         if (UIState.settingFocused) {
             UIState.dialog.draw(0, 0, mouseX, mouseY);
         }
-
-
     }
 
     public void topRouter(int mouseX, int mouseY) {
@@ -104,10 +95,6 @@ public class ClassicClickGUI extends GuiScreen {
         RenderUtil.drawRect(x, y + 20, screenWidth + 1.25f, 10, Theme.theme);
         FontLoaders.neverlose.drawStringWithShadow(Maple.getInstance().NAME, x + 10, y + 6, -1);
     }
-
-
-    public static int navbarWidth = 110;
-
     public void navbar(int mouseX, int mouseY) {
         RenderUtil.drawGradientRect(x + navbarWidth - 2,y + 30,0.5f,screenHeight - 30,new Color(50,50,50),new Color(70,70,70));
         int yOffset = 0;
@@ -119,7 +106,6 @@ public class ClassicClickGUI extends GuiScreen {
             }
         }
     }
-
     @Override
     protected void keyTyped(char typedChar, int keyCode) throws IOException {
         if (!UIState.settingFocused) {
@@ -135,9 +121,7 @@ public class ClassicClickGUI extends GuiScreen {
         } else {
             UIState.dialog.input(typedChar, keyCode);
         }
-
     }
-
     @Override
     protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
         super.mouseClicked(mouseX, mouseY, mouseButton);

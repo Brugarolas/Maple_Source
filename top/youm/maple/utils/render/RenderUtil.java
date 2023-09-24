@@ -43,16 +43,12 @@ public class RenderUtil {
         GL11.glHint(3154, 4352);
         GL11.glHint(3155, 4352);
     }
-    public static void drawCircleImage(ResourceLocation image, int x, int y, int width, int height){
-
-        GL11.glPushMatrix();
-        GL11.glEnable(GL11.GL_POLYGON_SMOOTH);
-        GL11.glColor4f(1F, 1F, 1F, 1F);
-        mc.getTextureManager().bindTexture(image);
-        drawScaledCustomSizeModalCircle(x,y,0f,0,256,256,width,height,256f,256f);
-        GL11.glDisable(GL11.GL_POLYGON_SMOOTH);
-        GL11.glPopMatrix();
+    // This will set the alpha limit to a specified value ranging from 0-1
+    public static void setAlphaLimit(float limit) {
+        GlStateManager.enableAlpha();
+        GlStateManager.alphaFunc(GL_GREATER, (float) (limit * .01));
     }
+
     public static int reAlpha(int color, int alpha) {
         try {
             Color c = new Color(color);
@@ -77,13 +73,16 @@ public class RenderUtil {
         drawRect(x + width - borderWidth, y + borderWidth, borderWidth, height - borderWidth, borderColor);
         drawRect(x + borderWidth, y + height - borderWidth, width - borderWidth * 2.0F, borderWidth, borderColor);
     }
-    public static void drawFadeRect(int x,int y,int width ,int height, Color color,int index) {
-        fadeRect(x, y, width + x, height + y, color,index);
+    public static void drawFadeRect(int x,int y,int width ,int height, Color color,int index,int speed) {
+        fadeRect(x, y, width + x, height + y, color,index,speed);
+    }
+    public static void drawFadeRect(float x,float y,float width ,float height, Color color,int index,int speed) {
+        fadeRect( x, y,  x+width, y+height, color,index,speed);
     }
     public static void drawFadeRect(float x,float y,float width ,float height, Color color,int index) {
-        fadeRect( x, y,  x+width, y+height, color,index);
+        fadeRect( x, y,  x+width, y+height, color,index,10);
     }
-    public static void fadeRect(double x,double y,double x2 ,double y2, Color color,int index) {
+    public static void fadeRect(double x,double y,double x2 ,double y2, Color color,int index,int speed) {
         double width = x2 - x;
         for (int i = 1; i<=width;i++){
             Gui.drawRect((int) (x+i-1), (int) y, (int) (x+i), (int) y2,ColorUtil.fade(10,i * index,color,255).getRGB());

@@ -2,6 +2,7 @@ package top.youm.maple.core.module.modules.combat;
 
 
 import com.darkmagician6.eventapi.EventTarget;
+import com.darkmagician6.eventapi.events.Event;
 import net.minecraft.network.play.client.C03PacketPlayer;
 import net.minecraft.network.play.client.C18PacketSpectate;
 import org.lwjgl.input.Keyboard;
@@ -21,7 +22,7 @@ import java.util.UUID;
  * @author YouM
  */
 public final class Criticals extends Module {
-    private final ModeSetting mode = new ModeSetting("Mode","Watchdog","Watchdog", "Packet", "Dev","Vulcan");
+    private final ModeSetting mode = new ModeSetting("Mode","Watchdog","Watchdog", "Packet", "Dev","NoGround");
     private final NumberSetting delay = new NumberSetting("Delay", 1, 20, 0, 1);
 
     public Criticals() {
@@ -54,13 +55,9 @@ public final class Criticals extends Module {
                     }
                 }
                 break;
-            case "Vulcan":
-                if (mc.objectMouseOver.entityHit != null && mc.thePlayer.onGround) {
-                    if (mc.objectMouseOver.entityHit.hurtResistantTime > delay.getValue().intValue()) {
-                        mc.thePlayer.sendQueue.addToSendQueue(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX, mc.thePlayer.posY + 0.08250803780931, mc.thePlayer.posZ, false));
-                        mc.thePlayer.sendQueue.addToSendQueue(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX, mc.thePlayer.posY + 0.02156345320044, mc.thePlayer.posZ, false));
-                        mc.thePlayer.sendQueue.addToSendQueue(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX, mc.thePlayer.posY + 0.10402203322278, mc.thePlayer.posZ, false));
-                    }
+            case "NoGround":
+                if (e.getState() == Event.State.PRE){
+                    e.setOnGround(false);
                 }
                 break;
             default:

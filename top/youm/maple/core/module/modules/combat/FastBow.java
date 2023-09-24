@@ -23,11 +23,11 @@ public class FastBow extends Module {
     @EventTarget
     public void onTick(MotionEvent event) {
         this.setSuffixes(mode.getValue());
-        if (this.mc.thePlayer.getItemInUseDuration() >= 15 || mode.getValue().equals("Vanilla")) {
-            if (this.mc.thePlayer.onGround && this.mc.thePlayer.getItemInUse().getItem() instanceof ItemBow) {
+        if (mc.thePlayer.getItemInUseDuration() >= 15 || mode.getValue().equals("Vanilla")) {
+            if (mc.thePlayer.onGround && mc.thePlayer.getItemInUse().getItem() instanceof ItemBow) {
                 for (int i = 0; i < (mode.getValue().equals("Vanilla") ? 20 : 8); ++i)
-                    this.mc.getNetHandler().addToSendQueue(new C03PacketPlayer(this.mc.thePlayer.onGround));
-                this.mc.playerController.onStoppedUsingItem(this.mc.thePlayer);
+                    mc.getNetHandler().addToSendQueue(new C03PacketPlayer(mc.thePlayer.onGround));
+                mc.playerController.onStoppedUsingItem(mc.thePlayer);
             }
         }
     }

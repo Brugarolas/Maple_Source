@@ -1,6 +1,7 @@
 package top.youm.maple.utils.player;
 
 import com.google.common.base.Predicates;
+import com.google.common.base.Supplier;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -12,6 +13,7 @@ import top.youm.maple.utils.math.MathUtil;
 
 import java.util.List;
 import java.util.Random;
+import java.util.function.Consumer;
 
 
 public class RotationUtil {
@@ -24,7 +26,6 @@ public class RotationUtil {
         mc.thePlayer.rotationYawHead = mc.thePlayer.renderYawOffset = yaw;
         mc.thePlayer.rotationPitchHead = pitch;
     }
-
     public static float clampRotation() {
         float rotationYaw = Minecraft.getMinecraft().thePlayer.rotationYaw;
         float n = 1.0f;
@@ -239,5 +240,18 @@ public class RotationUtil {
 
         return false;
     }
-
+    public static float getAngleDifference(float targetRotation, float currentRotation) {
+        return ((targetRotation - currentRotation) % 360f + 540f) % 360f - 180f;
+    }
+    public static float[] limitAngleChange(float[] current,float[] target,float speed) {
+        return new float[]{
+                current[0] + coerceIn(-speed, speed,getAngleDifference(target[0], current[0])),
+                current[1] + coerceIn(-speed, speed,getAngleDifference(target[1], current[1]))
+        };
+    }
+    public static float coerceIn(float min, float max, float value){
+        if(value < min){
+            return min;
+        }else return Math.min(value, max);
+    }
 }

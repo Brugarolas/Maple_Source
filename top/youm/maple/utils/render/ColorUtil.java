@@ -16,6 +16,13 @@ public class ColorUtil {
 
         return new Color(colorHSB.getRed(), colorHSB.getGreen(), colorHSB.getBlue(), Math.max(0, Math.min(255, (int) (alpha * 255))));
     }
+    public static Color staticFade(Color color){
+        float[] hsb = Color.RGBtoHSB(color.getRed(), color.getGreen(), color.getBlue(), null);
+        Color colorHSB = new Color(Color.HSBtoRGB(hsb[0], hsb[1], 200 / 360f));
+
+        return new Color(colorHSB.getRed(), colorHSB.getGreen(), colorHSB.getBlue(), 255);
+
+    }
     public static Color interpolateColorC(Color color1, Color color2, float amount) {
         amount = Math.min(1, Math.max(0, amount));
         return new Color(interpolateInt(color1.getRed(), color2.getRed(), amount),

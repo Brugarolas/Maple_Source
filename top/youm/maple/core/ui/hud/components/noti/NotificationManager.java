@@ -2,6 +2,7 @@ package top.youm.maple.core.ui.hud.components.noti;
 
 import top.youm.maple.core.module.Module;
 import top.youm.maple.core.module.modules.visual.HUD;
+import top.youm.maple.core.ui.clickgui.classic.theme.Icon;
 
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -29,16 +30,16 @@ public class NotificationManager {
             }
         }
     }
-    public static void show(String title, String message) {
-        notifications.add(new Notification(title, message, 2500L));
+    public static void show(String title, String message, Icon type) {
+        notifications.add(new Notification(title, message, 2500L,type));
     }
 
-    public static void show(String title, String message, long stayTime) {
-        notifications.add(new Notification(title, message, stayTime));
+    public static void show(String title, String message, long stayTime, Icon type) {
+        notifications.add(new Notification(title, message, stayTime,type));
     }
 
-    public static void show(String title, String message, Module module) {
-        notifications.add(new Notification(title, message, 2500L, module));
+    public static void show(String title, String message, Module module, Icon type) {
+        notifications.add(new Notification(title, message, 2500L, module,type));
     }
 
 }

@@ -73,7 +73,7 @@ public class ChestStealer extends Module {
                             if (pos.getBlock() == Blocks.chest && !openedChests.contains(pos)) {
                                 if (mc.playerController.onPlayerRightClick(mc.thePlayer, mc.theWorld, mc.thePlayer.getHeldItem(), pos, EnumFacing.UP, new Vec3(pos))) {
                                     mc.thePlayer.swingItem();
-                                    final float[] rotations = RotationUtils.getRotations1(pos.getX(), pos.getY(), pos.getZ());
+                                    final float[] rotations = RotationUtil.getRotations(pos.getX(), pos.getY(), pos.getZ());
                                     e.setRotations(rotations[0], rotations[1]);
                                     RotationUtil.setRotations(rotations[0], rotations[1]);
                                     openedChests.add(pos);

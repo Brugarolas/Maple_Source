@@ -38,7 +38,7 @@ public class ModuleListUI implements HUDComponent<ModuleList> {
 
         List<Module> modules = new ArrayList<>();
 
-        CFontRenderer fontRenderer = FontLoaders.aovel24;
+        CFontRenderer fontRenderer = FontLoaders.moduleList;
 
         for (Module m : Maple.getInstance().getModuleManager().modules) {
             if ((UIModule.noRender.getValue() && m.isRenderModule) || (!m.isToggle() && m.wasRemoved))
@@ -86,7 +86,7 @@ public class ModuleListUI implements HUDComponent<ModuleList> {
             if (module.isToggle()) {
 
                 module.animY = animator.animate(offsetY + (UIModule.edge.getValue() ? 10 : -2), module.animY, 0.2f);
-                module.animX = animator.animate(width - (font ? fontRenderer.getStringWidth(text) : Minecraft.getMinecraft().fontRendererObj.getStringWidth(text)) - (UIModule.edge.getValue() ?  12 : 0), module.animX, 0.08f);
+                module.animX = animator.animate(width - (font ? fontRenderer.getStringWidth(text) : Minecraft.getMinecraft().fontRendererObj.getStringWidth(text)) - (UIModule.edge.getValue() ?  12 : -1), module.animX, 0.08f);
                 module.wasRemoved = false;
                 offsetY += font ? fontRenderer.getHeight() + 3 : 12;
             } else {
@@ -250,7 +250,7 @@ public class ModuleListUI implements HUDComponent<ModuleList> {
                                         "" :
                                         ChatFormatting.BLUE + " " + ChatFormatting.WHITE + module.getSuffixes()
                         );
-                drawRoundedRect((int) (module.animX + (font ? fontRenderer.getStringWidth(context) : Minecraft.getMinecraft().fontRendererObj.getStringWidth(context)) - 3) + UIModule.rectPadding.getValue().floatValue(), (int) (2 + module.animY) + 1.5f, 1.5f, (font ? fontRenderer.getHeight() + 3 : Minecraft.getMinecraft().fontRendererObj.FONT_HEIGHT + 3) - 2f, 1f, sidebar);
+                drawRect((int) (module.animX + (font ? fontRenderer.getStringWidth(context) : Minecraft.getMinecraft().fontRendererObj.getStringWidth(context)) - 3) + UIModule.rectPadding.getValue().floatValue() - 3, (int) (module.animY) + 2, 1f, (font ? fontRenderer.getHeight() + 3 : Minecraft.getMinecraft().fontRendererObj.FONT_HEIGHT + 3), sidebar);
                 indexSide++;
             }
         }

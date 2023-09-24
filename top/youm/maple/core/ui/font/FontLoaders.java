@@ -9,26 +9,10 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.util.ResourceLocation;
 
 public abstract class FontLoaders {
-    public static CFontRenderer comfortaaR16 = new CFontRenderer(FontLoaders.getComfortaa(16,Roughness.Regular), true, true);
-    public static CFontRenderer comfortaaR18 = new CFontRenderer(FontLoaders.getComfortaa(18,Roughness.Regular), true, true);
-    public static CFontRenderer comfortaaR20 = new CFontRenderer(FontLoaders.getComfortaa(20,Roughness.Regular), true, true);
-
-    public static CFontRenderer comfortaaR22 = new CFontRenderer(FontLoaders.getComfortaa(22,Roughness.Regular), true, true);
     public static CFontRenderer comfortaaR24 = new CFontRenderer(FontLoaders.getComfortaa(24,Roughness.Regular), true, true);
 
-    public static CFontRenderer comfortaaR30 = new CFontRenderer(FontLoaders.getComfortaa(30,Roughness.Regular), true, true);
-
-    public static CFontRenderer comfortaaT16 = new CFontRenderer(FontLoaders.getComfortaa(16,Roughness.THIN), true, true);
-    public static CFontRenderer comfortaaT18 = new CFontRenderer(FontLoaders.getComfortaa(18,Roughness.THIN), true, true);
-    public static CFontRenderer comfortaaB16 = new CFontRenderer(FontLoaders.getComfortaa(16,Roughness.Bold), true, true);
     public static CFontRenderer comfortaaB18 = new CFontRenderer(FontLoaders.getComfortaa(18,Roughness.Bold), true, true);
-    public static CFontRenderer comfortaaB20 = new CFontRenderer(FontLoaders.getComfortaa(20,Roughness.Bold), true, true);
     public static CFontRenderer comfortaaB22 = new CFontRenderer(FontLoaders.getComfortaa(22,Roughness.Bold), true, true);
-    public static CFontRenderer comfortaaB24 = new CFontRenderer(FontLoaders.getComfortaa(24,Roughness.Bold), true, true);
-
-    public static CFontRenderer comfortaaB30 = new CFontRenderer(FontLoaders.getComfortaa(30,Roughness.Bold), true, true);
-    public static CFontRenderer comfortaaB40 = new CFontRenderer(FontLoaders.getComfortaa(40,Roughness.Bold), true, true);
-
     public static CFontRenderer robotoB22 = new CFontRenderer(FontLoaders.getRoboto(22,Roughness.Bold), true, true);
     public static CFontRenderer robotoB24 = new CFontRenderer(FontLoaders.getRoboto(24,Roughness.Bold), true, true);
     public static CFontRenderer robotoB26 = new CFontRenderer(FontLoaders.getRoboto(26,Roughness.Bold), true, true);
@@ -41,19 +25,20 @@ public abstract class FontLoaders {
     public static CFontRenderer robotoR22 = new CFontRenderer(FontLoaders.getRoboto(22,Roughness.Regular), true, true);
     public static CFontRenderer robotoR24 = new CFontRenderer(FontLoaders.getRoboto(24,Roughness.Regular), true, true);
 
-    public static CFontRenderer robotoR34 = new CFontRenderer(FontLoaders.getRoboto(34,Roughness.Regular), true, true);
-    public static CFontRenderer icon20 = new CFontRenderer(getFont("iconfont2",20),true,true);
-    public static CFontRenderer icon24 = new CFontRenderer(getFont("iconfont2",24),true,true);
-    public static CFontRenderer icon28 = new CFontRenderer(getFont("iconfont2",28),true,true);
-    public static CFontRenderer icon32 = new CFontRenderer(getFont("iconfont2",32),true,true);
-    public static CFontRenderer rise18 = new CFontRenderer(getFont("product_sans_regular",18),true,true);
-    public static CFontRenderer rise28 = new CFontRenderer(getFont("product_sans_regular",28),true,true);
-    public static CFontRenderer aovel24 = new CFontRenderer(getFont("aovel",24),true,true);
-    public static CFontRenderer aovel32 = new CFontRenderer(getFont("aovel",32),true,true);
+    public static CFontRenderer icon24 = new CFontRenderer(getFont("maple_icon",24),true,true);
+    public static CFontRenderer icon28 = new CFontRenderer(getFont("maple_icon",28),true,true);
+    public static CFontRenderer icon40 = new CFontRenderer(getFont("maple_icon",40),true,true);
 
-    public static CFontRenderer aovel22 = new CFontRenderer(getFont("aovel",22),true,true);
+    public static CFontRenderer noti = new CFontRenderer(getFont("product_sans_regular",18),true,true);
+    public static CFontRenderer title = new CFontRenderer(getFont("product_sans_regular",22),true,true);
     public static CFontRenderer neverlose = new CFontRenderer(getFont("neverlose",40),true,true);
+    public static CFontRenderer moduleList = new CFontRenderer(getFont("neverlose",22),true,true);
+
+    public static CFontRenderer statistics = new CFontRenderer(getFont("neverlose",26),true,true);
     public static CFontRenderer commonIcon = new CFontRenderer(getFont("common",38),true,true);
+    public static CFontRenderer tenacity = new CFontRenderer(getFont("tenacity-bold",40),true,true);
+    public static CFontRenderer notiTitle = new CFontRenderer(getFont("tenacity-bold",22),true,true);
+
     public static Font getFont(String name ,int size) {
         Font font;
         try {

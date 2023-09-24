@@ -34,7 +34,7 @@ public class Maple {
     }
     public static Logger log = LogManager.getLogger();
     public String NAME = "Maple";
-    public String VERSION = "beta-2";
+    public String VERSION = "beta-2.1";
     public boolean DevMode = true;
     public Account account;
     public String username = NAME + "Dev" + MathUtil.getRandomInRange(1,999);

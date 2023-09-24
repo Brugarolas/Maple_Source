@@ -4,7 +4,11 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.audio.SoundHandler;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.util.ResourceLocation;
+import top.youm.maple.utils.render.RenderUtil;
+
+import java.awt.*;
 
 public class GuiButton extends Gui
 {
@@ -92,6 +96,9 @@ public class GuiButton extends Gui
             GlStateManager.enableBlend();
             GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
             GlStateManager.blendFunc(770, 771);
+            if(hovered && this.enabled){
+                RenderUtil.drawBorder(this.xPosition - 1,this.yPosition - 2 ,this.width + 2, this.height + 3,1,new Color(255,255,255));
+            }
             this.drawTexturedModalRect(this.xPosition, this.yPosition, 0, 46 + i * 20, this.width / 2, this.height);
             this.drawTexturedModalRect(this.xPosition + this.width / 2, this.yPosition, 200 - this.width / 2, 46 + i * 20, this.width / 2, this.height);
             this.mouseDragged(mc, mouseX, mouseY);

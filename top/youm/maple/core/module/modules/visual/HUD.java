@@ -2,6 +2,7 @@ package top.youm.maple.core.module.modules.visual;
 
 import com.darkmagician6.eventapi.EventTarget;
 import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.client.renderer.GlStateManager;
 import top.youm.maple.Maple;
 import top.youm.maple.common.events.Render2DEvent;
 import top.youm.maple.common.settings.impl.BoolSetting;
@@ -17,6 +18,8 @@ import top.youm.maple.core.ui.hud.components.KeyStrokesUI;
 import top.youm.maple.core.ui.hud.components.ModuleListUI;
 import top.youm.maple.core.ui.hud.components.StatisticsUI;
 import top.youm.maple.core.ui.hud.components.noti.NotificationManager;
+import top.youm.maple.utils.render.ColorUtil;
+import top.youm.maple.utils.render.GradientUtil;
 import top.youm.maple.utils.render.RenderUtil;
 
 import java.awt.*;
@@ -25,13 +28,15 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import static org.lwjgl.opengl.GL11.GL_GREATER;
+
 /**
  * @author YouM
  */
 public class HUD extends Module {
     private final Map<Module, HUDComponent> ModuleUI = new HashMap<>();
-    public BoolSetting ttf_font = new BoolSetting("TTF-Font",false);
-    public ModeSetting mode = new ModeSetting("Mode","CSGO","CSGO","Text");
+    public static BoolSetting ttf_font = new BoolSetting("TTF-Font",false);
+    public static ModeSetting mode = new ModeSetting("Mode","CSGO","CSGO","Text","Tenacity");
     public static BoolSetting notification = new BoolSetting("Notification",true);
 
     public static NumberSetting red = new NumberSetting("red",Theme.theme.getRed(),255,0,1);
@@ -55,27 +60,36 @@ public class HUD extends Module {
         String text = " | " + Maple.getInstance().VERSION + " | " + mc.thePlayer.getName() + " | " + date;
         switch (mode.getValue()){
             case "CSGO":
+                RenderUtil.drawFadeRect(2,3,FontLoaders.title.getStringWidth(Maple.getInstance().NAME + text) + 4,1,HUD.getHUDThemeColor(),5);
+
                 if(ttf_font.getValue()){
-                    RenderUtil.drawRect(2,2,FontLoaders.aovel22.getStringWidth(Maple.getInstance().NAME + text) + 4,FontLoaders.aovel22.getHeight() + 4,new Color(0,0,0,150));
+                    RenderUtil.drawRect(2,4,FontLoaders.title.getStringWidth(Maple.getInstance().NAME + text) + 4,FontLoaders.title.getHeight() + 4,new Color(0,0,0,150));
                 }else{
-                    RenderUtil.drawRect(2,2,mc.fontRendererObj.getStringWidth(Maple.getInstance().NAME + text) + 4, mc.fontRendererObj.FONT_HEIGHT + 4,new Color(0,0,0,150));
+                    RenderUtil.drawRect(2,4,mc.fontRendererObj.getStringWidth(Maple.getInstance().NAME + text) + 4, mc.fontRendererObj.FONT_HEIGHT + 4,new Color(0,0,0,150));
                 }
-                if(this.ttf_font.getValue()){
-                    FontLoaders.aovel22.drawStringWithShadow(Maple.getInstance().NAME,5,5, HUD.getHUDThemeColor().getRGB());
-                    FontLoaders.aovel22.drawStringWithShadow(text,5 + FontLoaders.aovel22.getStringWidth(Maple.getInstance().NAME),5, -1);
+                if(ttf_font.getValue()){
+                    FontLoaders.title.drawStringWithShadow(Maple.getInstance().NAME,5,5, HUD.getHUDThemeColor().getRGB());
+                    FontLoaders.title.drawStringWithShadow(text,5 + FontLoaders.title.getStringWidth(Maple.getInstance().NAME),5, -1);
                 }else {
                     mc.fontRendererObj.drawStringWithShadow(Maple.getInstance().NAME,5,5, HUD.getHUDThemeColor().getRGB());
                     mc.fontRendererObj.drawStringWithShadow(text,5 + mc.fontRendererObj.getStringWidth(Maple.getInstance().NAME),5, -1);
                 }
                 break;
             case "Text":
-                if(this.ttf_font.getValue()){
-                    FontLoaders.aovel22.drawStringWithShadow(Maple.getInstance().NAME.substring(0,1),5,5, HUD.getHUDThemeColor().getRGB());
-                    FontLoaders.aovel22.drawStringWithShadow(Maple.getInstance().NAME.substring(1),5 + FontLoaders.aovel22.getStringWidth(Maple.getInstance().NAME.substring(0,1)),5, -1);
+                if(ttf_font.getValue()){
+                    FontLoaders.title.drawStringWithShadow(Maple.getInstance().NAME.substring(0,1),5,5, HUD.getHUDThemeColor().getRGB());
+                    FontLoaders.title.drawStringWithShadow(Maple.getInstance().NAME.substring(1),5 + FontLoaders.title.getStringWidth(Maple.getInstance().NAME.substring(0,1)),5, -1);
                 }else {
                     mc.fontRendererObj.drawStringWithShadow(Maple.getInstance().NAME.substring(0,1),5,5, HUD.getHUDThemeColor().getRGB());
                     mc.fontRendererObj.drawStringWithShadow(Maple.getInstance().NAME.substring(1),5 + mc.fontRendererObj.getStringWidth(Maple.getInstance().NAME.substring(0,1)),5, -1);
                 }
+                break;
+            case "Tenacity":
+                GradientUtil.applyGradientHorizontal(5, 5, FontLoaders.tenacity.getStringWidth(Maple.getInstance().NAME), 20, 1, HUD.getHUDThemeColor(), ColorUtil.staticFade(HUD.getHUDThemeColor()), () -> {
+                    RenderUtil.setAlphaLimit(0);
+                    FontLoaders.tenacity.drawStringWithShadow(Maple.getInstance().NAME, 5, 5, 0);
+                });
+                break;
         }
 
 

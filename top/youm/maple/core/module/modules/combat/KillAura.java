@@ -6,6 +6,7 @@ import de.florianmichael.viamcp.fixes.AttackOrder;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.DefaultPlayerSkin;
+import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.monster.EntityMob;
@@ -23,6 +24,7 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 import top.youm.maple.Maple;
 import top.youm.maple.common.events.*;
+import top.youm.maple.common.settings.Setting;
 import top.youm.maple.common.settings.impl.BoolSetting;
 import top.youm.maple.common.settings.impl.ModeSetting;
 import top.youm.maple.common.settings.impl.NumberSetting;
@@ -37,6 +39,7 @@ import top.youm.maple.utils.SlotComponent;
 import top.youm.maple.utils.TimerUtil;
 import top.youm.maple.utils.liquidbounce.Rotation;
 import top.youm.maple.utils.liquidbounce.RotationUtils;
+import top.youm.maple.utils.liquidbounce.VecRotation;
 import top.youm.maple.utils.math.MathUtil;
 import top.youm.maple.utils.network.PacketUtil;
 import top.youm.maple.utils.player.RotationUtil;
@@ -73,6 +76,7 @@ public class KillAura extends Module {
     private final BoolSetting scanCircle = new BoolSetting("scan circle", true);
     private final NumberSetting scanWidth = new NumberSetting("scan width", 2, 5, 1, 1);
 
+    private final BoolSetting movementFix = new BoolSetting("Movement Fix", true);
     BoolSetting players = new BoolSetting("Players", true);
     BoolSetting mobs = new BoolSetting("Mobs", false);
     BoolSetting animals = new BoolSetting("Animals", false);
@@ -81,10 +85,13 @@ public class KillAura extends Module {
     BoolSetting ticks = new BoolSetting("Ticks", true);
     BoolSetting nameTags = new BoolSetting("NameTags", true);
     BoolSetting packet = new BoolSetting("Packet", true);
-    ModeSetting rotateMode = new ModeSetting("RotateMode", "Dynamic", "Dynamic", "Smooth", "Grim", "Vanilla");
+    ModeSetting rotateMode = new ModeSetting("RotateMode", "Dynamic", "Dynamic", "Smooth", "LiquidBounce", "Vanilla");
     BoolSetting safeRotation = new BoolSetting("Safe Rotation", false);
     BoolSetting followRotation = new BoolSetting("Follow", false);
-
+    NumberSetting randomValue = new NumberSetting("random value",0.0,2.0f,0.0f,0.1f);
+    BoolSetting random = new BoolSetting("random",false);
+    BoolSetting targetUI = new BoolSetting("TargetUI",false);
+    ModeSetting targetUIStyle = new ModeSetting("TargetUI Style","Normal","Normal","Fade");
     private final BoolSetting autoDisable = new BoolSetting("Auto Disable", true);
     public static List<EntityLivingBase> targets = new ArrayList<>();
     public static EntityLivingBase target;
@@ -102,9 +109,14 @@ public class KillAura extends Module {
         autoBlockMode.addParent(autoBlock, BoolSetting::getValue);
         maxSpeed.addParent(rotateMode, rotateMode -> rotateMode.getValue().equals("Smooth"));
         minSpeed.addParent(rotateMode, rotateMode -> rotateMode.getValue().equals("Smooth"));
-        maxRotateSpeed.addParent(rotateMode, rotateMode -> rotateMode.getValue().equals("Grim"));
-        minRotateSpeed.addParent(rotateMode, rotateMode -> rotateMode.getValue().equals("Grim"));
-        this.addSetting(reach, minCps, maxCps, footCircle, footWidth, scanCircle, scanWidth, autoDisable,autoBlock, autoBlockMode, players,villager, invisible, mobs, animals, rotateMode, safeRotation, followRotation, maxSpeed, minSpeed, maxRotateSpeed, minRotateSpeed, ticks, packet, nameTags);
+        maxRotateSpeed.addParent(rotateMode, rotateMode -> rotateMode.getValue().equals("LiquidBounce"));
+        minRotateSpeed.addParent(rotateMode, rotateMode -> rotateMode.getValue().equals("LiquidBounce"));
+        random.addParent(rotateMode, rotateMode -> rotateMode.getValue().equals("LiquidBounce") || rotateMode.getValue().equals("Smooth"));
+        randomValue.addParent(rotateMode, rotateMode -> rotateMode.getValue().equals("LiquidBounce") || rotateMode.getValue().equals("Smooth"));
+        targetUIStyle.addParent(targetUI, Setting::getValue);
+
+        new RotationUtils().init();
+        this.addSetting(reach, minCps, maxCps,targetUI,targetUIStyle, footCircle, footWidth, scanCircle, scanWidth, autoDisable,autoBlock, autoBlockMode,movementFix, players,villager, invisible, mobs, animals, rotateMode, random,randomValue,safeRotation, followRotation, maxSpeed, minSpeed, maxRotateSpeed, minRotateSpeed, ticks, packet, nameTags);
     }
 
     boolean direction;
@@ -115,10 +127,9 @@ public class KillAura extends Module {
     private float size;
     private float headSize = 100;
     private float health = 120;
-    private float healthFade = 0;
-    private float armor = 120;
     @EventTarget
     public void onRender2D(Render2DEvent event){
+        if(!targetUI.getValue()) return;
         if(!targets.isEmpty() && target != null){
             if(target.hurtTime > 4){
                 headSize -= 0.5f;
@@ -130,16 +141,11 @@ public class KillAura extends Module {
 
             size = animator.animate(100,size,0.1f);
             health = animator.animate((target.getHealth() / target.getMaxHealth()) * 120,health,0.1f);
-            armor = animator.animate((target.getTotalArmorValue() / 20.0f) * 120,armor,0.1f);
         }else{
             health = animator.animate(0,health,0.1f);
-            armor = animator.animate(0,armor,0.1f);
             if(health <= 0) {
                 size = animator.animate(0,size,0.1f);
             }
-
-
-
         }
 
         ScaledResolution sr = new ScaledResolution(mc);
@@ -147,8 +153,8 @@ public class KillAura extends Module {
         int height = sr.getScaledHeight();
         int x = width - (width / 3);
         int y = height - (height / 3);
-        RenderUtil.scale(x + (200 / 2.0f),y + (50 / 2.0f),size / 100,()->{
-            RenderUtil.drawRect(x,y,180,50,new Color(0,0,0,120));
+        RenderUtil.scale(x + (200 / 2.0f),y + (40 / 2.0f),size / 100,()->{
+            RenderUtil.drawRect(x,y,180,40,new Color(0,0,0,120));
             ResourceLocation locationSkin;
             if(target != null) {
 
@@ -157,20 +163,31 @@ public class KillAura extends Module {
                 } else {
                     locationSkin = DefaultPlayerSkin.getDefaultSkinLegacy();
                 }
+                RenderUtil.drawHead(locationSkin, x + 4, y + 4, 34, 34);
+                if(target.hurtTime > 4) {
+                    RenderUtil.drawRect(x + 4, y + 4, 34, 34,new Color(255,0,0,120));
+                }
 
-                RenderUtil.scale(x + 26, y + 26,headSize / 100.0f,()->{
-                    RenderUtil.drawHead(locationSkin, x + 8, y + 8, 36, 36);
-                    if(target.hurtTime > 4) {
-                        RenderUtil.drawRect(x + 8, y + 8, 36, 36,new Color(255,0,0,120));
-                    }
-                });
+                RenderUtil.drawRect(x + 50, y + 25,120, 10, new Color(60, 60, 60).getRGB());
+                switch (targetUIStyle.getValue()) {
+                    case "Normal":
+                        Color healthColor = new Color(0, 255, 0);
+                        if(health <= 120 * 0.75f){
+                            healthColor = new Color(255, 255, 0);
+                        }
+                        if(health <= 120 * 0.50f){
+                            healthColor = new Color(255, 136, 0);
+                        }
+                        if(health <= 120 * 0.25f){
+                            healthColor = new Color(255, 0, 0);
+                        }
+                        RenderUtil.drawRect(x + 50, y + 25, health, 10, healthColor);
+                        break;
+                    case "Fade":
+                        RenderUtil.drawFadeRect(x + 50, y + 25, health, 10,HUD.getHUDThemeColor(),8,8);
+                }
 
-                RenderUtil.drawRect(x + 50, y + 30,120, 5, new Color(60, 60, 60).getRGB());
-                RenderUtil.drawRect(x + 50, y + 40,120, 5, new Color(60, 60, 60).getRGB());
-
-                RenderUtil.drawRect(x + 50, y + 30, health, 5, new Color(81, 160, 81));
-                RenderUtil.drawRect(x + 50, y + 30 + 10, armor,  5, new Color(88, 136, 171));
-                FontLoaders.aovel32.drawStringWithShadow(target.getName(), x + 50, y + 8, -1);
+                FontLoaders.robotoB32.drawStringWithShadow(target.getName(), x + 50, y + 8, -1);
 
             }
         });
@@ -370,6 +387,7 @@ public class KillAura extends Module {
     }
 
     private void rotation(MotionEvent event){
+
         float[] smoothRotations = getRotationsToEnt(target);
         switch (rotateMode.getValue()) {
             case "Dynamic":
@@ -381,16 +399,26 @@ public class KillAura extends Module {
                     smoothRotations = randomRotation;
                 }
                 break;
-            case "Grim":
-                Rotation targetRotation = getTargetRotation(target);
-                smoothRotations[0] = targetRotation.getYaw();
-                smoothRotations[1] = targetRotation.getPitch();
+            case "LiquidBounce":
+                if(random.getValue()){
+                    VecRotation vecRotation = RotationUtils.searchCenter(target.getEntityBoundingBox(), false, true, true, true, mc.thePlayer.getDistanceToEntity(target),randomValue.getValue().floatValue(),true);
+                    smoothRotations = RotationUtil.limitAngleChange(new float[]{mc.thePlayer.rotationYaw,mc.thePlayer.rotationPitch},new float[]{vecRotation.getRotation().getYaw(),vecRotation.getRotation().getPitch()},MathUtil.getRandomInRange(180,180));
+                }
                 break;
             case "Vanilla":
-                smoothRotations = getRotationsToEnt(target);
                 break;
             default:
-                smoothRotations = RotationUtil.getSmoothRotations(target, maxSpeed.getValue().floatValue(), minSpeed.getValue().floatValue());
+                if (RotationUtil.isMouseOver(event.getYaw(), event.getPitch(), target, reach.getValue().floatValue()) && random.getValue()) {
+                    if (rotateTimer.hasTimeElapsed(120,true)) {
+                        VecRotation rotation = RotationUtils.searchCenter(target.getEntityBoundingBox(), false, true, true, true, mc.thePlayer.getDistanceToEntity(target),randomValue.getValue().floatValue(),true);
+                        smoothRotations = new float[]{rotation.getRotation().getYaw(), rotation.getRotation().getPitch()};
+                        randomRotation = smoothRotations;
+                    } else {
+                        smoothRotations = randomRotation;
+                    }
+                }else{
+                    smoothRotations = RotationUtil.getSmoothRotations(target, maxSpeed.getValue().floatValue(), minSpeed.getValue().floatValue());
+                }
         }
 
         event.setYaw(smoothRotations[0]);
@@ -481,14 +509,14 @@ public class KillAura extends Module {
 
     @EventTarget
     public void onJumpFixEvent(JumpFixEvent event) {
-        if (!targets.isEmpty()) {
+        if (!targets.isEmpty()  && this.movementFix.getValue()) {
             event.setYaw(yaw);
         }
     }
 
     @EventTarget
     public void onPlayerMoveUpdateEvent(MoveInputEvent event) {
-        if (!targets.isEmpty()) {
+        if (!targets.isEmpty() && this.movementFix.getValue()) {
             event.setYaw(yaw);
         }
     }
@@ -593,37 +621,8 @@ public class KillAura extends Module {
         return new float[]{finishedYaw, -MathHelper.clamp_float(finishedPitch, -90, 90)};
     }
 
-    private Rotation getTargetRotation(Entity entity) {
-        AxisAlignedBB boundingBox = entity.getEntityBoundingBox();
-        boundingBox = boundingBox.offset(
-                (entity.posX - entity.prevPosX - (mc.thePlayer.posX - mc.thePlayer.prevPosX)) * RandomUtils.nextFloat(minRotateSpeed.getValue().floatValue(), maxRotateSpeed.getValue().floatValue()),
-                (entity.posY - entity.prevPosY - (mc.thePlayer.posY - mc.thePlayer.prevPosY)) * RandomUtils.nextFloat(minRotateSpeed.getValue().floatValue(), maxRotateSpeed.getValue().floatValue()),
-                (entity.posZ - entity.prevPosZ - (mc.thePlayer.posZ - mc.thePlayer.prevPosZ)) * RandomUtils.nextFloat(minRotateSpeed.getValue().floatValue(), maxRotateSpeed.getValue().floatValue())
-        );
-        Vec3 lastHitVec = new Vec3(0.0f, 0.0f, 0.0f);
-        AxisAlignedBB bb = entity.getEntityBoundingBox();
-        if (RotationUtils.targetRotation == null || (random.nextBoolean() && !timer.hasTimeElapsed((1000 / MathUtil.getRandomInRange(minCps.getValue().intValue(), maxCps.getValue().intValue()))))) {
-            lastHitVec = new Vec3(
-                    MathHelper.clamp_double(mc.thePlayer.posX, bb.minX, bb.maxX) + RandomUtils.nextDouble(0, 0.2),
-                    MathHelper.clamp_double(mc.thePlayer.posY + 1.62F, bb.minY, bb.maxY) + RandomUtils.nextDouble(0, 0.2),
-                    MathHelper.clamp_double(mc.thePlayer.posZ, bb.minZ, bb.maxZ) + RandomUtils.nextDouble(0, 0.2)
-            );
-        }
-        return RotationUtils.limitAngleChange(
-                RotationUtils.serverRotation,
-                Objects.requireNonNull(RotationUtils.OtherRotation(
-                        boundingBox,
-                        lastHitVec,
-                        true,
-                        false,
-                        reach.getValue().floatValue()
-                )),
-                (float) (Math.random() * (maxRotateSpeed.getValue().floatValue() - minRotateSpeed.getValue().floatValue()) + minRotateSpeed.getValue().floatValue()),
-                (float) (Math.random() * (maxRotateSpeed.getValue().floatValue() - minRotateSpeed.getValue().floatValue()) + minRotateSpeed.getValue().floatValue())
-        );
-    }
     public void vulcanBlock(boolean state){
-       /* KeyBinding.setKeyBindState(mc.gameSettings.keyBindUseItem.getKeyCode(),state);*/
+        KeyBinding.setKeyBindState(mc.gameSettings.keyBindUseItem.getKeyCode(),state);
     }
     //copy from liquid bounce
     private void startBlocking(Entity interactEntity, boolean interact) {
