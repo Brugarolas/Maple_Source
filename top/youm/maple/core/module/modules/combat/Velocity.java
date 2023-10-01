@@ -4,16 +4,15 @@ import com.darkmagician6.eventapi.EventTarget;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.client.C0FPacketConfirmTransaction;
 import net.minecraft.network.play.server.S12PacketEntityVelocity;
-import net.minecraft.network.play.server.S19PacketEntityStatus;
 import net.minecraft.network.play.server.S27PacketExplosion;
 import org.lwjgl.input.Keyboard;
 import top.youm.maple.common.events.PacketReceiveEvent;
 import top.youm.maple.common.events.PacketSendEvent;
 import top.youm.maple.common.events.TickEvent;
 import top.youm.maple.common.events.WorldEvent;
-import top.youm.maple.common.settings.impl.BoolSetting;
-import top.youm.maple.common.settings.impl.ModeSetting;
-import top.youm.maple.common.settings.impl.NumberSetting;
+import top.youm.maple.common.settings.impl.CheckBoxSetting;
+import top.youm.maple.common.settings.impl.SelectButtonSetting;
+import top.youm.maple.common.settings.impl.SliderSetting;
 import top.youm.maple.core.module.Module;
 import top.youm.maple.core.module.ModuleCategory;
 import top.youm.maple.utils.math.MathUtil;
@@ -21,15 +20,15 @@ import top.youm.maple.utils.player.MovementUtil;
 
 public class Velocity extends Module {
 
-    private final ModeSetting mode = new ModeSetting("Mode", "Matrix", "Matrix", "Tick", "Stack","Vulcan", "C0F Cancel","Standard");
-    private final NumberSetting horizontal = new NumberSetting("Horizontal", 0, 100, 0, 1);
-    private final NumberSetting vertical = new NumberSetting("Vertical", 0, 100, 0, 1);
-    private final NumberSetting chance = new NumberSetting("Chance", 100, 100, 0, 1);
-    private final BoolSetting onlyWhileMoving = new BoolSetting("Only while moving", false);
-    private final BoolSetting staffCheck = new BoolSetting("Staff check", false);
+    private final SelectButtonSetting mode = new SelectButtonSetting("Mode", "Matrix", "Matrix", "Tick", "Stack","Vulcan", "C0F Cancel","Standard");
+    private final SliderSetting horizontal = new SliderSetting("Horizontal", 0, 100, 0, 1);
+    private final SliderSetting vertical = new SliderSetting("Vertical", 0, 100, 0, 1);
+    private final SliderSetting chance = new SliderSetting("Chance", 100, 100, 0, 1);
+    private final CheckBoxSetting onlyWhileMoving = new CheckBoxSetting("Only while moving", false);
+    private final CheckBoxSetting staffCheck = new CheckBoxSetting("Staff check", false);
 
-    public final BoolSetting onSwing = new BoolSetting("Swing", false);
-    public final BoolSetting onSprint = new BoolSetting("Sprint", false);
+    public final CheckBoxSetting onSwing = new CheckBoxSetting("Swing", false);
+    public final CheckBoxSetting onSprint = new CheckBoxSetting("Sprint", false);
     private long lastDamageTimestamp, lastAlertTimestamp;
     private boolean cancel;
     private int stack;

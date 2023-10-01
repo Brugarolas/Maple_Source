@@ -4,7 +4,7 @@ import com.darkmagician6.eventapi.EventTarget;
 import com.darkmagician6.eventapi.events.Event;
 import top.youm.maple.common.events.MotionEvent;
 import top.youm.maple.common.events.TickEvent;
-import top.youm.maple.common.settings.impl.ModeSetting;
+import top.youm.maple.common.settings.impl.SelectButtonSetting;
 import top.youm.maple.core.module.Module;
 import top.youm.maple.core.module.ModuleCategory;
 import top.youm.maple.utils.network.PacketUtil;
@@ -17,7 +17,7 @@ import org.lwjgl.input.Keyboard;
 @SuppressWarnings("unused")
 public final class NoFall extends Module {
 
-    private final ModeSetting mode = new ModeSetting("Mode","Vanilla","Vanilla","Packet","Edit");
+    private final SelectButtonSetting mode = new SelectButtonSetting("Mode","Vanilla","Vanilla","Packet","Edit");
     @EventTarget
     public void onTick(TickEvent event){
         this.setSuffixes(mode.getValue());

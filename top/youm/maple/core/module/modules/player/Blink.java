@@ -9,8 +9,8 @@ import net.minecraft.util.Vec3;
 import org.lwjgl.input.Keyboard;
 import top.youm.maple.common.events.MotionEvent;
 import top.youm.maple.common.events.PacketSendEvent;
-import top.youm.maple.common.settings.impl.BoolSetting;
-import top.youm.maple.common.settings.impl.NumberSetting;
+import top.youm.maple.common.settings.impl.CheckBoxSetting;
+import top.youm.maple.common.settings.impl.SliderSetting;
 import top.youm.maple.core.module.Module;
 import top.youm.maple.core.module.ModuleCategory;
 import top.youm.maple.utils.network.PacketUtil;
@@ -24,8 +24,8 @@ import java.util.concurrent.ConcurrentLinkedQueue;
  */
 public class Blink extends Module {
     final ConcurrentLinkedQueue<Packet<?>> packets = new ConcurrentLinkedQueue<>();
-    private final BoolSetting pulse = new BoolSetting("Pulse",  false);
-    private final NumberSetting delayPulse = new NumberSetting("Tick Delay",20, 100, 4, 1);
+    private final CheckBoxSetting pulse = new CheckBoxSetting("Pulse",  false);
+    private final SliderSetting delayPulse = new SliderSetting("Tick Delay",20, 100, 4, 1);
 
     private EntityOtherPlayerMP blinkEntity;
 

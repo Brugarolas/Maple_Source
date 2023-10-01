@@ -16,9 +16,9 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.util.MouseFilter;
 import org.lwjgl.input.Keyboard;
 import top.youm.maple.common.events.*;
-import top.youm.maple.common.settings.impl.BoolSetting;
-import top.youm.maple.common.settings.impl.ModeSetting;
-import top.youm.maple.common.settings.impl.NumberSetting;
+import top.youm.maple.common.settings.impl.CheckBoxSetting;
+import top.youm.maple.common.settings.impl.SelectButtonSetting;
+import top.youm.maple.common.settings.impl.SliderSetting;
 import top.youm.maple.core.module.Module;
 import top.youm.maple.core.module.ModuleCategory;
 import top.youm.maple.utils.TimerUtil;
@@ -30,32 +30,32 @@ import top.youm.maple.utils.player.ScaffoldUtil;
 
 public class SafeScaffold extends Module {
 
-    private final ModeSetting countMode = new ModeSetting("Block Counter", "Tenacity", "None", "Tenacity", "Basic", "Polar");
-    private final BoolSetting rotations = new BoolSetting("Rotations", true);
-    private final ModeSetting rotationMode = new ModeSetting("Rotation Mode", "Watchdog", "Watchdog", "NCP", "Back", "45", "Enum", "Down", "0","Vulcan");
-    private final ModeSetting placeType = new ModeSetting("Place Type", "Post", "Pre", "Post", "Legit", "Dynamic","Telly");
-    public static ModeSetting keepYMode = new ModeSetting("Keep Y Mode", "Always", "Always", "Speed toggled");
-    public static ModeSetting sprintMode = new ModeSetting("Sprint Mode", "Vanilla", "Vanilla", "Watchdog", "Cancel");
-    public static ModeSetting towerMode = new ModeSetting("Tower Mode", "Watchdog", "Vanilla", "NCP", "Watchdog", "Verus");
-    public static ModeSetting swingMode = new ModeSetting("Swing Mode", "Client", "Client", "Silent");
-    public static NumberSetting delay = new NumberSetting("Delay", 0, 2, 0, 0.05);
-    public static NumberSetting rotateDelay = new NumberSetting("rotateDelay", 10, 100, 1, 1);
-    private final NumberSetting timer = new NumberSetting("Timer", 1, 5, 0.1, 0.1);
-    public static final BoolSetting auto3rdPerson = new BoolSetting("Auto 3rd Person", false);
-    public static final BoolSetting speedSlowdown = new BoolSetting("Speed Slowdown", true);
-    public static final NumberSetting speedSlowdownAmount = new NumberSetting("Slowdown Amount", 0.1, 0.2, 0.01, 0.01);
-    public static final BoolSetting itemSpoof = new BoolSetting("Item Spoof", false);
-    public static final BoolSetting downwards = new BoolSetting("Downwards", false);
-    public static final BoolSetting safewalk = new BoolSetting("Safewalk", false);
-    public static final BoolSetting sprint = new BoolSetting("Sprint", false);
-    private final BoolSetting sneak = new BoolSetting("Sneak", false);
-    public static final BoolSetting tower = new BoolSetting("Tower", false);
-    private final NumberSetting towerTimer = new NumberSetting("Tower Timer Boost", 1.2, 5, 0.1, 0.1);
-    private final BoolSetting swing = new BoolSetting("Swing", true);
-    private final BoolSetting autoJump = new BoolSetting("Auto Jump", false);
-    private final BoolSetting hideJump = new BoolSetting("Hide Jump", false);
-    private final BoolSetting baseSpeed = new BoolSetting("Base Speed", false);
-    public static BoolSetting keepY = new BoolSetting("Keep Y", false);
+    private final SelectButtonSetting countMode = new SelectButtonSetting("Block Counter", "Tenacity", "None", "Tenacity", "Basic", "Polar");
+    private final CheckBoxSetting rotations = new CheckBoxSetting("Rotations", true);
+    private final SelectButtonSetting rotationMode = new SelectButtonSetting("Rotation Mode", "Watchdog", "Watchdog", "NCP", "Back", "45", "Enum", "Down", "0","Vulcan");
+    private final SelectButtonSetting placeType = new SelectButtonSetting("Place Type", "Post", "Pre", "Post", "Legit", "Dynamic","Telly");
+    public static SelectButtonSetting keepYMode = new SelectButtonSetting("Keep Y Mode", "Always", "Always", "Speed toggled");
+    public static SelectButtonSetting sprintMode = new SelectButtonSetting("Sprint Mode", "Vanilla", "Vanilla", "Watchdog", "Cancel");
+    public static SelectButtonSetting towerMode = new SelectButtonSetting("Tower Mode", "Watchdog", "Vanilla", "NCP", "Watchdog", "Verus");
+    public static SelectButtonSetting swingMode = new SelectButtonSetting("Swing Mode", "Client", "Client", "Silent");
+    public static SliderSetting delay = new SliderSetting("Delay", 0, 2, 0, 0.05);
+    public static SliderSetting rotateDelay = new SliderSetting("rotateDelay", 10, 100, 1, 1);
+    private final SliderSetting timer = new SliderSetting("Timer", 1, 5, 0.1, 0.1);
+    public static final CheckBoxSetting auto3rdPerson = new CheckBoxSetting("Auto 3rd Person", false);
+    public static final CheckBoxSetting speedSlowdown = new CheckBoxSetting("Speed Slowdown", true);
+    public static final SliderSetting speedSlowdownAmount = new SliderSetting("Slowdown Amount", 0.1, 0.2, 0.01, 0.01);
+    public static final CheckBoxSetting itemSpoof = new CheckBoxSetting("Item Spoof", false);
+    public static final CheckBoxSetting downwards = new CheckBoxSetting("Downwards", false);
+    public static final CheckBoxSetting safewalk = new CheckBoxSetting("Safewalk", false);
+    public static final CheckBoxSetting sprint = new CheckBoxSetting("Sprint", false);
+    private final CheckBoxSetting sneak = new CheckBoxSetting("Sneak", false);
+    public static final CheckBoxSetting tower = new CheckBoxSetting("Tower", false);
+    private final SliderSetting towerTimer = new SliderSetting("Tower Timer Boost", 1.2, 5, 0.1, 0.1);
+    private final CheckBoxSetting swing = new CheckBoxSetting("Swing", true);
+    private final CheckBoxSetting autoJump = new CheckBoxSetting("Auto Jump", false);
+    private final CheckBoxSetting hideJump = new CheckBoxSetting("Hide Jump", false);
+    private final CheckBoxSetting baseSpeed = new CheckBoxSetting("Base Speed", false);
+    public static CheckBoxSetting keepY = new CheckBoxSetting("Keep Y", false);
     private ScaffoldUtil.BlockCache blockCache, lastBlockCache;
     private float y;
     private float speed;
@@ -80,14 +80,14 @@ public class SafeScaffold extends Module {
         this.addSetting(countMode, rotations, rotationMode,rotateDelay, placeType, keepYMode, sprintMode, towerMode, swingMode, delay, timer,
                 auto3rdPerson, speedSlowdown, speedSlowdownAmount, itemSpoof, downwards, safewalk, sprint, sneak, tower, towerTimer,
                 swing, autoJump, hideJump, baseSpeed, keepY);
-        rotationMode.addParent(rotations, BoolSetting::getValue);
-        sprintMode.addParent(sprint, BoolSetting::getValue);
-        towerMode.addParent(tower, BoolSetting::getValue);
-        swingMode.addParent(swing, BoolSetting::getValue);
-        towerTimer.addParent(tower, BoolSetting::getValue);
-        keepYMode.addParent(keepY, BoolSetting::getValue);
-        hideJump.addParent(autoJump, BoolSetting::getValue);
-        speedSlowdownAmount.addParent(speedSlowdown, BoolSetting::getValue);
+        rotationMode.addParent(rotations, CheckBoxSetting::getValue);
+        sprintMode.addParent(sprint, CheckBoxSetting::getValue);
+        towerMode.addParent(tower, CheckBoxSetting::getValue);
+        swingMode.addParent(swing, CheckBoxSetting::getValue);
+        towerTimer.addParent(tower, CheckBoxSetting::getValue);
+        keepYMode.addParent(keepY, CheckBoxSetting::getValue);
+        hideJump.addParent(autoJump, CheckBoxSetting::getValue);
+        speedSlowdownAmount.addParent(speedSlowdown, CheckBoxSetting::getValue);
     }
 
     @EventTarget

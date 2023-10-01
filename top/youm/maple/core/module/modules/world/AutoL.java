@@ -3,7 +3,7 @@ package top.youm.maple.core.module.modules.world;
 import com.darkmagician6.eventapi.EventTarget;
 import org.lwjgl.input.Keyboard;
 import top.youm.maple.common.events.TickEvent;
-import top.youm.maple.common.settings.impl.NumberSetting;
+import top.youm.maple.common.settings.impl.SliderSetting;
 import top.youm.maple.core.module.Module;
 import top.youm.maple.core.module.ModuleCategory;
 import top.youm.maple.utils.TimerUtil;
@@ -14,7 +14,7 @@ import top.youm.maple.utils.player.ChatUtil;
  * Created on 2023/7/17
  */
 public class AutoL extends Module {
-    NumberSetting delay = new NumberSetting("delay",0,5000,1000,100);
+    SliderSetting delay = new SliderSetting("delay",0,5000,1000,100);
     public AutoL() {
         super("AutoL", ModuleCategory.WORLD, Keyboard.KEY_NONE);
         this.addSetting(delay);

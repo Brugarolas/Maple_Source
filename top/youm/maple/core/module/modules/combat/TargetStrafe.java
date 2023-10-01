@@ -12,10 +12,11 @@ import org.lwjgl.input.Keyboard;
 import top.youm.maple.Maple;
 import top.youm.maple.common.events.MotionEvent;
 import top.youm.maple.common.events.MoveEvent;
-import top.youm.maple.common.settings.impl.BoolSetting;
-import top.youm.maple.common.settings.impl.NumberSetting;
+import top.youm.maple.common.settings.impl.CheckBoxSetting;
+import top.youm.maple.common.settings.impl.SliderSetting;
 import top.youm.maple.core.module.Module;
 import top.youm.maple.core.module.ModuleCategory;
+import top.youm.maple.core.module.modules.combat.killaura.KillAura;
 import top.youm.maple.core.module.modules.movement.Speed;
 import top.youm.maple.utils.player.MovementUtil;
 import top.youm.maple.utils.player.RotationUtil;
@@ -28,16 +29,16 @@ import java.util.List;
 public final class TargetStrafe extends Module {
 
 
-    public static BoolSetting edges = new BoolSetting("Edges", false);
-    public static BoolSetting behind = new BoolSetting("Behind", false);
-    public  BoolSetting liquids = new BoolSetting("Liquids", false);
-    public BoolSetting controllable = new BoolSetting("Controllable", true);
+    public static CheckBoxSetting edges = new CheckBoxSetting("Edges", false);
+    public static CheckBoxSetting behind = new CheckBoxSetting("Behind", false);
+    public CheckBoxSetting liquids = new CheckBoxSetting("Liquids", false);
+    public CheckBoxSetting controllable = new CheckBoxSetting("Controllable", true);
     
-    public static final NumberSetting radius = new NumberSetting("Radius", 2, 8, 0.5, 0.5);
-    private static final NumberSetting points = new NumberSetting("Points", 12, 16, 3, 1);
-    public static final BoolSetting space = new BoolSetting("Require space key", true);
-    public static final BoolSetting auto3rdPerson = new BoolSetting("Auto 3rd Person", false);
-    private final BoolSetting render = new BoolSetting("Render", true);
+    public static final SliderSetting radius = new SliderSetting("Radius", 2, 8, 0.5, 0.5);
+    private static final SliderSetting points = new SliderSetting("Points", 12, 16, 3, 1);
+    public static final CheckBoxSetting space = new CheckBoxSetting("Require space key", true);
+    public static final CheckBoxSetting auto3rdPerson = new CheckBoxSetting("Auto 3rd Person", false);
+    private final CheckBoxSetting render = new CheckBoxSetting("Render", true);
 
     private static int strafe = 1;
     private static int position;
@@ -98,14 +99,15 @@ public final class TargetStrafe extends Module {
 
     public static boolean strafe(MoveEvent e, double moveSpeed) {
         if (canStrafe()) {
-            setSpeed(e, moveSpeed, RotationUtil.getYaw(KillAura.target.getPositionVector()), strafe,
-                    mc.thePlayer.getDistanceToEntity(KillAura.target) <= radius.getValue().doubleValue() ? 0 : 1);
+            setSpeed(e, moveSpeed, RotationUtil.getYaw(Targets.INSTANCE.target.getPositionVector()), strafe,
+                    mc.thePlayer.getDistanceToEntity(Targets.INSTANCE.target) <= radius.getValue().doubleValue() ? 0 : 1);
             return true;
         }
         return false;
     }
 
     public static boolean canStrafe() {
+
         KillAura killAura = Maple.getInstance().getModuleManager().getModuleByClass(KillAura.class);
         if (!Maple.getInstance().getModuleManager().getModuleByClass(TargetStrafe.class).isToggle() || !killAura.isToggle()
                 || !MovementUtil.isMoving() || (space.getValue() && !Keyboard.isKeyDown(Keyboard.KEY_SPACE))) {
@@ -114,11 +116,11 @@ public final class TargetStrafe extends Module {
         if (!(Maple.getInstance().getModuleManager().getModuleByClass(Speed.class).isToggle())) {
             return false;
         }
-        return!KillAura.targets.isEmpty() && killAura.isValid(KillAura.target);
+        return Targets.INSTANCE.target != null && Targets.INSTANCE.targetCanAttack(Targets.INSTANCE.target);
     }
 
     public static void setSpeed(MoveEvent moveEvent, double speed, float yaw, double strafe, double forward) {
-        EntityLivingBase target = KillAura.target;
+        EntityLivingBase target = Targets.INSTANCE.target;
         double rad = radius.getValue().doubleValue();
         int count = points.getValue().intValue();
 
@@ -165,7 +167,7 @@ public final class TargetStrafe extends Module {
     }
 
     private boolean isInVoid() {
-        double yaw = Math.toRadians(RotationUtil.getYaw(KillAura.target.getPositionVector()));
+        double yaw = Math.toRadians(RotationUtil.getYaw(Targets.INSTANCE.target.getPositionVector()));
         double xValue = -Math.sin(yaw) * 2;
         double zValue = Math.cos(yaw) * 2;
         for (int i = 0; i <= 256; i++) {
@@ -182,7 +184,7 @@ public final class TargetStrafe extends Module {
     }
 
     private boolean isInLiquid() {
-        double yaw = Math.toRadians(RotationUtil.getYaw(KillAura.target.getPositionVector()));
+        double yaw = Math.toRadians(RotationUtil.getYaw(Targets.INSTANCE.target.getPositionVector()));
         double xValue = -Math.sin(yaw) * 2;
         double zValue = Math.cos(yaw) * 2;
         BlockPos b = new BlockPos(mc.thePlayer.posX + xValue, mc.thePlayer.posY, mc.thePlayer.posZ + zValue);

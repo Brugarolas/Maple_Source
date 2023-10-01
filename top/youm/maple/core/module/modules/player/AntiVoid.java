@@ -8,8 +8,8 @@ import org.lwjgl.input.Keyboard;
 import top.youm.maple.common.events.MotionEvent;
 import top.youm.maple.common.events.TPEvent;
 import top.youm.maple.common.events.TickEvent;
-import top.youm.maple.common.settings.impl.ModeSetting;
-import top.youm.maple.common.settings.impl.NumberSetting;
+import top.youm.maple.common.settings.impl.SelectButtonSetting;
+import top.youm.maple.common.settings.impl.SliderSetting;
 import top.youm.maple.core.module.Module;
 import top.youm.maple.core.module.ModuleCategory;
 
@@ -18,8 +18,8 @@ import top.youm.maple.core.module.ModuleCategory;
  * Created on 2023/8/16
  */
 public class AntiVoid extends Module {
-    private final NumberSetting distance = new NumberSetting("Distance", 1, 10, 0 , 1);
-    private final ModeSetting mode = new ModeSetting("mode","Vulcan","Position","Vulcan");
+    private final SliderSetting distance = new SliderSetting("Distance", 1, 10, 0 , 1);
+    private final SelectButtonSetting mode = new SelectButtonSetting("mode","Vulcan","Position","Vulcan");
     private boolean teleported;
     public AntiVoid() {
         super("AntiVoid", ModuleCategory.PLAYER, Keyboard.KEY_NONE);

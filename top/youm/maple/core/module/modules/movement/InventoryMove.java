@@ -4,7 +4,7 @@ import com.darkmagician6.eventapi.EventTarget;
 import com.darkmagician6.eventapi.events.Event;
 import top.youm.maple.common.events.MotionEvent;
 import top.youm.maple.common.events.TickEvent;
-import top.youm.maple.common.settings.impl.ModeSetting;
+import top.youm.maple.common.settings.impl.SelectButtonSetting;
 import top.youm.maple.core.module.Module;
 import top.youm.maple.core.module.ModuleCategory;
 import top.youm.maple.utils.TimerUtil;
@@ -22,7 +22,7 @@ import java.util.List;
 @SuppressWarnings("unused")
 public final class InventoryMove extends Module {
     private final TimerUtil delayTimer = new TimerUtil();
-    private final ModeSetting mode = new ModeSetting("Mode","Vanilla","Vanilla","Delay");
+    private final SelectButtonSetting mode = new SelectButtonSetting("Mode","Vanilla","Vanilla","Delay");
     private static final List<KeyBinding> keys = Arrays.asList(
             mc.gameSettings.keyBindForward,
             mc.gameSettings.keyBindBack,

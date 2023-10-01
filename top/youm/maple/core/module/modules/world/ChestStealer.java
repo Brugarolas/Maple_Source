@@ -20,14 +20,13 @@ import top.youm.maple.Maple;
 import top.youm.maple.common.events.MotionEvent;
 import top.youm.maple.common.events.Render2DEvent;
 import top.youm.maple.common.events.WorldEvent;
-import top.youm.maple.common.settings.impl.BoolSetting;
-import top.youm.maple.common.settings.impl.NumberSetting;
+import top.youm.maple.common.settings.impl.CheckBoxSetting;
+import top.youm.maple.common.settings.impl.SliderSetting;
 import top.youm.maple.core.module.Module;
 import top.youm.maple.core.module.ModuleCategory;
 import top.youm.maple.core.module.modules.player.InvManager;
 import top.youm.maple.core.ui.font.FontLoaders;
 import top.youm.maple.utils.TimerUtil;
-import top.youm.maple.utils.liquidbounce.RotationUtils;
 import top.youm.maple.utils.player.RotationUtil;
 
 import java.util.ArrayList;
@@ -36,15 +35,15 @@ import java.util.List;
 
 public class ChestStealer extends Module {
 
-    private final NumberSetting delay = new NumberSetting("Delay", 80, 300, 0, 10);
-    private final BoolSetting aura = new BoolSetting("Aura", false);
-    private final NumberSetting auraRange = new NumberSetting("Aura Range", 3, 6, 1, 1);
-    public static BoolSetting stealingIndicator = new BoolSetting("Stealing Indicator", false);
-    public static BoolSetting titleCheck = new BoolSetting("Title Check", true);
-    public static BoolSetting freeLook = new BoolSetting("Free Look", true);
-    private final BoolSetting reverse = new BoolSetting("Reverse", false);
-    public static final BoolSetting silent = new BoolSetting("Silent", false);
-    private final BoolSetting smart = new BoolSetting("Smart", false);
+    private final SliderSetting delay = new SliderSetting("Delay", 80, 300, 0, 10);
+    private final CheckBoxSetting aura = new CheckBoxSetting("Aura", false);
+    private final SliderSetting auraRange = new SliderSetting("Aura Range", 3, 6, 1, 1);
+    public static CheckBoxSetting stealingIndicator = new CheckBoxSetting("Stealing Indicator", false);
+    public static CheckBoxSetting titleCheck = new CheckBoxSetting("Title Check", true);
+    public static CheckBoxSetting freeLook = new CheckBoxSetting("Free Look", true);
+    private final CheckBoxSetting reverse = new CheckBoxSetting("Reverse", false);
+    public static final CheckBoxSetting silent = new CheckBoxSetting("Silent", false);
+    private final CheckBoxSetting smart = new CheckBoxSetting("Smart", false);
 
     private final List<BlockPos> openedChests = new ArrayList<>();
     private final List<Item> items = new ArrayList<>();
@@ -55,8 +54,8 @@ public class ChestStealer extends Module {
 
     public ChestStealer() {
         super("Chest Stealer", ModuleCategory.WORLD, Keyboard.KEY_NONE);
-        auraRange.addParent(aura, BoolSetting::getValue);
-        stealingIndicator.addParent(silent, BoolSetting::getValue);
+        auraRange.addParent(aura, CheckBoxSetting::getValue);
+        stealingIndicator.addParent(silent, CheckBoxSetting::getValue);
         this.addSetting(delay, aura, auraRange, stealingIndicator, titleCheck, freeLook, reverse, silent, smart);
     }
 

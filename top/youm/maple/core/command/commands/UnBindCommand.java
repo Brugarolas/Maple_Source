@@ -1,31 +1,30 @@
 package top.youm.maple.core.command.commands;
 
+import org.lwjgl.input.Keyboard;
 import top.youm.maple.Maple;
 import top.youm.maple.core.command.Command;
 import top.youm.maple.core.command.CommandManager;
 import top.youm.maple.core.module.Module;
-import org.lwjgl.input.Keyboard;
 
 /**
  * @author YouM
- * can bind your keyborad to toggle prescribed module
+ * Created on 2023/9/29
  */
-public class BindCommand extends Command {
-    public BindCommand() {
-        super("bind", "*bind <module name> <key name>");
+public class UnBindCommand extends Command {
+    public UnBindCommand() {
+        super("unbind", "*unbind <module name>");
     }
 
     @Override
     public boolean execute(String... args) {
         for (Module module : Maple.getInstance().getModuleManager().modules) {
             if(args[1].equalsIgnoreCase(module.getName().replace(" ",""))){
-                module.setKey(Keyboard.getKeyIndex(args[2].toUpperCase()));
-                CommandManager.helperSend("Bind Successed! module: " + module.getName(), CommandManager.State.Info);
+                module.setKey(Keyboard.KEY_NONE);
+                CommandManager.helperSend("UnBind Successed! module: " + module.getName(), CommandManager.State.Info);
                 return true;
             }
         }
-        CommandManager.helperSend("Bind Filed!",CommandManager.State.Error);
-
+        CommandManager.helperSend("UnBind Filed!",CommandManager.State.Error);
         return false;
     }
 }

@@ -8,6 +8,7 @@ import top.youm.maple.core.command.commands.BindCommand;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.EnumChatFormatting;
+import top.youm.maple.core.command.commands.UnBindCommand;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -22,6 +23,7 @@ public class CommandManager {
     public final String prefix = "*";
     public void initialize(){
         commands.add(new BindCommand());
+        commands.add(new UnBindCommand());
         EventManager.register(this);
     }
 
@@ -31,18 +33,21 @@ public class CommandManager {
      * @return is success
      */
     public boolean execute(String message){
-        if (!message.startsWith(prefix)) {
-            return false;
-        }
         String[] context = message.substring(1).split(" ");
         System.out.println(Arrays.toString(context));
+        if(context[0].equals("help")) {
+            for (Command command : commands) {
+                helperSend("command: " + command.getName() + " usage: " + command.getUsage(), State.Info);
+            }
+            return true;
+        }
+
         for (Command command : commands) {
-            if(context[0].equals("help")){
-                helperSend("command: " +command.getName() + " usage: "+ command.getUsage(),State.NONE);
-            }else if(context[0].equals(command.getName())){
+            if(context[0].equals(command.getName())){
                 return command.execute(context);
             }
         }
+        helperSend("nonexistent command",State.Error);
         return false;
     }
 
@@ -51,7 +56,11 @@ public class CommandManager {
      */
     @EventTarget
     public void onChat(ChatEvent event){
-       execute(event.getMessage());
+        if(event.getMessage().startsWith("*")){
+            event.setCancelled(true);
+            execute(event.getMessage());
+        }
+
     }
 
     /**
@@ -63,7 +72,7 @@ public class CommandManager {
         Minecraft.getMinecraft().thePlayer.addChatMessage(new ChatComponentTranslation("["+ EnumChatFormatting.BLUE + Maple.getInstance().NAME + EnumChatFormatting.WHITE +"]: " + state.color + (state == State.NONE ? state.color : "") + " " + message));
     }
     public enum State{
-        NONE(EnumChatFormatting.WHITE),Info(EnumChatFormatting.BLUE),Warn(EnumChatFormatting.YELLOW),Error(EnumChatFormatting.RED),Debug(EnumChatFormatting.GOLD);
+        NONE(EnumChatFormatting.WHITE),Info(EnumChatFormatting.GREEN),Warn(EnumChatFormatting.YELLOW),Error(EnumChatFormatting.RED),Debug(EnumChatFormatting.BLUE);
         public final EnumChatFormatting color;
 
         State(EnumChatFormatting color) {

@@ -4,11 +4,10 @@ import com.darkmagician6.eventapi.EventTarget;
 import com.darkmagician6.eventapi.events.Event;
 import net.minecraft.item.ItemBow;
 import net.minecraft.network.play.client.C09PacketHeldItemChange;
-import top.youm.maple.Maple;
 import top.youm.maple.common.events.MotionEvent;
 import top.youm.maple.common.events.SlowDownEvent;
 import top.youm.maple.common.events.TickEvent;
-import top.youm.maple.common.settings.impl.ModeSetting;
+import top.youm.maple.common.settings.impl.SelectButtonSetting;
 import top.youm.maple.core.module.Module;
 import top.youm.maple.core.module.ModuleCategory;
 import net.minecraft.network.play.client.C07PacketPlayerDigging;
@@ -16,7 +15,6 @@ import net.minecraft.network.play.client.C08PacketPlayerBlockPlacement;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 import org.lwjgl.input.Keyboard;
-import top.youm.maple.core.module.modules.combat.KillAura;
 import top.youm.maple.utils.BadPacketsComponent;
 import top.youm.maple.utils.SlotComponent;
 import top.youm.maple.utils.network.PacketUtil;
@@ -29,7 +27,7 @@ import java.util.Objects;
  */
 public class NoSlow extends Module {
     private int disable;
-    private ModeSetting mode = new ModeSetting("Mode","New NCP","New NCP","Other");
+    private SelectButtonSetting mode = new SelectButtonSetting("Mode","New NCP","New NCP","Other");
     public NoSlow() {
         super("No Slow", ModuleCategory.MOVEMENT, Keyboard.KEY_NONE);
         this.addSetting(mode);
@@ -48,7 +46,7 @@ public class NoSlow extends Module {
             case "New NCP":
                 this.disable++;
                 if (mc.thePlayer.isUsingItem() && this.disable > 10 && !BadPacketsComponent.bad(false,
-                        true, true, false, false) && !(Objects.requireNonNull(SlotComponent.getItemStack()).getItem() instanceof ItemBow) && KillAura.target == null) {
+                        true, true, false, false) && !(Objects.requireNonNull(SlotComponent.getItemStack()).getItem() instanceof ItemBow)) {
                     PacketUtil.send(new C09PacketHeldItemChange(SlotComponent.getItemIndex() % 8 + 1));
                     PacketUtil.send(new C09PacketHeldItemChange(SlotComponent.getItemIndex()));
                 }

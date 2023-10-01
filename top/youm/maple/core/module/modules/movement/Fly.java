@@ -9,8 +9,8 @@ import org.lwjgl.input.Keyboard;
 import top.youm.maple.common.events.MotionEvent;
 import top.youm.maple.common.events.PacketReceiveEvent;
 import top.youm.maple.common.events.TickEvent;
-import top.youm.maple.common.settings.impl.ModeSetting;
-import top.youm.maple.common.settings.impl.NumberSetting;
+import top.youm.maple.common.settings.impl.SelectButtonSetting;
+import top.youm.maple.common.settings.impl.SliderSetting;
 import top.youm.maple.core.module.Module;
 import top.youm.maple.core.module.ModuleCategory;
 import top.youm.maple.utils.player.MovementUtil;
@@ -21,8 +21,8 @@ import java.util.ArrayList;
  * @author YouM
  */
 public class Fly extends Module {
-    private final ModeSetting mode = new ModeSetting("Mode", "WatchDog","WatchDog","Vanilla","AirWalk","Vulcan");
-    private final NumberSetting speed = new NumberSetting("Speed", 2, 5, 0, 0.1);
+    private final SelectButtonSetting mode = new SelectButtonSetting("Mode", "WatchDog","WatchDog","Vanilla","AirWalk","Vulcan");
+    private final SliderSetting speed = new SliderSetting("Speed", 2, 5, 0, 0.1);
     private float stage;
     private int ticks;
     private boolean doFly;

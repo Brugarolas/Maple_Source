@@ -1,4 +1,4 @@
-package top.youm.maple;
+package top.youm.maple.alts;
 
 /**
  * @author YouM

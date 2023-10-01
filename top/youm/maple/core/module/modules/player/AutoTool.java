@@ -8,15 +8,15 @@ import net.minecraft.item.ItemSword;
 import net.minecraft.util.MovingObjectPosition;
 import org.lwjgl.input.Keyboard;
 import top.youm.maple.common.events.MotionEvent;
-import top.youm.maple.common.settings.impl.BoolSetting;
+import top.youm.maple.common.settings.impl.CheckBoxSetting;
 import top.youm.maple.core.module.Module;
 import top.youm.maple.core.module.ModuleCategory;
-import top.youm.maple.core.module.modules.combat.KillAura;
+import top.youm.maple.core.module.modules.combat.Targets;
 import top.youm.maple.utils.player.InventoryUtil;
 
 public class AutoTool extends Module {
 
-    private final BoolSetting autoSword = new BoolSetting("AutoSword", true);
+    private final CheckBoxSetting autoSword = new CheckBoxSetting("AutoSword", true);
 
     public AutoTool() {
         super("Auto Tool", ModuleCategory.PLAYER, Keyboard.KEY_NONE);
@@ -34,7 +34,7 @@ public class AutoTool extends Module {
                     Block block = mc.theWorld.getBlockState(objectMouseOver.getBlockPos()).getBlock();
                     updateItem(block);
                 }
-            } else if (!KillAura.targets.isEmpty()) {
+            } else if (Targets.INSTANCE.target != null) {
                 switchSword();
             }
         }

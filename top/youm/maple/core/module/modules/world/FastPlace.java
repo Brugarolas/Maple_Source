@@ -3,8 +3,8 @@ package top.youm.maple.core.module.modules.world;
 import com.darkmagician6.eventapi.EventTarget;
 import top.youm.maple.common.events.MotionEvent;
 import top.youm.maple.common.events.TickEvent;
-import top.youm.maple.common.settings.impl.BoolSetting;
-import top.youm.maple.common.settings.impl.NumberSetting;
+import top.youm.maple.common.settings.impl.CheckBoxSetting;
+import top.youm.maple.common.settings.impl.SliderSetting;
 import top.youm.maple.core.module.Module;
 import top.youm.maple.core.module.ModuleCategory;
 import net.minecraft.item.Item;
@@ -17,9 +17,9 @@ import org.lwjgl.input.Keyboard;
  * @author YouM
  */
 public class FastPlace extends Module {
-    private final BoolSetting blocks = new BoolSetting("Blocks", true);
-    private final BoolSetting projectiles = new BoolSetting("Projectiles", true);
-    private final NumberSetting ticks = new NumberSetting("Ticks", 0, 4, 0, 1);
+    private final CheckBoxSetting blocks = new CheckBoxSetting("Blocks", true);
+    private final CheckBoxSetting projectiles = new CheckBoxSetting("Projectiles", true);
+    private final SliderSetting ticks = new SliderSetting("Ticks", 0, 4, 0, 1);
     public FastPlace() {
         super("Fast Place", ModuleCategory.WORLD, Keyboard.KEY_NONE);
         this.addSetting(ticks, blocks, projectiles);

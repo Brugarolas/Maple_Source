@@ -1,7 +1,7 @@
 package top.youm.maple.core.ui.clickgui.classic.component.sub;
 
 import net.minecraft.client.renderer.GlStateManager;
-import top.youm.maple.common.settings.impl.ModeSetting;
+import top.youm.maple.common.settings.impl.SelectButtonSetting;
 import top.youm.maple.core.ui.clickgui.classic.component.Component;
 import top.youm.maple.core.ui.clickgui.classic.theme.Theme;
 import top.youm.maple.core.ui.clickgui.classic.MouseType;
@@ -12,11 +12,11 @@ import top.youm.maple.utils.render.RoundedUtil;
 import java.awt.*;
 
 public class DropdownComponent extends Component {
-    private final ModeSetting modeSetting;
+    private final SelectButtonSetting modeSetting;
     private boolean open;
     private float animation;
 
-    public DropdownComponent(ModeSetting modeSetting) {
+    public DropdownComponent(SelectButtonSetting modeSetting) {
         super(modeSetting.getName());
         this.modeSetting = modeSetting;
     }

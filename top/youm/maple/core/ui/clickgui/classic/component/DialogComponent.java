@@ -4,10 +4,10 @@ import net.minecraft.client.gui.ScaledResolution;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import top.youm.maple.common.settings.Setting;
-import top.youm.maple.common.settings.impl.BoolSetting;
+import top.youm.maple.common.settings.impl.CheckBoxSetting;
 import top.youm.maple.common.settings.impl.ColorThemeSetting;
-import top.youm.maple.common.settings.impl.ModeSetting;
-import top.youm.maple.common.settings.impl.NumberSetting;
+import top.youm.maple.common.settings.impl.SelectButtonSetting;
+import top.youm.maple.common.settings.impl.SliderSetting;
 import top.youm.maple.core.module.Module;
 import top.youm.maple.core.ui.clickgui.classic.MouseType;
 import top.youm.maple.core.ui.clickgui.classic.component.sub.ButtonComponent;
@@ -48,12 +48,12 @@ public class DialogComponent extends Component {
         this.width = 300;
         this.height = 300;
         for (Setting<?> setting : module.getSettings()) {
-            if (setting instanceof BoolSetting) {
-                subComponents.add(new ButtonComponent((BoolSetting) setting));
-            } else if (setting instanceof NumberSetting) {
-                subComponents.add(new SliderComponent((NumberSetting) setting));
-            } else if (setting instanceof ModeSetting) {
-                subComponents.add(new DropdownComponent((ModeSetting) setting));
+            if (setting instanceof CheckBoxSetting) {
+                subComponents.add(new ButtonComponent((CheckBoxSetting) setting));
+            } else if (setting instanceof SliderSetting) {
+                subComponents.add(new SliderComponent((SliderSetting) setting));
+            } else if (setting instanceof SelectButtonSetting) {
+                subComponents.add(new DropdownComponent((SelectButtonSetting) setting));
             } else if (setting instanceof ColorThemeSetting) {
                 subComponents.add(new ColorThemeComponent((ColorThemeSetting) setting));
                 System.out.println(setting.getName());

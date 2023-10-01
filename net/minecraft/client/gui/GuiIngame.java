@@ -8,6 +8,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Random;
 
+import top.youm.maple.Maple;
 import top.youm.maple.common.events.Render2DEvent;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
@@ -46,6 +47,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StringUtils;
 import net.minecraft.world.border.WorldBorder;
 import net.optifine.CustomColors;
+import top.youm.maple.core.module.modules.visual.HUD;
 
 public class GuiIngame extends Gui
 {
@@ -173,6 +175,7 @@ public class GuiIngame extends Gui
         {
             this.renderTooltip(scaledresolution, partialTicks);
         }
+        Maple.getInstance().getModuleManager().getModuleByClass(HUD.class).blurScreen();
         /* Maple: 2D render event */
         EventManager.call(new Render2DEvent(partialTicks));
 

@@ -1,6 +1,6 @@
 package top.youm.maple.core.ui.clickgui.classic.component.sub;
 
-import top.youm.maple.common.settings.impl.BoolSetting;
+import top.youm.maple.common.settings.impl.CheckBoxSetting;
 import top.youm.maple.core.ui.clickgui.classic.component.Component;
 import top.youm.maple.core.ui.clickgui.classic.theme.Theme;
 import top.youm.maple.core.ui.clickgui.classic.MouseType;
@@ -10,10 +10,10 @@ import top.youm.maple.utils.render.RoundedUtil;
 import java.awt.*;
 
 public class ButtonComponent extends Component {
-    private final BoolSetting boolSetting;
+    private final CheckBoxSetting boolSetting;
     private float animationBool = 10;
 
-    public ButtonComponent(BoolSetting boolSetting) {
+    public ButtonComponent(CheckBoxSetting boolSetting) {
         super(boolSetting.getName());
         this.boolSetting = boolSetting;
     }

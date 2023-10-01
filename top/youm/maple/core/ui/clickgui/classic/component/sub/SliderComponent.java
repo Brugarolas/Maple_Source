@@ -1,7 +1,7 @@
 package top.youm.maple.core.ui.clickgui.classic.component.sub;
 
 
-import top.youm.maple.common.settings.impl.NumberSetting;
+import top.youm.maple.common.settings.impl.SliderSetting;
 import top.youm.maple.core.ui.clickgui.classic.component.Component;
 import top.youm.maple.core.ui.font.FontLoaders;
 import top.youm.maple.core.ui.clickgui.classic.theme.Theme;
@@ -12,12 +12,12 @@ import top.youm.maple.utils.render.RoundedUtil;
 import java.awt.*;
 
 public class SliderComponent extends Component {
-    private final NumberSetting numberSetting;
+    private final SliderSetting numberSetting;
     private float percentBar;
     private float animation;
     private boolean dragging;
 
-    public SliderComponent(NumberSetting numberSetting) {
+    public SliderComponent(SliderSetting numberSetting) {
         super(numberSetting.getName());
         this.numberSetting = numberSetting;
     }
@@ -42,7 +42,7 @@ public class SliderComponent extends Component {
         }
     }
 
-    public void setValue(NumberSetting setting) {
+    public void setValue(SliderSetting setting) {
         float min = setting.getMin().floatValue();
         float max = setting.getMax().floatValue();
         float inc = setting.getInc().floatValue();

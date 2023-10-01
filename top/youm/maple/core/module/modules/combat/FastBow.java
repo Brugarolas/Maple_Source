@@ -5,7 +5,7 @@ import net.minecraft.item.ItemBow;
 import net.minecraft.network.play.client.C03PacketPlayer;
 import org.lwjgl.input.Keyboard;
 import top.youm.maple.common.events.MotionEvent;
-import top.youm.maple.common.settings.impl.ModeSetting;
+import top.youm.maple.common.settings.impl.SelectButtonSetting;
 import top.youm.maple.core.module.Module;
 import top.youm.maple.core.module.ModuleCategory;
 
@@ -13,7 +13,7 @@ import top.youm.maple.core.module.ModuleCategory;
  * @author YouM
  */
 public class FastBow extends Module {
-    public static ModeSetting mode = new ModeSetting("Mode","NCP", "NCP","Vanilla");
+    public static SelectButtonSetting mode = new SelectButtonSetting("Mode","NCP", "NCP","Vanilla");
 
     public FastBow(){
         super("Fast Bow", ModuleCategory.COMBAT, Keyboard.KEY_NONE);

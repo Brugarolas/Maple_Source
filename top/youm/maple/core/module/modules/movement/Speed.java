@@ -2,21 +2,19 @@ package top.youm.maple.core.module.modules.movement;
 
 import com.darkmagician6.eventapi.EventTarget;
 import com.darkmagician6.eventapi.events.Event;
-import com.sun.org.apache.xpath.internal.operations.Mod;
 import net.minecraft.init.Blocks;
 import net.minecraft.network.play.client.C03PacketPlayer;
 import net.minecraft.network.play.server.S08PacketPlayerPosLook;
 import net.minecraft.potion.Potion;
 import net.minecraft.util.BlockPos;
 import top.youm.maple.common.events.*;
-import top.youm.maple.common.settings.impl.BoolSetting;
-import top.youm.maple.common.settings.impl.ModeSetting;
-import top.youm.maple.common.settings.impl.NumberSetting;
+import top.youm.maple.common.settings.impl.CheckBoxSetting;
+import top.youm.maple.common.settings.impl.SelectButtonSetting;
+import top.youm.maple.common.settings.impl.SliderSetting;
 import top.youm.maple.core.module.Module;
 import top.youm.maple.core.module.ModuleCategory;
 import org.lwjgl.input.Keyboard;
 import top.youm.maple.core.module.modules.combat.TargetStrafe;
-import top.youm.maple.core.module.modules.world.Disabler;
 import top.youm.maple.utils.TimerUtil;
 import top.youm.maple.utils.network.PacketUtil;
 import top.youm.maple.utils.player.MovementUtil;
@@ -27,15 +25,15 @@ import java.util.concurrent.ThreadLocalRandom;
  * @author YouM
  */
 public final class Speed extends Module {
-    private final ModeSetting mode = new ModeSetting("Mode", "Watchdog",
+    private final SelectButtonSetting mode = new SelectButtonSetting("Mode", "Watchdog",
             "Watchdog", "Strafe", "Matrix", "HurtTime", "Vanilla", "BHop", "Verus", "Viper", "Vulcan", "Zonecraft", "Heatseeker", "Mineland");
-    private final ModeSetting watchdogMode = new ModeSetting("Watchdog Mode", "Hop", "Hop", "Dev", "Low Hop", "Ground");
-    private final ModeSetting verusMode = new ModeSetting("Verus Mode", "Normal", "Low", "Normal");
-    private final ModeSetting viperMode = new ModeSetting("Viper Mode", "Normal", "High", "Normal");
-    private final BoolSetting autoDisable = new BoolSetting("Auto Disable", false);
-    private final NumberSetting groundSpeed = new NumberSetting("Ground Speed", 2, 5, 1, 0.1);
-    private final NumberSetting timer = new NumberSetting("Timer", 1, 5, 1, 0.1);
-    private final NumberSetting vanillaSpeed = new NumberSetting("Speed", 1, 10, 1, 0.1);
+    private final SelectButtonSetting watchdogMode = new SelectButtonSetting("Watchdog Mode", "Hop", "Hop", "Dev", "Low Hop", "Ground");
+    private final SelectButtonSetting verusMode = new SelectButtonSetting("Verus Mode", "Normal", "Low", "Normal");
+    private final SelectButtonSetting viperMode = new SelectButtonSetting("Viper Mode", "Normal", "High", "Normal");
+    private final CheckBoxSetting autoDisable = new CheckBoxSetting("Auto Disable", false);
+    private final SliderSetting groundSpeed = new SliderSetting("Ground Speed", 2, 5, 1, 0.1);
+    private final SliderSetting timer = new SliderSetting("Timer", 1, 5, 1, 0.1);
+    private final SliderSetting vanillaSpeed = new SliderSetting("Speed", 1, 10, 1, 0.1);
 
     private final TimerUtil timerUtil = new TimerUtil();
     private final float r = ThreadLocalRandom.current().nextFloat();

@@ -8,8 +8,8 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import org.lwjgl.input.Keyboard;
 import top.youm.maple.common.events.TickEvent;
-import top.youm.maple.common.settings.impl.BoolSetting;
-import top.youm.maple.common.settings.impl.ModeSetting;
+import top.youm.maple.common.settings.impl.CheckBoxSetting;
+import top.youm.maple.common.settings.impl.SelectButtonSetting;
 import top.youm.maple.core.module.Module;
 import top.youm.maple.core.module.ModuleCategory;
 import top.youm.maple.utils.player.Helper;
@@ -21,8 +21,8 @@ import java.util.List;
  *
  */
 public class AntiBot extends Module {
-    ModeSetting mode = new ModeSetting("Mode","Advanced","Classic","Advanced","BMC");
-    BoolSetting pingCheck = new BoolSetting("Ping Check",true);
+    SelectButtonSetting mode = new SelectButtonSetting("Mode","Advanced","Classic","Advanced","BMC");
+    CheckBoxSetting pingCheck = new CheckBoxSetting("Ping Check",true);
     public AntiBot() {
         super("Anti Bot", ModuleCategory.COMBAT, Keyboard.KEY_NONE);
         this.addSetting(mode,pingCheck);
@@ -36,20 +36,20 @@ public class AntiBot extends Module {
     public boolean isNPC(EntityLivingBase entity) {
         if(!this.isToggle()) return false;
         if (entity == null) {
-            return false;
+            return true;
         }
         if (entity == mc.thePlayer) {
-            return false;
+            return true;
         }
         if (!(entity instanceof EntityPlayer)) {
-            return false;
+            return true;
         }
         if (entity.isPlayerSleeping()) {
-            return false;
+            return true;
         }
         if (pingCheck.getValue()) {
             if (mc.getNetHandler().getPlayerInfo(entity.getUniqueID()).getResponseTime() == 0) {
-                return false;
+                return true;
             }
         }
         if(mode.getValue().equals("BMC")){

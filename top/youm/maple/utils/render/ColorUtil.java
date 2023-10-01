@@ -16,12 +16,30 @@ public class ColorUtil {
 
         return new Color(colorHSB.getRed(), colorHSB.getGreen(), colorHSB.getBlue(), Math.max(0, Math.min(255, (int) (alpha * 255))));
     }
-    public static Color staticFade(Color color){
-        float[] hsb = Color.RGBtoHSB(color.getRed(), color.getGreen(), color.getBlue(), null);
-        Color colorHSB = new Color(Color.HSBtoRGB(hsb[0], hsb[1], 200 / 360f));
+    public static Color brighter(Color color, float FACTOR) {
+        int r = color.getRed();
+        int g = color.getGreen();
+        int b = color.getBlue();
+        int alpha = color.getAlpha();
 
-        return new Color(colorHSB.getRed(), colorHSB.getGreen(), colorHSB.getBlue(), 255);
+        int i = (int) (1.0 / (1.0 - FACTOR));
+        if (r == 0 && g == 0 && b == 0) {
+            return new Color(i, i, i, alpha);
+        }
+        if (r > 0 && r < i) r = i;
+        if (g > 0 && g < i) g = i;
+        if (b > 0 && b < i) b = i;
 
+        return new Color(Math.min((int) (r / FACTOR), 255),
+                Math.min((int) (g / FACTOR), 255),
+                Math.min((int) (b / FACTOR), 255),
+                alpha);
+    }
+    public static Color darker(Color color, float FACTOR) {
+        return new Color(Math.max((int) (color.getRed() * FACTOR), 0),
+                Math.max((int) (color.getGreen() * FACTOR), 0),
+                Math.max((int) (color.getBlue() * FACTOR), 0),
+                color.getAlpha());
     }
     public static Color interpolateColorC(Color color1, Color color2, float amount) {
         amount = Math.min(1, Math.max(0, amount));

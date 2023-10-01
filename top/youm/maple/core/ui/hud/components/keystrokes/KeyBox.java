@@ -28,6 +28,7 @@ public class KeyBox {
             fontColor = new Color(255, 255, 255);
         }
         RenderUtil.drawRect(x, y, width, height, new Color(animBackgroundColor, animBackgroundColor, animBackgroundColor, 150));
+
         KeyStrokesUI.drawCenteredStringWithShadow(Keyboard.getKeyName(keyBinding.getKeyCode()).toUpperCase(), x + (width / 2.0f), y + (KeyStrokesUI.size / 2.0f), fontColor);
     }
 

@@ -3,6 +3,7 @@ package top.youm.maple;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import de.florianmichael.viamcp.ViaMCP;
+import top.youm.maple.alts.Account;
 import top.youm.maple.alts.AltManager;
 import top.youm.maple.core.command.CommandManager;
 import top.youm.maple.core.config.ConfigManager;
@@ -34,7 +35,7 @@ public class Maple {
     }
     public static Logger log = LogManager.getLogger();
     public String NAME = "Maple";
-    public String VERSION = "beta-2.1";
+    public String VERSION = "beta-3.0";
     public boolean DevMode = true;
     public Account account;
     public String username = NAME + "Dev" + MathUtil.getRandomInRange(1,999);
@@ -42,7 +43,6 @@ public class Maple {
     private ConfigManager configManager;
     private CommandManager commandManager;
     private AltManager altManager;
-    public List<String> songList;
     public void startGame(){
         setTheme(Theme.themes.get("Blue"));
 
@@ -85,9 +85,6 @@ public class Maple {
         return altManager;
     }
 
-    public List<String> getSongList() {
-        return songList;
-    }
     public static void setTheme(ColorTheme theme){
         Theme.theme = theme.getTheme();
         Theme.themeHover = theme.getThemeHover();

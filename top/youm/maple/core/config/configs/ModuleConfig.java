@@ -4,9 +4,9 @@ import com.google.gson.reflect.TypeToken;
 import top.youm.maple.Maple;
 import top.youm.maple.common.config.ModuleConfiguration;
 import top.youm.maple.common.settings.Setting;
-import top.youm.maple.common.settings.impl.BoolSetting;
-import top.youm.maple.common.settings.impl.ModeSetting;
-import top.youm.maple.common.settings.impl.NumberSetting;
+import top.youm.maple.common.settings.impl.CheckBoxSetting;
+import top.youm.maple.common.settings.impl.SelectButtonSetting;
+import top.youm.maple.common.settings.impl.SliderSetting;
 import top.youm.maple.core.config.Config;
 import top.youm.maple.core.config.ConfigManager;
 import top.youm.maple.core.module.Module;
@@ -15,7 +15,6 @@ import org.lwjgl.input.Keyboard;
 import top.youm.maple.core.module.modules.visual.ClickGui;
 import top.youm.maple.utils.tools.Catcher;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -51,12 +50,12 @@ public class ModuleConfig extends Config {
                             if (!setting.getName().equals(configurationSetting.getName())) {
                                 continue;
                             }
-                            if(setting instanceof NumberSetting){
-                                ((NumberSetting)setting).setValue((Number) configurationSetting.getValue());
-                            }else if(setting instanceof BoolSetting){
-                                ((BoolSetting)setting).setValue((Boolean) configurationSetting.getValue());
-                            }else if(setting instanceof ModeSetting){
-                                ((ModeSetting)setting).setValue((String) configurationSetting.getValue());
+                            if(setting instanceof SliderSetting){
+                                ((SliderSetting)setting).setValue((Number) configurationSetting.getValue());
+                            }else if(setting instanceof CheckBoxSetting){
+                                ((CheckBoxSetting)setting).setValue((Boolean) configurationSetting.getValue());
+                            }else if(setting instanceof SelectButtonSetting){
+                                ((SelectButtonSetting)setting).setValue((String) configurationSetting.getValue());
                             }
                         }
                     }

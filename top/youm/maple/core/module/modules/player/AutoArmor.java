@@ -10,8 +10,8 @@ import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 import org.lwjgl.input.Keyboard;
 import top.youm.maple.common.events.MotionEvent;
-import top.youm.maple.common.settings.impl.BoolSetting;
-import top.youm.maple.common.settings.impl.NumberSetting;
+import top.youm.maple.common.settings.impl.CheckBoxSetting;
+import top.youm.maple.common.settings.impl.SliderSetting;
 import top.youm.maple.core.module.Module;
 import top.youm.maple.core.module.ModuleCategory;
 import top.youm.maple.utils.TimerUtil;
@@ -19,9 +19,9 @@ import top.youm.maple.utils.player.InventoryUtil;
 
 public class AutoArmor extends Module {
 
-    private final NumberSetting delay = new NumberSetting("Delay", 150, 300, 0, 10);
-    private final BoolSetting onlyWhileNotMoving = new BoolSetting("Stop when moving", false);
-    private final BoolSetting invOnly = new BoolSetting("Inventory only", false);
+    private final SliderSetting delay = new SliderSetting("Delay", 150, 300, 0, 10);
+    private final CheckBoxSetting onlyWhileNotMoving = new CheckBoxSetting("Stop when moving", false);
+    private final CheckBoxSetting invOnly = new CheckBoxSetting("Inventory only", false);
     private final TimerUtil timer = new TimerUtil();
 
     public AutoArmor() {

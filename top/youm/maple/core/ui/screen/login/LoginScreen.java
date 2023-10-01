@@ -1,12 +1,10 @@
 package top.youm.maple.core.ui.screen.login;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.*;
-import net.minecraft.client.renderer.GlStateManager;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.lwjgl.input.Keyboard;
-import top.youm.maple.Account;
+import top.youm.maple.alts.Account;
 import top.youm.maple.Maple;
 import top.youm.maple.utils.math.RsaUtil;
 import top.youm.maple.utils.render.RenderUtil;

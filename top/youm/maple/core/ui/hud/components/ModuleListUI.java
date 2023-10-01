@@ -96,7 +96,7 @@ public class ModuleListUI implements HUDComponent<ModuleList> {
 
             //render rect
             if (UIModule.rect.getValue()) {
-                if (UIModule.border.getValue() && UIModule.borderMode.getValue().equals("Shadow")) {
+                if (UIModule.border.getValue() && (UIModule.borderMode.getValue().equals("Shadow") || UIModule.borderMode.getValue().equals("Glow"))) {
                     drawRect(
                             (int) (module.animX - UIModule.rectPadding.getValue().floatValue()),
                             (int) (2 + module.animY),
@@ -182,8 +182,11 @@ public class ModuleListUI implements HUDComponent<ModuleList> {
             //increments
             index++;
         }
-        if (UIModule.border.getValue() && UIModule.borderMode.getValue().equals("Shadow")) {
+        if (UIModule.border.getValue()) {
+
             ShadowUtils.shadow(UIModule.shadowStrength.getValue().floatValue(), () -> {
+
+                int indexSide = 0;
                 for (Module module : modules) {
                     String context =
                             module.getName() + (
@@ -192,16 +195,26 @@ public class ModuleListUI implements HUDComponent<ModuleList> {
                                             ChatFormatting.BLUE + " " + ChatFormatting.WHITE + module.getSuffixes()
                             );
                     GlStateManager.pushMatrix();
-                    drawRect(
-                            (int) (module.animX - UIModule.rectPadding.getValue().floatValue()),
-                            (int) (2 + module.animY),
-                            font ? fontRenderer.getStringWidth(context) + (UIModule.rectPadding.getValue().floatValue() + UIModule.rectPadding.getValue().floatValue() - 7) + 1
-                                    : Minecraft.getMinecraft().fontRendererObj.getStringWidth(context) + 1 + (UIModule.rectPadding.getValue().floatValue() + UIModule.rectPadding.getValue().floatValue() - 7),
-                            font ? fontRenderer.getHeight() + 3
-                                    : Minecraft.getMinecraft().fontRendererObj.FONT_HEIGHT + 3,
-                            new Color(0, 0, 0, 180)
-                    );
-
+                    if(UIModule.borderMode.getValue().equals("Shadow")){
+                        drawRect(
+                                (int) (module.animX - UIModule.rectPadding.getValue().floatValue()),
+                                (int) (2 + module.animY),
+                                font ? fontRenderer.getStringWidth(context) + (UIModule.rectPadding.getValue().floatValue() + UIModule.rectPadding.getValue().floatValue() - 7) + 1
+                                        : Minecraft.getMinecraft().fontRendererObj.getStringWidth(context) + 1 + (UIModule.rectPadding.getValue().floatValue() + UIModule.rectPadding.getValue().floatValue() - 7),
+                                font ? fontRenderer.getHeight() + 3
+                                        : Minecraft.getMinecraft().fontRendererObj.FONT_HEIGHT + 3,
+                                new Color(0, 0, 0, 180));
+                    }else if(UIModule.borderMode.getValue().equals("Glow")){
+                        drawRect(
+                                (int) (module.animX - UIModule.rectPadding.getValue().floatValue()),
+                                (int) (2 + module.animY),
+                                font ? fontRenderer.getStringWidth(context) + (UIModule.rectPadding.getValue().floatValue() + UIModule.rectPadding.getValue().floatValue() - 7) + 1
+                                        : Minecraft.getMinecraft().fontRendererObj.getStringWidth(context) + 1 + (UIModule.rectPadding.getValue().floatValue() + UIModule.rectPadding.getValue().floatValue() - 7),
+                                font ? fontRenderer.getHeight() + 3
+                                        : Minecraft.getMinecraft().fontRendererObj.FONT_HEIGHT + 3,
+                                color);
+                    }
+                    indexSide++;
                     GlStateManager.popMatrix();
                 }
             }, () -> {
@@ -213,15 +226,26 @@ public class ModuleListUI implements HUDComponent<ModuleList> {
                                             ChatFormatting.BLUE + " " + ChatFormatting.WHITE + module.getSuffixes()
                             );
                     GlStateManager.pushMatrix();
-                    drawRect(
-                            (int) (module.animX - UIModule.rectPadding.getValue().floatValue()),
-                            (int) (2 + module.animY),
-                            font ? fontRenderer.getStringWidth(context) + (UIModule.rectPadding.getValue().floatValue() + UIModule.rectPadding.getValue().floatValue() - 7) + 1
-                                    : Minecraft.getMinecraft().fontRendererObj.getStringWidth(context) + 1 + (UIModule.rectPadding.getValue().floatValue() + UIModule.rectPadding.getValue().floatValue() - 7),
-                            font ? fontRenderer.getHeight() + 3
-                                    : Minecraft.getMinecraft().fontRendererObj.FONT_HEIGHT + 3,
-                            new Color(0, 0, 0, 180)
-                    );
+                    if(UIModule.borderMode.getValue().equals("Shadow")) {
+                        drawRect(
+                                (int) (module.animX - UIModule.rectPadding.getValue().floatValue()),
+                                (int) (2 + module.animY),
+                                font ? fontRenderer.getStringWidth(context) + (UIModule.rectPadding.getValue().floatValue() + UIModule.rectPadding.getValue().floatValue() - 7) + 1
+                                        : Minecraft.getMinecraft().fontRendererObj.getStringWidth(context) + 1 + (UIModule.rectPadding.getValue().floatValue() + UIModule.rectPadding.getValue().floatValue() - 7),
+                                font ? fontRenderer.getHeight() + 3
+                                        : Minecraft.getMinecraft().fontRendererObj.FONT_HEIGHT + 3,
+                                new Color(0, 0, 0, 180));
+                    }else if(UIModule.borderMode.getValue().equals("Glow")){
+                        drawRect(
+                                (int) (module.animX - UIModule.rectPadding.getValue().floatValue()),
+                                (int) (2 + module.animY),
+                                font ? fontRenderer.getStringWidth(context) + (UIModule.rectPadding.getValue().floatValue() + UIModule.rectPadding.getValue().floatValue() - 7) + 1
+                                        : Minecraft.getMinecraft().fontRendererObj.getStringWidth(context) + 1 + (UIModule.rectPadding.getValue().floatValue() + UIModule.rectPadding.getValue().floatValue() - 7),
+                                font ? fontRenderer.getHeight() + 3
+                                        : Minecraft.getMinecraft().fontRendererObj.FONT_HEIGHT + 3,
+                                color);
+
+                    }
                     GlStateManager.popMatrix();
                 }
             });

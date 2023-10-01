@@ -4,8 +4,8 @@ import com.darkmagician6.eventapi.EventTarget;
 import com.darkmagician6.eventapi.events.Event;
 import top.youm.maple.common.events.MotionEvent;
 import top.youm.maple.common.events.PacketSendEvent;
-import top.youm.maple.common.settings.impl.BoolSetting;
-import top.youm.maple.common.settings.impl.NumberSetting;
+import top.youm.maple.common.settings.impl.CheckBoxSetting;
+import top.youm.maple.common.settings.impl.SliderSetting;
 import top.youm.maple.core.module.Module;
 import top.youm.maple.core.module.ModuleCategory;
 import top.youm.maple.utils.BlockUtil;
@@ -37,20 +37,20 @@ import java.util.Arrays;
 @SuppressWarnings("unused")
 public class InvManager extends Module {
 
-    private final NumberSetting delay = new NumberSetting("Delay", 120, 300, 0, 10);
-    private final BoolSetting inventoryPackets = new BoolSetting("Send inventory packets", true);
-    private final BoolSetting onlyWhileNotMoving = new BoolSetting("Only while not moving", true);
-    private final BoolSetting inventoryOnly = new BoolSetting("Inventory only", true);
-    private final BoolSetting dropArchery = new BoolSetting("Drop archery", false);
-    private final BoolSetting moveArrows = new BoolSetting("Move arrows", true);
-    private final BoolSetting dropFood = new BoolSetting("Drop food", true);
+    private final SliderSetting delay = new SliderSetting("Delay", 120, 300, 0, 10);
+    private final CheckBoxSetting inventoryPackets = new CheckBoxSetting("Send inventory packets", true);
+    private final CheckBoxSetting onlyWhileNotMoving = new CheckBoxSetting("Only while not moving", true);
+    private final CheckBoxSetting inventoryOnly = new CheckBoxSetting("Inventory only", true);
+    private final CheckBoxSetting dropArchery = new CheckBoxSetting("Drop archery", false);
+    private final CheckBoxSetting moveArrows = new CheckBoxSetting("Move arrows", true);
+    private final CheckBoxSetting dropFood = new CheckBoxSetting("Drop food", true);
 
-    private final NumberSetting slotWeapon = new NumberSetting("Weapon Slot", 1, 9, 1, 1);
-    private final NumberSetting slotPick = new NumberSetting("Pickaxe Slot", 2, 9, 1, 1);
-    private final NumberSetting slotAxe = new NumberSetting("Axe Slot", 3, 9, 1, 1);
-    private final NumberSetting slotShovel = new NumberSetting("Shovel Slot", 4, 9, 1, 1);
-    private final NumberSetting slotBow = new NumberSetting("Bow Slot", 5, 9, 1, 1);
-    private final NumberSetting slotBlock = new NumberSetting("Block Slot", 6, 9, 1, 1);
+    private final SliderSetting slotWeapon = new SliderSetting("Weapon Slot", 1, 9, 1, 1);
+    private final SliderSetting slotPick = new SliderSetting("Pickaxe Slot", 2, 9, 1, 1);
+    private final SliderSetting slotAxe = new SliderSetting("Axe Slot", 3, 9, 1, 1);
+    private final SliderSetting slotShovel = new SliderSetting("Shovel Slot", 4, 9, 1, 1);
+    private final SliderSetting slotBow = new SliderSetting("Bow Slot", 5, 9, 1, 1);
+    private final SliderSetting slotBlock = new SliderSetting("Block Slot", 6, 9, 1, 1);
 
     private final String[] shitItems = {"tnt", "stick", "egg", "string", "cake", "mushroom", "flint", "compass", "dyePowder", "feather", "bucket", "chest", "snow", "fish", "enchant", "exp", "shears", "anvil", "torch", "seeds", "leather", "reeds", "skull", "record", "snowball", "piston"};
     private final String[] serverItems = {"selector", "tracking compass", "(right click)", "tienda ", "perfil", "salir", "shop", "collectibles", "game", "profil", "lobby", "show all", "hub", "friends only", "cofre", "(click", "teleport", "play", "exit", "hide all", "jeux", "gadget", " (activ", "emote", "amis", "bountique", "choisir", "choose "};

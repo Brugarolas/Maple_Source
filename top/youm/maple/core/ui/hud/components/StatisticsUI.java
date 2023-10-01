@@ -25,15 +25,16 @@ public class StatisticsUI implements HUDComponent<Statistics> {
         } else {
             yPosition = 50;
         }
+
         if (statistics.shadow.getValue()) {
             ShadowUtils.shadow(
                     13.0f
-                    , () -> RenderUtil.drawRect(5, yPosition, width, height, new Color(0, 0, 0, 130))
-                    , () -> RenderUtil.drawRect(5, yPosition, width, height, new Color(0, 0, 0, 130))
+                    , () -> RenderUtil.drawRect(5, yPosition - 30, width, height, HUD.getHUDThemeColor())
+                    , () -> RenderUtil.drawRect(5, yPosition - 30, width, height, HUD.getHUDThemeColor())
             );
-        } else {
-            RoundedUtil.drawRoundOutline(5, yPosition - 30, width, height, 1, 0.2f, new Color(0, 0, 0, 130), HUD.getHUDThemeColor());
         }
+        RoundedUtil.drawRoundOutline(5, yPosition - 30, width, height, 1, 0.2f, new Color(0, 0, 0, 130), HUD.getHUDThemeColor());
+
 
         RenderUtil.drawRect(5, yPosition - 30 + FontLoaders.robotoB26.getHeight() + 4, 100, 1, HUD.getHUDThemeColor());
         FontLoaders.statistics.drawCenteredStringWithShadow("Statistics", 5 + (width / 2.0f), yPosition - 30 + 4, -1);

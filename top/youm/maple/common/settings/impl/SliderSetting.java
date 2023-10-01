@@ -6,11 +6,10 @@ import top.youm.maple.common.settings.Setting;
  * @author YouM
  * can update number setting like slider
  */
-public class NumberSetting extends Setting<Number> {
+public class SliderSetting extends Setting<Number> {
 
-    private final Number max,min;
-    private Number inc;
-    public NumberSetting(String name,Number value,Number max, Number min, Number inc) {
+    private final Number max,min,inc;
+    public SliderSetting(String name, Number value, Number max, Number min, Number inc) {
         super(name, value);
         this.max = max;
         this.min = min;
@@ -26,8 +25,5 @@ public class NumberSetting extends Setting<Number> {
         return inc;
     }
 
-    public void setInc(Number inc) {
-        this.inc = inc;
-    }
 
 }

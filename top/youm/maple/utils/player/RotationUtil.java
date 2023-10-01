@@ -44,7 +44,50 @@ public class RotationUtil {
         }
         return rotationYaw * 0.017453292f;
     }
+    public static float[] getRotationsToEnt(Entity ent) {
+        //target and player x distance
+        final double diffX = ent.posX - mc.thePlayer.posX;
+        //target and player y distance
+        final double diffY = (ent.posY + ent.height) - (mc.thePlayer.posY + mc.thePlayer.height) - 0.2;
+        //target and player z distance
+        final double diffZ = ent.posZ - mc.thePlayer.posZ;
+        // radian unit
+        double radianUnit = 180.0D / Math.PI;
+        /*
+         * atan 2(x,y) need two parameters to compute angle
+         * radian * radianUnit
+         */
+        // player head yaw rotation
+        final float rotationYaw = (float) (Math.atan2(diffZ, diffX) * radianUnit) - 90.0f;
+        // player head pitch rotation
+        final float rotationPitch = (float) (Math.atan2(diffY, mc.thePlayer.getDistanceToEntity(ent)) * radianUnit);
 
+        float finishedYaw = mc.thePlayer.rotationYaw + MathHelper.wrapAngleTo180_float(rotationYaw - mc.thePlayer.rotationYaw);
+        float finishedPitch = mc.thePlayer.rotationPitch + MathHelper.wrapAngleTo180_float(rotationPitch - mc.thePlayer.rotationPitch);
+        return new float[]{finishedYaw, -MathHelper.clamp_float(finishedPitch, -90, 90)};
+    }
+    public static float[] getVulcanRotationsToEnt(Entity ent,float[] current) {
+        //target and player x distance
+        final double diffX = ent.posX - mc.thePlayer.posX;
+        //target and player y distance
+        final double diffY = (ent.posY + ent.height * 0.9f) - (mc.thePlayer.posY + mc.thePlayer.height);
+        //target and player z distance
+        final double diffZ = ent.posZ - mc.thePlayer.posZ;
+        // radian unit
+        double radianUnit = 180.0D / Math.PI;
+        /*
+         * atan 2(x,y) need two parameters to compute angle
+         * radian * radianUnit
+         */
+        // player head yaw rotation
+        float rotationYaw = (float) (Math.atan2(diffZ, diffX) * radianUnit) - 90.0f;
+        // player head pitch rotation
+        float rotationPitch = (float) (Math.atan2(diffY, mc.thePlayer.getDistanceToEntity(ent)) * radianUnit);
+        rotationYaw = getAngleDifference(rotationYaw ,current[0]);
+        rotationPitch = getAngleDifference(rotationPitch ,current[1]);
+
+        return new float[]{ rotationYaw, rotationPitch };
+        }
     public static float smoothRotation(float from, float to, float speed) {
         float f = MathHelper.wrapAngleTo180_float(to - from);
 
@@ -105,27 +148,8 @@ public class RotationUtil {
         }
         return yaw;
     }
-    public static float[] getRotationsNeeded(final Entity entity) {
-        if (entity == null) {
-            return null;
-        }
-        Minecraft mc = Minecraft.getMinecraft();
-        final double xSize = entity.posX - mc.thePlayer.posX;
-        final double ySize = entity.posY + entity.getEyeHeight() / 2 - (mc.thePlayer.posY + mc.thePlayer.getEyeHeight());
-        final double zSize = entity.posZ - mc.thePlayer.posZ;
-        final double theta = MathHelper.sqrt_double(xSize * xSize + zSize * zSize);
-        final float yaw = (float) (Math.atan2(zSize, xSize) * 180 / Math.PI) - 90;
-        final float pitch = (float) (-(Math.atan2(ySize, theta) * 180 / Math.PI));
-        return new float[]{(mc.thePlayer.rotationYaw + MathHelper.wrapAngleTo180_float(yaw - mc.thePlayer.rotationYaw)) % 360, (mc.thePlayer.rotationPitch + MathHelper.wrapAngleTo180_float(pitch - mc.thePlayer.rotationPitch)) % 360.0f};
-    }
 
-    public static float[] getFacingRotations2(final int paramInt1, final double d, final int paramInt3) {
-        final EntitySnowball localEntityPig = new EntitySnowball(Minecraft.getMinecraft().theWorld);
-        localEntityPig.posX = paramInt1 + 0.5;
-        localEntityPig.posY = d + 0.5;
-        localEntityPig.posZ = paramInt3 + 0.5;
-        return getRotationsNeeded(localEntityPig);
-    }
+
 
     public static float getYaw(Vec3 to) {
         float x = (float) (to.xCoord - mc.thePlayer.posX);
@@ -135,35 +159,14 @@ public class RotationUtil {
         return rotationYaw + MathHelper.wrapAngleTo180_float(var1 - rotationYaw);
     }
 
-    public static float[] getSmoothRotations(EntityLivingBase entity) {
-        float f1 = mc.gameSettings.mouseSensitivity * 0.6F + 0.2F;
-        float fac = f1 * f1 * f1 * 256.0F;
 
-        double x = entity.posX - mc.thePlayer.posX;
-        double z = entity.posZ - mc.thePlayer.posZ;
-        double y = entity.posY + entity.getEyeHeight()
-                - (mc.thePlayer.getEntityBoundingBox().minY
-                + (mc.thePlayer.getEntityBoundingBox().maxY
-                - mc.thePlayer.getEntityBoundingBox().minY));
-
-        double d3 = MathHelper.sqrt_double(x * x + z * z);
-        float yaw = (float) (MathHelper.atan2(z, x) * 180.0 / Math.PI) - 90.0F;
-        float pitch = (float) (-(MathHelper.atan2(y, d3) * 180.0 / Math.PI));
-        yaw = smoothRotation(mc.thePlayer.prevRotationYawHead, yaw, fac * MathUtil.getRandomFloat(0.9F, 1));
-        pitch = smoothRotation(mc.thePlayer.prevRotationPitchHead, pitch, fac * MathUtil.getRandomFloat(0.7F, 1));
-
-        return new float[]{yaw, pitch};
-    }
     public static float[] getSmoothRotations(EntityLivingBase entity,float maxSpeed,float minSpeed) {
         float f1 = mc.gameSettings.mouseSensitivity * 0.6F + 0.2F;
         float fac = f1 * f1 * f1 * 256.0F;
 
         double x = entity.posX - mc.thePlayer.posX;
         double z = entity.posZ - mc.thePlayer.posZ;
-        double y = entity.posY + entity.getEyeHeight()
-                - (mc.thePlayer.getEntityBoundingBox().minY
-                + (mc.thePlayer.getEntityBoundingBox().maxY
-                - mc.thePlayer.getEntityBoundingBox().minY));
+        double y = (entity.posY + entity.height) - (mc.thePlayer.posY + mc.thePlayer.height) - 0.5;
 
         double d3 = MathHelper.sqrt_double(x * x + z * z);
         float yaw = (float) (MathHelper.atan2(z, x) * 180.0 / Math.PI) - 90.0F;

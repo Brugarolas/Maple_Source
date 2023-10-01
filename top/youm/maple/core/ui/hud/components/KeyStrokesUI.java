@@ -13,7 +13,7 @@ import java.awt.*;
  * Created on 2023/8/10
  */
 public class KeyStrokesUI implements HUDComponent<KeyStrokes>{
-    public static final int size = 25, margin = 4;
+    public static final int size = 25, margin = 2;
     public static int x = 50, y = 50;
     private final KeyBox forward, back, left, right;
     private final MouseBox mouseLeft = new MouseBox(), mouseRight = new MouseBox();
@@ -46,8 +46,8 @@ public class KeyStrokesUI implements HUDComponent<KeyStrokes>{
     }
 
     public void renderMouse() {
-        mouseLeft.drawMouseBox("LMB", x, y + (size + margin) * 2, 40, size - 4, new Color(255, 255, 255, 120), Mouse.isButtonDown(0));
-        mouseRight.drawMouseBox("RMB", x + 43, y + (size + margin) * 2, 40, size - 4, new Color(255, 255, 255, 120), Mouse.isButtonDown(1));
+        mouseLeft.drawMouseBox("LMB", x, y + (size + margin) * 2, 38, size - 4, new Color(255, 255, 255, 120), Mouse.isButtonDown(0));
+        mouseRight.drawMouseBox("RMB", x + 41, y + (size + margin) * 2, 38, size - 4, new Color(255, 255, 255, 120), Mouse.isButtonDown(1));
     }
 
     public static void drawCenteredStringWithShadow(String text, float x, float y, Color color) {

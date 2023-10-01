@@ -2,31 +2,26 @@ package top.youm.maple.core.module.modules.visual;
 
 import com.darkmagician6.eventapi.EventTarget;
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.Gui;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.StringUtils;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.util.vector.Vector4f;
 import top.youm.maple.common.events.Render2DEvent;
 import top.youm.maple.common.events.Render3DEvent;
-import top.youm.maple.common.settings.impl.BoolSetting;
-import top.youm.maple.common.settings.impl.NumberSetting;
+import top.youm.maple.common.settings.impl.CheckBoxSetting;
+import top.youm.maple.common.settings.impl.SliderSetting;
 import top.youm.maple.core.module.Module;
 import top.youm.maple.core.module.ModuleCategory;
-import top.youm.maple.core.module.modules.world.Teams;
 import top.youm.maple.utils.render.ESPUtil;
 import top.youm.maple.utils.render.RenderUtil;
 
 import java.awt.*;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import static org.lwjgl.opengl.GL11.*;
@@ -37,11 +32,11 @@ import static org.lwjgl.opengl.GL11.*;
  */
 public class NameTag extends Module {
     private final Map<EntityLivingBase, Vector4f> entities = new HashMap<>();
-    BoolSetting players = new BoolSetting("Players", true);
-    BoolSetting mobs = new BoolSetting("Mobs", true);
-    BoolSetting animals = new BoolSetting("Animals", false);
+    CheckBoxSetting players = new CheckBoxSetting("Players", true);
+    CheckBoxSetting mobs = new CheckBoxSetting("Mobs", true);
+    CheckBoxSetting animals = new CheckBoxSetting("Animals", false);
 
-    private NumberSetting scale = new NumberSetting("scale",0.5,1,0.1,0.1);
+    private SliderSetting scale = new SliderSetting("scale",0.5,1,0.1,0.1);
     public NameTag() {
         super("NameTag", ModuleCategory.VISUAL, Keyboard.KEY_NONE);
         this.addSetting(players,mobs,animals,scale);

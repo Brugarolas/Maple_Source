@@ -7,6 +7,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import top.youm.maple.common.events.KeyEvent;
 import top.youm.maple.core.module.modules.combat.*;
+import top.youm.maple.core.module.modules.combat.killaura.KillAura;
 import top.youm.maple.core.module.modules.movement.*;
 import top.youm.maple.core.module.modules.player.*;
 import top.youm.maple.core.module.modules.visual.*;
@@ -43,6 +44,7 @@ public class ModuleManager {
         this.modules.add(new TargetStrafe());
         this.modules.add(new Velocity());
         this.modules.add(new SuperKnockback());
+        this.modules.add(new Targets());
         /* movement */
         this.modules.add(new Sprint());
         this.modules.add(new Speed());

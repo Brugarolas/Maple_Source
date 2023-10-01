@@ -307,6 +307,7 @@ public class EntityPlayerSP extends AbstractClientPlayer
      */
     public void sendChatMessage(String message)
     {
+
         ChatEvent event = new ChatEvent(message);
         EventManager.call(event);
 

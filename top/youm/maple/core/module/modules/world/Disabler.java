@@ -6,7 +6,7 @@ import net.minecraft.network.play.client.C17PacketCustomPayload;
 import org.lwjgl.input.Keyboard;
 import top.youm.maple.common.events.PacketReceiveEvent;
 import top.youm.maple.common.events.TickEvent;
-import top.youm.maple.common.settings.impl.ModeSetting;
+import top.youm.maple.common.settings.impl.SelectButtonSetting;
 import top.youm.maple.core.module.Module;
 import top.youm.maple.core.module.ModuleCategory;
 
@@ -15,7 +15,7 @@ import top.youm.maple.core.module.ModuleCategory;
  * Created on 2023/7/24
  */
 public class Disabler extends Module {
-    private ModeSetting mode = new ModeSetting("Mode","Vulcan","Vulcan","NCP","WatchDog");
+    private SelectButtonSetting mode = new SelectButtonSetting("Mode","Vulcan","Vulcan","NCP","WatchDog");
     public Disabler() {
         super("Disabler", ModuleCategory.WORLD, Keyboard.KEY_NONE);
     }

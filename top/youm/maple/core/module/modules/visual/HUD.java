@@ -2,12 +2,12 @@ package top.youm.maple.core.module.modules.visual;
 
 import com.darkmagician6.eventapi.EventTarget;
 import net.minecraft.client.gui.ScaledResolution;
-import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.shader.Framebuffer;
 import top.youm.maple.Maple;
 import top.youm.maple.common.events.Render2DEvent;
-import top.youm.maple.common.settings.impl.BoolSetting;
-import top.youm.maple.common.settings.impl.ModeSetting;
-import top.youm.maple.common.settings.impl.NumberSetting;
+import top.youm.maple.common.settings.impl.CheckBoxSetting;
+import top.youm.maple.common.settings.impl.SelectButtonSetting;
+import top.youm.maple.common.settings.impl.SliderSetting;
 import top.youm.maple.core.module.Module;
 import top.youm.maple.core.module.ModuleCategory;
 import top.youm.maple.core.ui.clickgui.classic.theme.Theme;
@@ -18,9 +18,7 @@ import top.youm.maple.core.ui.hud.components.KeyStrokesUI;
 import top.youm.maple.core.ui.hud.components.ModuleListUI;
 import top.youm.maple.core.ui.hud.components.StatisticsUI;
 import top.youm.maple.core.ui.hud.components.noti.NotificationManager;
-import top.youm.maple.utils.render.ColorUtil;
-import top.youm.maple.utils.render.GradientUtil;
-import top.youm.maple.utils.render.RenderUtil;
+import top.youm.maple.utils.render.*;
 
 import java.awt.*;
 import java.text.SimpleDateFormat;
@@ -28,24 +26,29 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.lwjgl.opengl.GL11.GL_GREATER;
-
 /**
  * @author YouM
  */
 public class HUD extends Module {
     private final Map<Module, HUDComponent> ModuleUI = new HashMap<>();
-    public static BoolSetting ttf_font = new BoolSetting("TTF-Font",false);
-    public static ModeSetting mode = new ModeSetting("Mode","CSGO","CSGO","Text","Tenacity");
-    public static BoolSetting notification = new BoolSetting("Notification",true);
 
-    public static NumberSetting red = new NumberSetting("red",Theme.theme.getRed(),255,0,1);
-    public static NumberSetting green = new NumberSetting("green",Theme.theme.getGreen(),255,0,1);
-    public static NumberSetting blue = new NumberSetting("blue",Theme.theme.getBlue(),255,0,1);
+
+    public static SelectButtonSetting mode = new SelectButtonSetting("Mode","CSGO","CSGO","Text","Tenacity");
+    public static CheckBoxSetting ttf_font = new CheckBoxSetting("TTF-Font",false);
+
+
+    public static CheckBoxSetting notification = new CheckBoxSetting("Notification",true);
+
+    public static SliderSetting red = new SliderSetting("red",Theme.theme.getRed(),255,0,1);
+    public static SliderSetting green = new SliderSetting("green",Theme.theme.getGreen(),255,0,1);
+    public static SliderSetting blue = new SliderSetting("blue",Theme.theme.getBlue(),255,0,1);
+    private Framebuffer stencilFramebuffer = new Framebuffer(1, 1, false);
+
     public HUD() {
         super("HUD", ModuleCategory.VISUAL, Keyboard.KEY_NONE);
         this.setToggle(true);
-        this.addSetting(ttf_font,mode,notification,red,green,blue);
+        ttf_font.addParent(mode,modeSetting -> modeSetting.getValue().equals("Text") || modeSetting.getValue().equals("CSGO"));
+        this.addSetting(mode,ttf_font,notification,red,green,blue);
         this.isRenderModule = true;
     }
     public void initRenderModule(){
@@ -85,9 +88,14 @@ public class HUD extends Module {
                 }
                 break;
             case "Tenacity":
-                GradientUtil.applyGradientHorizontal(5, 5, FontLoaders.tenacity.getStringWidth(Maple.getInstance().NAME), 20, 1, HUD.getHUDThemeColor(), ColorUtil.staticFade(HUD.getHUDThemeColor()), () -> {
+                GradientUtil.applyGradientHorizontal(6, 6, FontLoaders.tenacity.getStringWidth(Maple.getInstance().NAME) + 1, 20, 1, ColorUtil.darker(HUD.getHUDThemeColor(),0.6f), ColorUtil.darker(ColorUtil.brighter(HUD.getHUDThemeColor(),0.8f),0.6f), () -> {
                     RenderUtil.setAlphaLimit(0);
-                    FontLoaders.tenacity.drawStringWithShadow(Maple.getInstance().NAME, 5, 5, 0);
+                    FontLoaders.tenacity.drawString(Maple.getInstance().NAME, 6, 6, 0);
+                });
+                RenderUtil.resetColor();
+                GradientUtil.applyGradientHorizontal(5, 5, FontLoaders.tenacity.getStringWidth(Maple.getInstance().NAME), 20, 1, HUD.getHUDThemeColor(), ColorUtil.brighter(HUD.getHUDThemeColor(),0.8f), () -> {
+                    RenderUtil.setAlphaLimit(0);
+                    FontLoaders.tenacity.drawString(Maple.getInstance().NAME, 5, 5, 0);
                 });
                 break;
         }
@@ -102,5 +110,25 @@ public class HUD extends Module {
     }
     public static Color getHUDThemeColor(){
         return new Color(red.getValue().intValue(),green.getValue().intValue(),blue.getValue().intValue());
+    }
+    public void blurScreen() {
+        if(mode.getValue().equals("Tenacity")){
+            stencilFramebuffer = RenderUtil.createFrameBuffer(stencilFramebuffer);
+            stencilFramebuffer.framebufferClear();
+            stencilFramebuffer.bindFramebuffer(false);
+
+            GradientUtil.applyGradientHorizontal(6, 6, FontLoaders.tenacity.getStringWidth(Maple.getInstance().NAME) + 1, 20, 1, HUD.getHUDThemeColor(), ColorUtil.brighter(HUD.getHUDThemeColor(),0.8f), () -> {
+                RenderUtil.setAlphaLimit(0);
+                FontLoaders.tenacity.drawString(Maple.getInstance().NAME, 6, 6, 0);
+            });
+
+
+            stencilFramebuffer.unbindFramebuffer();
+
+            KawaseBloom.renderBlur(stencilFramebuffer.framebufferTexture, 2,  1);
+
+        }
+
+
     }
 }

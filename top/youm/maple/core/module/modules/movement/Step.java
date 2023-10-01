@@ -3,8 +3,8 @@ package top.youm.maple.core.module.modules.movement;
 import com.darkmagician6.eventapi.EventTarget;
 import top.youm.maple.common.events.MotionEvent;
 import top.youm.maple.common.events.TickEvent;
-import top.youm.maple.common.settings.impl.BoolSetting;
-import top.youm.maple.common.settings.impl.NumberSetting;
+import top.youm.maple.common.settings.impl.CheckBoxSetting;
+import top.youm.maple.common.settings.impl.SliderSetting;
 import top.youm.maple.core.module.Module;
 import top.youm.maple.core.module.ModuleCategory;
 import net.minecraft.network.play.client.C03PacketPlayer;
@@ -14,8 +14,8 @@ import org.lwjgl.input.Keyboard;
  * @author YouM
  */
 public class Step extends Module {
-    private NumberSetting height = new NumberSetting("Height", 1.0, 10.0, 1.0, 0.5);
-    private BoolSetting ncp = new BoolSetting("NCP", false);
+    private SliderSetting height = new SliderSetting("Height", 1.0, 10.0, 1.0, 0.5);
+    private CheckBoxSetting ncp = new CheckBoxSetting("NCP", false);
     public Step() {
         super("Step", ModuleCategory.MOVEMENT, Keyboard.KEY_NONE);
         this.addSetting(ncp,height);
