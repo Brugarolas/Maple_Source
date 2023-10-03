@@ -33,7 +33,7 @@ public class Blink extends Module {
 
     public Blink() {
         super("Blink", ModuleCategory.PLAYER, Keyboard.KEY_NONE);
-        this.addSetting(pulse, delayPulse);
+        this.addSettings(pulse, delayPulse);
     }
 
     @EventTarget

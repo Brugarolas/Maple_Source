@@ -20,7 +20,7 @@ public final class Timer extends Module {
 
     public Timer() {
         super("Timer", ModuleCategory.PLAYER, Keyboard.KEY_NONE);
-        this.addSetting(amount);
+        this.addSettings(amount);
     }
 
     @Override

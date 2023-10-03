@@ -39,7 +39,7 @@ public class ModuleList extends Module {
         red.addParent(mode,modeSetting -> modeSetting.getValue().equals("Gradient"));
         green.addParent(mode,modeSetting -> modeSetting.getValue().equals("Gradient"));
         blue.addParent(mode,modeSetting -> modeSetting.getValue().equals("Gradient"));
-        this.addSetting(mode,font,noRender,rect,edge,rectPadding,sidebar,border,borderMode,shadowStrength,rectAlpha,speed,red,green,blue);
+        this.addSettings(mode,font,noRender,rect,edge,rectPadding,sidebar,border,borderMode,shadowStrength,rectAlpha,speed,red,green,blue);
         this.isRenderModule = true;
     }
 }

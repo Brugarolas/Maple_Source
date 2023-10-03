@@ -11,6 +11,7 @@ import net.minecraft.block.BlockBed;
 import net.minecraft.block.BlockDirectional;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.Minecraft;
 import net.minecraft.command.server.CommandBlockLogic;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
@@ -74,6 +75,8 @@ import net.minecraft.world.IInteractionObject;
 import net.minecraft.world.LockCode;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldSettings;
+import top.youm.maple.Maple;
+import top.youm.maple.core.module.modules.world.HitEffect;
 
 public abstract class EntityPlayer extends EntityLivingBase
 {
@@ -1102,6 +1105,7 @@ public abstract class EntityPlayer extends EntityLivingBase
                         entity = ((EntityArrow)entity).shootingEntity;
                     }
 
+
                     return super.attackEntityFrom(source, amount);
                 }
             }
@@ -1374,6 +1378,12 @@ public abstract class EntityPlayer extends EntityLivingBase
                             targetEntity.motionX = d0;
                             targetEntity.motionY = d1;
                             targetEntity.motionZ = d2;
+                        }
+                        if(Maple.getInstance().getModuleManager().getModuleByClass(HitEffect.class).isEnabled()){
+                            Minecraft.getMinecraft().effectRenderer.emitParticleAtEntity(targetEntity, EnumParticleTypes.SMOKE_NORMAL);
+                            Minecraft.getMinecraft().effectRenderer.emitParticleAtEntity(targetEntity, EnumParticleTypes.CLOUD);
+                            Minecraft.getMinecraft().effectRenderer.emitParticleAtEntity(targetEntity, EnumParticleTypes.CRIT);
+                            Minecraft.getMinecraft().effectRenderer.emitParticleAtEntity(targetEntity, EnumParticleTypes.CRIT_MAGIC);
                         }
 
                         if (flag)

@@ -26,7 +26,7 @@ public class AutoArmor extends Module {
 
     public AutoArmor() {
         super("Auto Armor", ModuleCategory.PLAYER, Keyboard.KEY_NONE);
-        this.addSetting(delay, onlyWhileNotMoving, invOnly);
+        this.addSettings(delay, onlyWhileNotMoving, invOnly);
     }
 
     @EventTarget

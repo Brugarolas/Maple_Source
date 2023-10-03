@@ -16,7 +16,6 @@ import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.entity.layers.LayerRenderer;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EnumPlayerModelParts;
@@ -637,7 +636,7 @@ public abstract class RendererLivingEntity<T extends EntityLivingBase> extends R
         if(     entity instanceof EntityPlayer &&
                 Maple.getInstance().getModuleManager() != null
                 && Maple.getInstance().getModuleManager().getModuleByClass(NameTag.class) != null
-                && Maple.getInstance().getModuleManager().getModuleByClass(NameTag.class).isToggle()) {
+                && Maple.getInstance().getModuleManager().getModuleByClass(NameTag.class).isEnabled()) {
             return;
         }
         if (!Reflector.RenderLivingEvent_Specials_Pre_Constructor.exists() || !Reflector.postForgeBusEvent(Reflector.RenderLivingEvent_Specials_Pre_Constructor, entity, this, x, y, z))

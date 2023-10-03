@@ -405,7 +405,7 @@ public class ItemRenderer
                         case BLOCK:
                             float rotateAngle = MathHelper.sin(MathHelper.sqrt_float(f1) * (float)Math.PI);
                             Animations animations = Maple.getInstance().getModuleManager().getModuleByClass(Animations.class);
-                            if(animations.isToggle()){
+                            if(animations.isEnabled()){
                                 switch (animations.mode.getValue()){
                                     case "OLD":
                                         this.transformFirstPersonItem(f, f1);

@@ -20,7 +20,7 @@ public class AutoTool extends Module {
 
     public AutoTool() {
         super("Auto Tool", ModuleCategory.PLAYER, Keyboard.KEY_NONE);
-        this.addSetting(autoSword);
+        this.addSettings(autoSword);
     }
 
     @EventTarget

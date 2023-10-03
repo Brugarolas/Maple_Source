@@ -14,7 +14,7 @@ import org.lwjgl.input.Keyboard;
 public class SafeWalk extends Module {
     public SafeWalk() {
         super("Safe Walk", ModuleCategory.PLAYER, Keyboard.KEY_NONE);
-        this.addSetting(blocksOnly);
+        this.addSettings(blocksOnly);
     }
     private final CheckBoxSetting blocksOnly = new CheckBoxSetting("Blocks only", false);
     @EventTarget

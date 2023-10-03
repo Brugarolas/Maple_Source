@@ -8,10 +8,10 @@ import top.youm.maple.core.module.Module;
 import top.youm.maple.core.module.ModuleCategory;
 import top.youm.maple.utils.network.PacketUtil;
 
-public final class SuperKnockback extends Module {
+public final class SuperKB extends Module {
 
-    public SuperKnockback() {
-        super("SuperKnockback", ModuleCategory.COMBAT, Keyboard.KEY_NONE);
+    public SuperKB() {
+        super("SuperKB", ModuleCategory.COMBAT, Keyboard.KEY_NONE);
     }
 
     @EventTarget

@@ -60,7 +60,7 @@ public class InvManager extends Module {
 
     public InvManager() {
         super("InvManager", ModuleCategory.PLAYER, Keyboard.KEY_NONE);
-        this.addSetting(delay, inventoryPackets, onlyWhileNotMoving, inventoryOnly, dropArchery, moveArrows, dropFood, slotWeapon, slotPick, slotAxe, slotShovel, slotBow, slotBlock);
+        this.addSettings(delay, inventoryPackets, onlyWhileNotMoving, inventoryOnly, dropArchery, moveArrows, dropFood, slotWeapon, slotPick, slotAxe, slotShovel, slotBow, slotBlock);
     }
     @EventTarget
     public void onMotion(MotionEvent event) {

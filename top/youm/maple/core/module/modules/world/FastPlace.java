@@ -22,7 +22,7 @@ public class FastPlace extends Module {
     private final SliderSetting ticks = new SliderSetting("Ticks", 0, 4, 0, 1);
     public FastPlace() {
         super("Fast Place", ModuleCategory.WORLD, Keyboard.KEY_NONE);
-        this.addSetting(ticks, blocks, projectiles);
+        this.addSettings(ticks, blocks, projectiles);
     }
     @EventTarget
     public void onTick(TickEvent event){

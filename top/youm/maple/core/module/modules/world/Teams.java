@@ -23,7 +23,7 @@ public class Teams extends Module {
     }
 
     public static boolean isInTeam(Entity entity) {
-        if (INSTANCE == null || !INSTANCE.isToggle() || entity == null) return false;
+        if (INSTANCE == null || !INSTANCE.isEnabled() || entity == null) return false;
         if (!(entity instanceof EntityPlayer)) return false;
 
         return mc.thePlayer.getTeam() != null

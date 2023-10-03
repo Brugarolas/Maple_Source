@@ -11,7 +11,7 @@ public class Animations extends Module {
     public SelectButtonSetting mode = new SelectButtonSetting("Mode","OLD","OLD","SIGMA","Smooth","ETB","Exhibition","Slide","Position");
     public Animations() {
         super("Animations", ModuleCategory.VISUAL, Keyboard.KEY_NONE);
-        this.addSetting(mode);
+        this.addSettings(mode);
     }
     @EventTarget
     public void onTick(TickEvent event){

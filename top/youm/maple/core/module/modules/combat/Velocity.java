@@ -37,7 +37,7 @@ public class Velocity extends Module {
         super("Velocity", ModuleCategory.COMBAT, Keyboard.KEY_NONE);
         onSprint.addParent(mode,mode->mode.getValue().equals("Vulcan"));
         onSwing.addParent(mode,mode->mode.getValue().equals("Vulcan"));
-        this.addSetting(mode, horizontal, vertical, chance, onlyWhileMoving, staffCheck);
+        this.addSettings(mode, horizontal, vertical, chance, onlyWhileMoving, staffCheck);
     }
 
     @EventTarget

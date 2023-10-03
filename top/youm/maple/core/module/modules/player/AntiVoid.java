@@ -23,7 +23,7 @@ public class AntiVoid extends Module {
     private boolean teleported;
     public AntiVoid() {
         super("AntiVoid", ModuleCategory.PLAYER, Keyboard.KEY_NONE);
-        this.addSetting(distance);
+        this.addSettings(distance);
     }
     @EventTarget
     public void onTick(TickEvent event){

@@ -46,9 +46,9 @@ public class HUD extends Module {
 
     public HUD() {
         super("HUD", ModuleCategory.VISUAL, Keyboard.KEY_NONE);
-        this.setToggle(true);
+        this.setEnabled(true);
         ttf_font.addParent(mode,modeSetting -> modeSetting.getValue().equals("Text") || modeSetting.getValue().equals("CSGO"));
-        this.addSetting(mode,ttf_font,notification,red,green,blue);
+        this.addSettings(mode,ttf_font,notification,red,green,blue);
         this.isRenderModule = true;
     }
     public void initRenderModule(){
@@ -103,7 +103,7 @@ public class HUD extends Module {
 
         NotificationManager.draw(sr.getScaledWidth(),sr.getScaledHeight() - (sr.getScaledHeight() / 10.0f));
         ModuleUI.forEach((module, hudComponent) -> {
-            if(module.isToggle()){
+            if(module.isEnabled()){
                 hudComponent.draw(module);
             }
         });

@@ -56,7 +56,7 @@ public class ChestStealer extends Module {
         super("Chest Stealer", ModuleCategory.WORLD, Keyboard.KEY_NONE);
         auraRange.addParent(aura, CheckBoxSetting::getValue);
         stealingIndicator.addParent(silent, CheckBoxSetting::getValue);
-        this.addSetting(delay, aura, auraRange, stealingIndicator, titleCheck, freeLook, reverse, silent, smart);
+        this.addSettings(delay, aura, auraRange, stealingIndicator, titleCheck, freeLook, reverse, silent, smart);
     }
 
     @EventTarget
@@ -149,7 +149,7 @@ public class ChestStealer extends Module {
     }
 
     public static boolean canSteal() {
-        if (Maple.getInstance().getModuleManager().getModuleByClass(ChestStealer.class).isToggle() && mc.currentScreen instanceof GuiChest) {
+        if (Maple.getInstance().getModuleManager().getModuleByClass(ChestStealer.class).isEnabled() && mc.currentScreen instanceof GuiChest) {
             ContainerChest chest = (ContainerChest) mc.thePlayer.openContainer;
             IInventory chestInv = chest.getLowerChestInventory();
             return !titleCheck.getValue() || (chestInv instanceof ContainerLocalMenu && ((ContainerLocalMenu) chestInv).realChest);

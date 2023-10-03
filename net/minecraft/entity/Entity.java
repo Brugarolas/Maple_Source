@@ -11,6 +11,8 @@ import net.minecraft.client.entity.EntityPlayerSP;
 import top.youm.maple.Maple;
 import top.youm.maple.common.events.MoveInputEvent;
 import top.youm.maple.common.events.SafeWalkEvent;
+import top.youm.maple.common.events.StrafeEvent;
+import top.youm.maple.core.module.modules.movement.StrafeFix;
 import top.youm.maple.core.module.modules.player.SafeWalk;
 import top.youm.maple.utils.math.Vec2f;
 import top.youm.maple.utils.math.Vec3f;
@@ -1245,10 +1247,16 @@ public abstract class Entity implements ICommandSender
      */
     public void moveFlying(float strafe, float forward, float friction) {
         MoveInputEvent playerMovementEvent = new MoveInputEvent(strafe, forward, friction, this.rotationYaw, this.rotationPitch);
-        if (this instanceof EntityPlayerSP) {
+        final StrafeEvent strafeEvent = new StrafeEvent(strafe, forward, friction);
+        final StrafeFix strafeFix = Maple.getInstance().getModuleManager().getModuleByClass(StrafeFix.class);
+        if (this == Minecraft.getMinecraft().thePlayer) {
             EventManager.call(playerMovementEvent);
+            EventManager.call(strafeEvent);
+            if (strafeFix.doFix) { //Run StrafeFix process on Post Strafe 2023/02/15
+                strafeFix.runStrafeFixLoop(strafeFix.silentFix, strafeEvent);
+            }
         }
-        if (playerMovementEvent.isCancelled()) return;
+        if (playerMovementEvent.isCancelled() || strafeEvent.isCancelled()) return;
 
         strafe = playerMovementEvent.getStrafe();
         forward = playerMovementEvent.getForward();
@@ -1265,6 +1273,7 @@ public abstract class Entity implements ICommandSender
             f = friction / f;
             strafe = strafe * f;
             forward = forward * f;
+
             float f1 = MathHelper.sin(playerMovementEvent.getYaw() * (float) Math.PI / 180.0F);
             float f2 = MathHelper.cos(playerMovementEvent.getYaw() * (float) Math.PI / 180.0F);
             this.motionX += strafe * f2 - forward * f1;

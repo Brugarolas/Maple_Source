@@ -52,7 +52,7 @@ public final class Speed extends Module {
         viperMode.addParent(mode, modeSetting -> modeSetting.getValue().equals("Viper"));
         groundSpeed.addParent(watchdogMode, modeSetting -> modeSetting.getValue().equals("Ground") && mode.getValue().equals("Watchdog"));
         vanillaSpeed.addParent(mode, modeSetting -> modeSetting.getValue().equals("Vanilla") || modeSetting.getValue().equals("BHop"));
-        this.addSetting(mode, vanillaSpeed, watchdogMode, verusMode, viperMode, autoDisable, groundSpeed, timer);
+        this.addSettings(mode, vanillaSpeed, watchdogMode, verusMode, viperMode, autoDisable, groundSpeed, timer);
     }
     @EventTarget
     public void onTick(TickEvent event){
@@ -309,7 +309,7 @@ public final class Speed extends Module {
     @EventTarget
     public void onPacketReceiveEvent(PacketReceiveEvent e) {
         if (e.getPacket() instanceof S08PacketPlayerPosLook) {
-            this.setToggle(!this.isToggle());
+            this.setEnabled(!this.isEnabled());
         }
     }
 

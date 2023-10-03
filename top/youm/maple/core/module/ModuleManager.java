@@ -5,6 +5,7 @@ import com.darkmagician6.eventapi.EventTarget;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.core.config.plugins.ResolverUtil;
 import top.youm.maple.common.events.KeyEvent;
 import top.youm.maple.core.module.modules.combat.*;
 import top.youm.maple.core.module.modules.combat.killaura.KillAura;
@@ -13,7 +14,11 @@ import top.youm.maple.core.module.modules.player.*;
 import top.youm.maple.core.module.modules.visual.*;
 import top.youm.maple.core.module.modules.world.*;
 
+import java.lang.reflect.Modifier;
+import java.net.URI;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -23,66 +28,9 @@ public class ModuleManager {
     public List<Module> modules = new ArrayList<>();
     private static final Logger logger = LogManager.getLogger();
     public void initialize(){
-        /*if(Maple.getInstance().account.getUid() != null){
-            try {
-                String decrypt = RsaUtil.decryptByPrivateKey(Maple.getInstance().account.getUid(), RsaUtil.generateKey().get("privateKeyStr"));
-                for (float accountNum : RsaUtil.accounts) {
-                    if (accountNum != Float.parseFloat(decrypt) + 114514) {
-                        return;
-                    }
-                }
-            } catch (Exception e) {
-                logger.error("脑瘫玩应，别几把瞎搞我的端子，操你妈逼");
-                System.exit(0);
-            }
-        }*/
-        /* combat */
-        this.modules.add(new KillAura());
-        this.modules.add(new FastBow());
-        this.modules.add(new AntiBot());
-        this.modules.add(new Criticals());
-        this.modules.add(new TargetStrafe());
-        this.modules.add(new Velocity());
-        this.modules.add(new SuperKnockback());
-        this.modules.add(new Targets());
-        /* movement */
-        this.modules.add(new Sprint());
-        this.modules.add(new Speed());
-        this.modules.add(new Step());
-        this.modules.add(new Fly());
-        this.modules.add(new InventoryMove());
-        this.modules.add(new NoSlow());
-        /* player */
-        this.modules.add(new FullBright());
-        this.modules.add(new SafeWalk());
-        this.modules.add(new InvManager());
-        this.modules.add(new NoFall());
-        this.modules.add(new Timer());
-        this.modules.add(new Blink());
-        this.modules.add(new AutoArmor());
-        this.modules.add(new AutoTool());
-        this.modules.add(new Freecam());
-        this.modules.add(new AntiVoid());
-        /* visual */
-        this.modules.add(new Animations());
-        this.modules.add(new KeyStrokes());
-        this.modules.add(new HUD());
-        this.modules.add(new ModuleList());
-        this.modules.add(new ClickGui());
-        this.modules.add(new ESP());
-        this.modules.add(new NameTag());
-        this.modules.add(new Statistics());
-        this.modules.add(new DamageParticle());
-        this.modules.add(new MotionBlur());
-        this.modules.add(new ItemPhysical());
-        /* world*/
-        this.modules.add(new Teams());
-        this.modules.add(new Disabler());
-        this.modules.add(new ChestStealer());
-        this.modules.add(new AutoL());
-        this.modules.add(new FastPlace());
-        this.modules.add(new SafeScaffold());
-        this.modules.add(new AutoReport());
+        scanModules();
+        modules.sort(Comparator.comparingInt(module -> Character.getNumericValue(module.getName().charAt(0))));
+
         EventManager.register(this);
         this.getModuleByClass(HUD.class).initRenderModule();
     }
@@ -101,5 +49,46 @@ public class ModuleManager {
                 module.toggled();
             }
         });
+    }
+    public void scanModules(){
+        ResolverUtil resolver = initResolverUtil();
+        for (Class<?> aClass : resolver.getClasses()) {
+            if (Module.class.isAssignableFrom(aClass) &&
+                    !aClass.isInterface() &&
+                    !aClass.isAnnotation() &&
+                    !Modifier.isAbstract(aClass.getModifiers())) {
+                try {
+                    this.modules.add((Module) aClass.newInstance());
+                } catch (InstantiationException | IllegalAccessException e) {
+                    logger.error(e.getMessage());
+                }
+            }
+        }
+    }
+
+    private ResolverUtil initResolverUtil() {
+        ResolverUtil resolver = new ResolverUtil();
+        resolver.findInPackage(new ResolverUtil.Test() {
+            @Override
+            public boolean matches(Class<?> aClass) {
+                return true;
+            }
+
+            @Override
+            public boolean matches(URI uri) {
+                return true;
+            }
+
+            @Override
+            public boolean doesMatchClass() {
+                return true;
+            }
+
+            @Override
+            public boolean doesMatchResource() {
+                return true;
+            }
+        },getClass().getPackage().getName() +".modules");
+        return resolver;
     }
 }

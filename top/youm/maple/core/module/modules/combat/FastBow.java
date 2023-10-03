@@ -17,7 +17,7 @@ public class FastBow extends Module {
 
     public FastBow(){
         super("Fast Bow", ModuleCategory.COMBAT, Keyboard.KEY_NONE);
-        this.addSetting(mode);
+        this.addSettings(mode);
     }
 
     @EventTarget

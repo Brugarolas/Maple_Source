@@ -19,7 +19,7 @@ public final class Criticals extends Module {
 
     public Criticals() {
         super("Criticals", ModuleCategory.COMBAT, Keyboard.KEY_NONE);
-        this.addSetting(mode, delay);
+        this.addSettings(mode, delay);
     }
     @EventTarget
     public void onTick(TickEvent event){

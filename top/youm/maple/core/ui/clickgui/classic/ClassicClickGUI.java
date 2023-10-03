@@ -113,7 +113,7 @@ public class ClassicClickGUI extends GuiScreen {
                 this.onGuiClosed();
                 mc.displayGuiScreen(null);
                 ClickGui clickGui = Maple.getInstance().getModuleManager().getModuleByClass(ClickGui.class);
-                clickGui.setToggle(false);
+                clickGui.setEnabled(false);
             }
             for (ModuleComponent moduleComponent : moduleComponents) {
                 moduleComponent.input(typedChar, keyCode);

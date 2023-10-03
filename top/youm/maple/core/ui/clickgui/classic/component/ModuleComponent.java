@@ -7,7 +7,6 @@ import top.youm.maple.core.ui.clickgui.classic.state.UIState;
 import top.youm.maple.core.ui.clickgui.classic.theme.Theme;
 import top.youm.maple.core.ui.clickgui.classic.MouseType;
 import top.youm.maple.core.ui.font.FontLoaders;
-import top.youm.maple.utils.AnimationUtils;
 import top.youm.maple.utils.render.RenderUtil;
 import top.youm.maple.utils.render.RoundedUtil;
 
@@ -39,7 +38,7 @@ public class ModuleComponent extends Component {
             RoundedUtil.drawRound(x + 3, y, width, height, 3, Theme.moduleTheme);
         }
         FontLoaders.comfortaaB18.drawStringWithShadow(module.getName(), x + 7, y + height / 2.0f - FontLoaders.comfortaaB18.getHeight() / 2.0f, Theme.font.getRGB());
-        if (module.isToggle()) {
+        if (module.isEnabled()) {
             if (animation >= 10) {
                 animation = animator.animate(10, animation, 0.08f);
             }

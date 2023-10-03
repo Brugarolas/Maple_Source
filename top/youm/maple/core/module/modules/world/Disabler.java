@@ -18,6 +18,7 @@ public class Disabler extends Module {
     private SelectButtonSetting mode = new SelectButtonSetting("Mode","Vulcan","Vulcan","NCP","WatchDog");
     public Disabler() {
         super("Disabler", ModuleCategory.WORLD, Keyboard.KEY_NONE);
+        this.addSettings(mode);
     }
 
     @EventTarget

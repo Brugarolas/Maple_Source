@@ -36,7 +36,7 @@ public class ScaffoldUtil {
     }
 
     public static double getYLevel() {
-        if (!SafeScaffold.keepY.getValue() || SafeScaffold.keepYMode.getValue().equals("Speed toggled") && !Maple.getInstance().getModuleManager().getModuleByClass(Speed.class).isToggle()) {
+        if (!SafeScaffold.keepY.getValue() || SafeScaffold.keepYMode.getValue().equals("Speed toggled") && !Maple.getInstance().getModuleManager().getModuleByClass(Speed.class).isEnabled()) {
             return mc.thePlayer.posY - 1.0;
         }
         return mc.thePlayer.posY - 1.0 >= SafeScaffold.keepYCoord && Math.max(mc.thePlayer.posY, SafeScaffold.keepYCoord)

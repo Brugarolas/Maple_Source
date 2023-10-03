@@ -13,7 +13,6 @@ import net.minecraft.network.play.client.C0BPacketEntityAction;
 import net.minecraft.potion.Potion;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.MathHelper;
-import net.minecraft.util.MouseFilter;
 import org.lwjgl.input.Keyboard;
 import top.youm.maple.common.events.*;
 import top.youm.maple.common.settings.impl.CheckBoxSetting;
@@ -30,7 +29,6 @@ import top.youm.maple.utils.player.ScaffoldUtil;
 
 public class SafeScaffold extends Module {
 
-    private final SelectButtonSetting countMode = new SelectButtonSetting("Block Counter", "Tenacity", "None", "Tenacity", "Basic", "Polar");
     private final CheckBoxSetting rotations = new CheckBoxSetting("Rotations", true);
     private final SelectButtonSetting rotationMode = new SelectButtonSetting("Rotation Mode", "Watchdog", "Watchdog", "NCP", "Back", "45", "Enum", "Down", "0","Vulcan");
     private final SelectButtonSetting placeType = new SelectButtonSetting("Place Type", "Post", "Pre", "Post", "Legit", "Dynamic","Telly");
@@ -39,7 +37,6 @@ public class SafeScaffold extends Module {
     public static SelectButtonSetting towerMode = new SelectButtonSetting("Tower Mode", "Watchdog", "Vanilla", "NCP", "Watchdog", "Verus");
     public static SelectButtonSetting swingMode = new SelectButtonSetting("Swing Mode", "Client", "Client", "Silent");
     public static SliderSetting delay = new SliderSetting("Delay", 0, 2, 0, 0.05);
-    public static SliderSetting rotateDelay = new SliderSetting("rotateDelay", 10, 100, 1, 1);
     private final SliderSetting timer = new SliderSetting("Timer", 1, 5, 0.1, 0.1);
     public static final CheckBoxSetting auto3rdPerson = new CheckBoxSetting("Auto 3rd Person", false);
     public static final CheckBoxSetting speedSlowdown = new CheckBoxSetting("Speed Slowdown", true);
@@ -59,25 +56,18 @@ public class SafeScaffold extends Module {
     private ScaffoldUtil.BlockCache blockCache, lastBlockCache;
     private float y;
     private float speed;
-    private final MouseFilter pitchMouseFilter = new MouseFilter();
     private final TimerUtil delayTimer = new TimerUtil();
     private final TimerUtil timerUtil = new TimerUtil();
     public static double keepYCoord;
-    private boolean shouldSendPacket;
-    private boolean shouldTower;
-    private boolean firstJump;
     private boolean pre;
-    private int jumpTimer;
     private int slot;
     private int prevSlot;
     private float[] cachedRots = new float[2];
-
-    private boolean isBlockEdge = false;
     public static boolean noSprint;
 
     public SafeScaffold() {
-        super("Scaffold", ModuleCategory.WORLD, Keyboard.KEY_NONE);
-        this.addSetting(countMode, rotations, rotationMode,rotateDelay, placeType, keepYMode, sprintMode, towerMode, swingMode, delay, timer,
+        super("OldScaffold", ModuleCategory.WORLD, Keyboard.KEY_NONE);
+        this.addSettings( rotations, rotationMode, placeType, keepYMode, sprintMode, towerMode, swingMode, delay, timer,
                 auto3rdPerson, speedSlowdown, speedSlowdownAmount, itemSpoof, downwards, safewalk, sprint, sneak, tower, towerTimer,
                 swing, autoJump, hideJump, baseSpeed, keepY);
         rotationMode.addParent(rotations, CheckBoxSetting::getValue);
@@ -339,7 +329,6 @@ public class SafeScaffold extends Module {
 
         boolean placed = false;
         if (delayTimer.hasTimeElapsed(delay.getValue().longValue() * 1000)) {
-            firstJump = false;
             if (mc.playerController.onPlayerRightClick(mc.thePlayer, mc.theWorld,
                     mc.thePlayer.inventory.getStackInSlot(this.slot),
                     lastBlockCache.getPosition(), lastBlockCache.getFacing(),
@@ -426,10 +415,8 @@ public class SafeScaffold extends Module {
                 mc.gameSettings.thirdPersonView = 1;
             }
         }
-        firstJump = true;
         speed = 1.1f;
         timerUtil.reset();
-        jumpTimer = 0;
         y = 80;
     }
 

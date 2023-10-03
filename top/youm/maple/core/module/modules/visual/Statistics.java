@@ -17,7 +17,7 @@ public class Statistics extends Module {
     public int wins,kills,death;
     public Statistics() {
         super("Statistics", ModuleCategory.VISUAL, Keyboard.KEY_NONE);
-        this.addSetting(shadow);
+        this.addSettings(shadow);
         this.isRenderModule = true;
     }
     @EventTarget

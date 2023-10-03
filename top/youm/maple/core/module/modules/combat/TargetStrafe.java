@@ -46,7 +46,7 @@ public final class TargetStrafe extends Module {
 
     public TargetStrafe() {
         super("Target Strafe", ModuleCategory.COMBAT, Keyboard.KEY_NONE);
-        addSetting(edges,behind,liquids,controllable, radius, points, space, auto3rdPerson, render);
+        addSettings(edges,behind,liquids,controllable, radius, points, space, auto3rdPerson, render);
     }
 
     @EventTarget
@@ -109,11 +109,11 @@ public final class TargetStrafe extends Module {
     public static boolean canStrafe() {
 
         KillAura killAura = Maple.getInstance().getModuleManager().getModuleByClass(KillAura.class);
-        if (!Maple.getInstance().getModuleManager().getModuleByClass(TargetStrafe.class).isToggle() || !killAura.isToggle()
+        if (!Maple.getInstance().getModuleManager().getModuleByClass(TargetStrafe.class).isEnabled() || !killAura.isEnabled()
                 || !MovementUtil.isMoving() || (space.getValue() && !Keyboard.isKeyDown(Keyboard.KEY_SPACE))) {
             return false;
         }
-        if (!(Maple.getInstance().getModuleManager().getModuleByClass(Speed.class).isToggle())) {
+        if (!(Maple.getInstance().getModuleManager().getModuleByClass(Speed.class).isEnabled())) {
             return false;
         }
         return Targets.INSTANCE.target != null && Targets.INSTANCE.targetCanAttack(Targets.INSTANCE.target);

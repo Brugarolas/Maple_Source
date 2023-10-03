@@ -4,7 +4,6 @@ import com.darkmagician6.eventapi.EventTarget;
 import com.darkmagician6.eventapi.events.Event;
 import de.florianmichael.viamcp.fixes.AttackOrder;
 import net.minecraft.item.ItemSword;
-import net.minecraft.network.play.client.C0APacketAnimation;
 import net.minecraft.potion.Potion;
 import org.lwjgl.input.Keyboard;
 import top.youm.maple.Maple;
@@ -15,12 +14,12 @@ import top.youm.maple.common.settings.impl.SliderSetting;
 import top.youm.maple.core.module.Module;
 import top.youm.maple.core.module.ModuleCategory;
 import top.youm.maple.core.module.modules.combat.Targets;
+import top.youm.maple.core.module.modules.movement.StrafeFix;
 import top.youm.maple.core.module.modules.world.SafeScaffold;
 import top.youm.maple.utils.TimerUtil;
 import top.youm.maple.utils.liquidbounce.RotationUtils;
 import top.youm.maple.utils.liquidbounce.VecRotation;
 import top.youm.maple.utils.math.MathUtil;
-import top.youm.maple.utils.network.PacketUtil;
 import top.youm.maple.utils.player.RotationUtil;
 
 
@@ -30,6 +29,7 @@ import top.youm.maple.utils.player.RotationUtil;
 public class KillAura extends Module {
 
     private float yaw = 0;
+    private final CheckBoxSetting onlyAim = new CheckBoxSetting("Only Aim",false);
     public static final SliderSetting reach = new SliderSetting("Reach", 3.3, 6, 1, 0.01);
     private final SliderSetting minCps = new SliderSetting("Min CPS", 6, 20, 1, 1);
     private final SliderSetting maxCps = new SliderSetting("Max CPS", 11, 20, 1, 1);
@@ -49,7 +49,7 @@ public class KillAura extends Module {
     private final CheckBoxSetting autoDisable = new CheckBoxSetting("Auto Disable", true);
     private final TimerUtil timer = new TimerUtil();
     private final TimerUtil rotateTimer = new TimerUtil();
-
+    AuraRenderer auraRenderer = new AuraRenderer();
 
     public KillAura() {
         super("Kill Aura", ModuleCategory.COMBAT, Keyboard.KEY_NONE);
@@ -61,9 +61,9 @@ public class KillAura extends Module {
         targetUIStyle.addParent(targetUI, CheckBoxSetting::getValue);
 
         new RotationUtils().init();
-        this.addSetting(reach, minCps, maxCps, targetUI, targetUIStyle, footCircle, scanCircle, autoDisable, autoBlock, autoBlockMode, movementFix, rotateMode, random, randomValue, followRotation, maxRotateSpeed, minRotateSpeed);
+        this.addSettings(reach, minCps, maxCps, targetUI, targetUIStyle, onlyAim,footCircle, scanCircle, autoDisable, autoBlock, autoBlockMode, movementFix, rotateMode, random, randomValue, followRotation, maxRotateSpeed, minRotateSpeed);
     }
-    AuraRenderer auraRenderer = new AuraRenderer();
+
     @EventTarget
     public void onRender2D(Render2DEvent event) {
         if (!targetUI.getValue()) return;
@@ -75,7 +75,7 @@ public class KillAura extends Module {
 
         if (mc.thePlayer != null) {
             if ((mc.thePlayer.getHealth() <= 0.0f || mc.thePlayer.isDead) && this.autoDisable.getValue()) {
-                this.setToggle(false);
+                this.setEnabled(false);
             }
             auraRenderer.update();
         }
@@ -92,9 +92,9 @@ public class KillAura extends Module {
         if (Targets.INSTANCE.target == null) {
             return;
         }
-
-        if (Maple.getInstance().getModuleManager().getModuleByClass(SafeScaffold.class).isToggle()) {
-            Maple.getInstance().getModuleManager().getModuleByClass(SafeScaffold.class).setToggle(false);
+        Maple.getInstance().getModuleManager().getModuleByClass(StrafeFix.class).applyForceStrafe(true,true);
+        if (Maple.getInstance().getModuleManager().getModuleByClass(SafeScaffold.class).isEnabled()) {
+            Maple.getInstance().getModuleManager().getModuleByClass(SafeScaffold.class).setEnabled(false);
         }
         if (Targets.INSTANCE.removeTarget()) return;
 
@@ -107,7 +107,7 @@ public class KillAura extends Module {
             autoBlock(event);
         }
 
-        if (event.getState() == Event.State.PRE) {
+        if (event.getState() == Event.State.PRE && !onlyAim.getValue()) {
             attack();
         }
     }
@@ -155,7 +155,6 @@ public class KillAura extends Module {
     }
 
     private void autoBlock(MotionEvent event) {
-
         switch (autoBlockMode.getValue()) {
             case "Watchdog":
                 break;
@@ -169,8 +168,6 @@ public class KillAura extends Module {
                 break;
             default:
         }
-        PacketUtil.sendPacket(new C0APacketAnimation());
-
     }
 
     @EventTarget
@@ -196,15 +193,15 @@ public class KillAura extends Module {
     @EventTarget
     public void respawn(RespawnPlayerEvent event) {
         if (autoDisable.getValue()) {
-            this.setToggle(false);
+            this.setEnabled(false);
         }
     }
 
     @Override
     public void onEnable() {
         SafeScaffold scaffold = Maple.getInstance().getModuleManager().getModuleByClass(SafeScaffold.class);
-        if (scaffold.isToggle()) {
-            scaffold.setToggle(false);
+        if (scaffold.isEnabled()) {
+            scaffold.setEnabled(false);
         }
     }
 }

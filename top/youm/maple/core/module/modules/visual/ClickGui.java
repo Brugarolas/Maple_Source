@@ -19,8 +19,8 @@ public class ClickGui extends Module {
     public ColorThemeSetting colorTheme = new ColorThemeSetting("theme",Theme.themes);
     public ClickGui() {
         super("ClickGui", ModuleCategory.VISUAL, Keyboard.KEY_RSHIFT);
-        this.setToggle(false);
-        this.addSetting(colorTheme,mode);
+        this.setEnabled(false);
+        this.addSettings(colorTheme,mode);
         this.isRenderModule = true;
     }
     @Override

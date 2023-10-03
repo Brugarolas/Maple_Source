@@ -30,7 +30,7 @@ public class NoSlow extends Module {
     private SelectButtonSetting mode = new SelectButtonSetting("Mode","New NCP","New NCP","Other");
     public NoSlow() {
         super("No Slow", ModuleCategory.MOVEMENT, Keyboard.KEY_NONE);
-        this.addSetting(mode);
+        this.addSettings(mode);
     }
     @EventTarget
     public void onTick(TickEvent event){

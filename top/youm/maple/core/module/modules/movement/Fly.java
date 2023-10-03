@@ -33,7 +33,7 @@ public class Fly extends Module {
     public Minecraft minecraft = Minecraft.getMinecraft();
     public Fly() {
         super("Fly", ModuleCategory.MOVEMENT, Keyboard.KEY_NONE);
-        this.addSetting(mode, speed);
+        this.addSettings(mode, speed);
     }
     @EventTarget
     public void onMotion(MotionEvent event) {

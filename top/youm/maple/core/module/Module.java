@@ -9,6 +9,7 @@ import top.youm.maple.utils.animation.Animation;
 import top.youm.maple.utils.animation.Direction;
 import top.youm.maple.utils.animation.SmoothStepAnimation;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -19,7 +20,7 @@ import java.util.stream.Collectors;
  */
 public class Module {
     public static Minecraft mc = Minecraft.getMinecraft();
-    private boolean toggle;
+    private boolean enabled;
     public boolean isRenderModule = false;
     public Animation animation = new SmoothStepAnimation(200,1).setDirection(Direction.BACKWARDS);
     private String name;
@@ -31,7 +32,6 @@ public class Module {
     public float animX,animY;
     public Module(String name, ModuleCategory category, int key) {
         this(name,"",category,key);
-
     }
 
     public Module(String name, String suffixes, ModuleCategory category, int key) {
@@ -40,19 +40,19 @@ public class Module {
         this.category = category;
         this.key = key;
     }
-    public boolean isToggle() {
-        return toggle;
+    public boolean isEnabled() {
+        return enabled;
     }
-    public void setToggle(boolean toggle){
-        this.toggle = toggle;
-        this.isEnabled();
+    public void setEnabled(boolean enabled){
+        this.enabled = enabled;
+        this.checkEnabled();
     }
     public void toggled(){
-        this.toggle = !this.toggle;
-        this.isEnabled();
+        this.enabled = !this.enabled;
+        this.checkEnabled();
     }
-    private void isEnabled() {
-        if (toggle) {
+    private void checkEnabled() {
+        if (enabled) {
             EventManager.register(this);
             this.onEnable();
             NotificationManager.show(this.name,this.name + ": has enabled",this, Icon.SUCCESS);
@@ -105,11 +105,11 @@ public class Module {
     public List<Setting<?>> getSettings() {
         return settings;
     }
-    public void setSettings(List<Setting<?>> settings) {
-        this.settings = settings;
+    public void addSettings(Setting<?> ...settings){
+        this.settings.addAll(Arrays.stream(settings).collect(Collectors.toCollection(ArrayList::new)));
     }
-    public void addSetting(Setting<?> ...setting){
-        this.settings.addAll(Arrays.stream(setting).collect(Collectors.toCollection(ArrayList::new)));
+    public void addSetting(Setting<?> setting){
+        this.settings.add(setting);
     }
 
 }

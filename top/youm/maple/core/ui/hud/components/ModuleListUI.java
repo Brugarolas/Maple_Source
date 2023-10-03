@@ -41,7 +41,7 @@ public class ModuleListUI implements HUDComponent<ModuleList> {
         CFontRenderer fontRenderer = FontLoaders.moduleList;
 
         for (Module m : Maple.getInstance().getModuleManager().modules) {
-            if ((UIModule.noRender.getValue() && m.isRenderModule) || (!m.isToggle() && m.wasRemoved))
+            if ((UIModule.noRender.getValue() && m.isRenderModule) || (!m.isEnabled() && m.wasRemoved))
                 continue;
             modules.add(m);
         }
@@ -83,7 +83,7 @@ public class ModuleListUI implements HUDComponent<ModuleList> {
                                     ChatFormatting.BLUE + " " + ChatFormatting.WHITE + module.getSuffixes()
                     );
             //animation
-            if (module.isToggle()) {
+            if (module.isEnabled()) {
 
                 module.animY = animator.animate(offsetY + (UIModule.edge.getValue() ? 10 : -2), module.animY, 0.2f);
                 module.animX = animator.animate(width - (font ? fontRenderer.getStringWidth(text) : Minecraft.getMinecraft().fontRendererObj.getStringWidth(text)) - (UIModule.edge.getValue() ?  12 : -1), module.animX, 0.08f);
@@ -135,7 +135,7 @@ public class ModuleListUI implements HUDComponent<ModuleList> {
             }
 
             //render border
-            if (UIModule.border.getValue() && module.isToggle()) {
+            if (UIModule.border.getValue() && module.isEnabled()) {
                 if (UIModule.borderMode.getValue().equals("Border")) {
                     drawRect((int) (module.animX - UIModule.rectPadding.getValue().intValue()), (int) (2 + module.animY), 1, (font ? fontRenderer.getHeight() + 3 : Minecraft.getMinecraft().fontRendererObj.FONT_HEIGHT + 3), color.getRGB());
                     drawRect((int) (module.animX + (font ? fontRenderer.getStringWidth(text) - 1 : Minecraft.getMinecraft().fontRendererObj.getStringWidth(text))) + UIModule.rectPadding.getValue().intValue() - 5, (int) (2 + module.animY), 1, (font ? fontRenderer.getHeight() + 3 : Minecraft.getMinecraft().fontRendererObj.FONT_HEIGHT + 3), color.getRGB());

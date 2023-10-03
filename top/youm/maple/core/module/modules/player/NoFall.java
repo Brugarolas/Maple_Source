@@ -40,7 +40,7 @@ public final class NoFall extends Module {
     }
     public NoFall() {
         super("No Fall", ModuleCategory.PLAYER, Keyboard.KEY_NONE);
-        this.addSetting(mode);
+        this.addSettings(mode);
     }
 
 }

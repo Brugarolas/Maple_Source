@@ -20,7 +20,7 @@ public class MotionBlur extends Module {
 
     public MotionBlur() {
         super("Motion Blur", ModuleCategory.VISUAL, Keyboard.KEY_NONE);
-        this.addSetting(amount);
+        this.addSettings(amount);
     }
     @EventTarget
     public void onTick(TickEvent event){

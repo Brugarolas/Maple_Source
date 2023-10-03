@@ -37,7 +37,7 @@ public class RenderEntityItem extends Render<EntityItem>
         if (item == null) {
             return 0;
         } else {
-            if (Maple.getInstance().getModuleManager().getModuleByClass(ItemPhysical.class).isToggle()) {
+            if (Maple.getInstance().getModuleManager().getModuleByClass(ItemPhysical.class).isEnabled()) {
                 boolean var12 = p_177077_9_.isAmbientOcclusion();
                 int var13 = this.func_177078_a(itemstack);
                 if (!(item instanceof ItemBlock))

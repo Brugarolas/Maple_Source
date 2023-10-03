@@ -39,7 +39,7 @@ public class NameTag extends Module {
     private SliderSetting scale = new SliderSetting("scale",0.5,1,0.1,0.1);
     public NameTag() {
         super("NameTag", ModuleCategory.VISUAL, Keyboard.KEY_NONE);
-        this.addSetting(players,mobs,animals,scale);
+        this.addSettings(players,mobs,animals,scale);
         this.isRenderModule = true;
     }
     private boolean shouldRender(Entity entity) {

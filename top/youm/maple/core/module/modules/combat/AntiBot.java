@@ -25,7 +25,7 @@ public class AntiBot extends Module {
     CheckBoxSetting pingCheck = new CheckBoxSetting("Ping Check",true);
     public AntiBot() {
         super("Anti Bot", ModuleCategory.COMBAT, Keyboard.KEY_NONE);
-        this.addSetting(mode,pingCheck);
+        this.addSettings(mode,pingCheck);
     }
     @EventTarget
     public void onUpdate(TickEvent event){
@@ -34,7 +34,7 @@ public class AntiBot extends Module {
 
 
     public boolean isNPC(EntityLivingBase entity) {
-        if(!this.isToggle()) return false;
+        if(!this.isEnabled()) return false;
         if (entity == null) {
             return true;
         }
@@ -59,7 +59,7 @@ public class AntiBot extends Module {
         return (mode.getValue().equals("Classic") || mode.getValue().equals("Advanced")) && (entity).ticksExisted <= 80;
     }
     public boolean isServerBot(Entity entity) {
-        if(!this.isToggle()){
+        if(!this.isEnabled()){
             return true;
         }
         if (Helper.onServer("hypixel")) {

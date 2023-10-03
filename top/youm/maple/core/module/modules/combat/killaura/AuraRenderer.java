@@ -69,7 +69,7 @@ public class AuraRenderer {
         if (Targets.INSTANCE.target == null) {
             return;
         }
-        if (Targets.INSTANCE.target.isDead || Targets.INSTANCE.target.getHealth() <= 0 || Maple.getInstance().getModuleManager().getModuleByClass(SafeScaffold.class).isToggle() || KillAura.mc.thePlayer.isDead || KillAura.mc.thePlayer.isSpectator())
+        if (Targets.INSTANCE.target.isDead || Targets.INSTANCE.target.getHealth() <= 0 || Maple.getInstance().getModuleManager().getModuleByClass(SafeScaffold.class).isEnabled() || KillAura.mc.thePlayer.isDead || KillAura.mc.thePlayer.isSpectator())
             return;
         if (KillAura.scanCircle.getValue()) {
             drawCircle(event);

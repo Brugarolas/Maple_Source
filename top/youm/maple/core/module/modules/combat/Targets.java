@@ -41,7 +41,7 @@ public class Targets extends Module {
     public Targets() {
         super("Targets", ModuleCategory.COMBAT, Keyboard.KEY_NONE);
         INSTANCE = this;
-        this.addSetting(players,mobs,animals,villager,invisible);
+        this.addSettings(players,mobs,animals,villager,invisible);
     }
     public void sort() {
         clear();

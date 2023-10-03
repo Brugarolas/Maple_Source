@@ -61,6 +61,6 @@ public final class InventoryMove extends Module {
 
     public InventoryMove() {
         super("Inventory Move", ModuleCategory.MOVEMENT, Keyboard.KEY_NONE);
-        this.addSetting(mode);
+        this.addSettings(mode);
     }
 }

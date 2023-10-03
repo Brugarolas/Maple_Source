@@ -40,7 +40,7 @@ public class ModuleConfig extends Config {
                     if (!configuration.getName().equals(module.getName())) {
                         continue;
                     }
-                    if (module.isToggle() != configuration.isEnable()) {
+                    if (module.isEnabled() != configuration.isEnable()) {
                         module.toggled();
                     }
                     module.setKey(Keyboard.getKeyIndex(configuration.getKey()));
@@ -70,10 +70,10 @@ public class ModuleConfig extends Config {
                 modules.stream().
                 map(module -> {
                     if(module != Maple.getInstance().getModuleManager().getModuleByClass(ClickGui.class)){
-                        return new ModuleConfiguration(module.getName(), module.isToggle(), Keyboard.getKeyName(module.getKey()),module.getSettings());
+                        return new ModuleConfiguration(module.getName(), module.isEnabled(), Keyboard.getKeyName(module.getKey()),module.getSettings());
                     }
-                    if(module.isToggle())module.toggled();
-                    return new ModuleConfiguration(module.getName(), module.isToggle(), Keyboard.getKeyName(module.getKey()),module.getSettings());
+                    if(module.isEnabled())module.toggled();
+                    return new ModuleConfiguration(module.getName(), module.isEnabled(), Keyboard.getKeyName(module.getKey()),module.getSettings());
                 }).
                 collect(Collectors.toList());
 

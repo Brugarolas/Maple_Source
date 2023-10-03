@@ -17,7 +17,7 @@ public class AutoL extends Module {
     SliderSetting delay = new SliderSetting("delay",0,5000,1000,100);
     public AutoL() {
         super("AutoL", ModuleCategory.WORLD, Keyboard.KEY_NONE);
-        this.addSetting(delay);
+        this.addSettings(delay);
     }
     TimerUtil timer = new TimerUtil();
     private final String[] context = new String[]{

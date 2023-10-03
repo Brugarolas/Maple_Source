@@ -3,6 +3,7 @@ package net.minecraft.client.entity;
 import com.darkmagician6.eventapi.EventManager;
 import com.darkmagician6.eventapi.events.Event;
 import net.minecraft.util.*;
+import top.youm.maple.Maple;
 import top.youm.maple.common.events.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.MovingSoundMinecartRiding;
@@ -48,6 +49,7 @@ import net.minecraft.stats.StatFileWriter;
 import net.minecraft.tileentity.TileEntitySign;
 import net.minecraft.world.IInteractionObject;
 import net.minecraft.world.World;
+import top.youm.maple.core.module.modules.movement.StrafeFix;
 
 
 public class EntityPlayerSP extends AbstractClientPlayer
@@ -187,7 +189,6 @@ public class EntityPlayerSP extends AbstractClientPlayer
         if (this.worldObj.isBlockLoaded(new BlockPos(this.posX, 0.0D, this.posZ)))
         {
             super.onUpdate();
-
             if (this.isRiding())
             {
                 this.sendQueue.addToSendQueue(new C03PacketPlayer.C05PacketPlayerLook(this.rotationYaw, this.rotationPitch, this.onGround));
@@ -205,6 +206,9 @@ public class EntityPlayerSP extends AbstractClientPlayer
      */
     public void onUpdateWalkingPlayer()
     {
+        final StrafeFix strafeFix = Maple.getInstance().getModuleManager().getModuleByClass(StrafeFix.class);
+        strafeFix.updateOverwrite();
+
         MotionEvent motionEvent = new MotionEvent(
                 this.posX, this.getEntityBoundingBox().minY, this.posZ, this.rotationYaw, this.rotationPitch, this.onGround);
 
@@ -566,7 +570,7 @@ public class EntityPlayerSP extends AbstractClientPlayer
     }
 
     /**
-     * Get the position in the world. <b>{@code null} is not allowed!</b> If you are not an entity in the world, return
+     * Get the position with the world. <b>{@code null} is not allowed!</b> If you are not an entity in the world, return
      * the coordinates 0, 0, 0
      */
     public BlockPos getPosition()

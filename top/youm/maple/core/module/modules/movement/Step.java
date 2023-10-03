@@ -18,7 +18,7 @@ public class Step extends Module {
     private CheckBoxSetting ncp = new CheckBoxSetting("NCP", false);
     public Step() {
         super("Step", ModuleCategory.MOVEMENT, Keyboard.KEY_NONE);
-        this.addSetting(ncp,height);
+        this.addSettings(ncp,height);
     }
     @EventTarget
     public void onTick(TickEvent event){
